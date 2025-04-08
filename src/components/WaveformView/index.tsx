@@ -57,7 +57,6 @@ export const WaveformView = ({
 
       peaksRef.current.points.add({
         time: time,
-        labelText: "Test Point",
         editable: true,
       });
     }
