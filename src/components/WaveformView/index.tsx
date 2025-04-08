@@ -51,6 +51,46 @@ export const WaveformView = ({
     });
   }, [audioUrl]);
 
+  const addPoint = () => {
+    if (peaksRef.current) {
+      const time = peaksRef.current.player.getCurrentTime();
+
+      peaksRef.current.points.add({
+        time: time,
+        labelText: "Test Point",
+        editable: true,
+      });
+    }
+  };
+
+  const nextPoint = () => {
+    if (peaksRef.current) {
+      const points = peaksRef.current.points.getPoints();
+      const currentTime = peaksRef.current.player.getCurrentTime();
+
+      const nextPoint = points.find((point) => point.time > currentTime);
+
+      if (nextPoint) {
+        peaksRef.current.player.seek(nextPoint.time);
+      }
+    }
+  };
+
+  const previousPoint = () => {
+    if (peaksRef.current) {
+      const points = peaksRef.current.points.getPoints();
+      const currentTime = peaksRef.current.player.getCurrentTime();
+      const previousPoint = points
+        .slice()
+        .reverse()
+        .find((point) => point.time < currentTime);
+
+      if (previousPoint) {
+        peaksRef.current.player.seek(previousPoint.time);
+      }
+    }
+  };
+
   return (
     <div>
       <div ref={viewRef} className={styles["waveform-container"]}></div>
@@ -58,6 +98,11 @@ export const WaveformView = ({
         <source src={audioUrl} type={audioContentType} />
         Your browser does not support the audio element.
       </audio>
+      <div className={styles["controls"]}>
+        <button onClick={addPoint}>Add Point</button>
+        <button onClick={nextPoint}>Next Point</button>
+        <button onClick={previousPoint}>Previous Point</button>
+      </div>
     </div>
   );
 };
