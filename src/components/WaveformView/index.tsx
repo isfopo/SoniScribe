@@ -18,13 +18,16 @@ export const WaveformView = ({
 
   useEffect(() => {
     const options: PeaksOptions = {
-      overview: {
+      zoomview: {
         container: viewRef.current,
         waveformColor: "#ddd",
         playheadColor: "#fff",
+        autoScroll: true,
+        enableSegments: false,
+        autoScrollOffset: 1,
       },
       mediaElement: audioElementRef.current as Element,
-      webAudio: { audioContext: audioContext.current },
+      webAudio: { audioContext: audioContext.current, multiChannel: true },
       keyboard: true,
       logger: console.error.bind(console),
       // createSegmentMarker: createSegmentMarker,
