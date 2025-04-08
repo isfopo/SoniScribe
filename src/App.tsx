@@ -1,7 +1,25 @@
 import "./App.css";
 import { WaveformView } from "./components/WaveformView";
+import { useKeyPress } from "./hooks/useKeyPress";
 
 function App() {
+  useKeyPress({
+    keymap: {
+      ArrowUp: () => {
+        console.log("ArrowUp pressed");
+      },
+      ArrowDown: () => {
+        console.log("ArrowDown pressed");
+      },
+      ArrowLeft: () => {
+        console.log("ArrowLeft pressed");
+      },
+      ArrowRight: () => {
+        console.log("ArrowRight pressed");
+      },
+    },
+  });
+
   return (
     <>
       <WaveformView
