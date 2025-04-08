@@ -20,6 +20,8 @@ export const WaveformView = ({
     const options: PeaksOptions = {
       overview: {
         container: viewRef.current,
+        waveformColor: "#ddd",
+        playheadColor: "#fff",
       },
       mediaElement: audioElementRef.current as Element,
       webAudio: { audioContext: audioContext.current },
