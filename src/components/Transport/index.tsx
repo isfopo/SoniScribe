@@ -15,11 +15,13 @@ export const Transport = ({
 }: TransportProps) => {
   return (
     <div>
-      <button onClick={previousPoint} title="Next Point">
+      <button type="button" onClick={previousPoint} title="Next Point">
         <ArrowBigLeftDash />
       </button>
-      <button onClick={playPause}>{isPlaying ? <Pause /> : <Play />}</button>
-      <button onClick={nextPoint} title="Previous Point">
+      <button type="button" onClick={playPause}>
+        {isPlaying ? <Pause /> : <Play />}
+      </button>
+      <button type="button" onClick={nextPoint} title="Previous Point">
         <ArrowBigRightDash />
       </button>
     </div>
