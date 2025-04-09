@@ -1,5 +1,5 @@
 import Peaks, { PeaksInstance, PeaksOptions } from "peaks.js";
-import { useRef, useEffect, useMemo } from "react";
+import { useRef, useEffect, useMemo, useState } from "react";
 import { WaveformView } from "../components/WaveformView";
 
 export interface UsePeaksOptions {
@@ -19,7 +19,7 @@ export const usePeaks = ({
   const audioContext = useRef<AudioContext>(new AudioContext());
   const peaksRef = useRef<PeaksInstance>(undefined);
 
-  const isPlaying = useRef(false);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
   useEffect(() => {
     const options: PeaksOptions = {
@@ -73,12 +73,12 @@ export const usePeaks = ({
   const playPause = () => {
     if (peaksRef.current) {
       const player = peaksRef.current.player;
-      if (isPlaying.current) {
+      if (isPlaying) {
         player.pause();
-        isPlaying.current = false;
+        setIsPlaying(false);
       } else {
         player.play();
-        isPlaying.current = true;
+        setIsPlaying(true);
       }
     }
   };
@@ -129,5 +129,6 @@ export const usePeaks = ({
     addPoint,
     nextPoint,
     previousPoint,
+    isPlaying,
   };
 };
