@@ -5,9 +5,5 @@ export interface WaveformViewProps {
 }
 
 export const WaveformView = ({ viewRef }: WaveformViewProps) => {
-  return (
-    <div>
-      <div ref={viewRef} className={styles["waveform-container"]}></div>
-    </div>
-  );
+  return <div ref={viewRef} className={styles["waveform-container"]}></div>;
 };
