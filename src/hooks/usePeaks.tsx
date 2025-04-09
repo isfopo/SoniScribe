@@ -13,6 +13,8 @@ export const usePeaks = ({ audioUrl, audioContentType }: UsePeaksOptions) => {
   const audioContext = useRef<AudioContext>(new AudioContext());
   const peaksRef = useRef<PeaksInstance>(undefined);
 
+  const isPlaying = useRef(false);
+
   useEffect(() => {
     const options: PeaksOptions = {
       zoomview: {
@@ -68,8 +70,13 @@ export const usePeaks = ({ audioUrl, audioContentType }: UsePeaksOptions) => {
   const playPause = () => {
     if (peaksRef.current) {
       const player = peaksRef.current.player;
-
-      player.play();
+      if (isPlaying.current) {
+        player.pause();
+        isPlaying.current = false;
+      } else {
+        player.play();
+        isPlaying.current = true;
+      }
     }
   };
 
