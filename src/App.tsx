@@ -1,13 +1,12 @@
-import { useState } from "react";
-import "./App.css";
 import { SubdivisionSelector } from "./components/SubdivisionSelector";
 import { Transport } from "./components/Transport";
 import { useKeyPress } from "./hooks/useKeyPress";
 import { usePeaks } from "./hooks/usePeaks";
-import { Subdivision } from "./helpers/subdivisions";
+import { useSettingsStore } from "./stores/settings";
+import "./App.css";
 
 function App() {
-  const [subdivision, setSubdivision] = useState<Subdivision>("quarter");
+  const { subdivision, setSubdivision } = useSettingsStore();
 
   const {
     waveformElement,
