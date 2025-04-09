@@ -23,3 +23,5 @@ export const SubdivisionPoints: Record<string, Omit<PointOptions, "time">> = {
     color: "#555 ",
   },
 } as const;
+
+export type Subdivision = keyof typeof SubdivisionPoints;

@@ -1,21 +1,18 @@
-import { SubdivisionPoints } from "../../helpers/subdivisions";
+import { Subdivision } from "../../helpers/subdivisions";
 import { Music2, Music3, Music4 } from "lucide-react";
 import styles from "./index.module.css";
 
 export interface SubdivisionSelectorProps {
   /** The current subdivision. */
-  currentSubdivision: keyof typeof SubdivisionPoints;
+  currentSubdivision: Subdivision;
   /** The available subdivisions. */
-  subdivisions: (keyof typeof SubdivisionPoints)[];
+  subdivisions: Subdivision[];
   /** The function to call when the subdivision is selected. */
-  onSelect: (subdivision: keyof typeof SubdivisionPoints) => void;
+  onSelect: (subdivision: Subdivision) => void;
 }
 
 /** The icons for each subdivision. Will need to add SVGs - lucide doesn't have all of them. */
-const SubdivisionIcons: Record<
-  keyof typeof SubdivisionPoints,
-  React.ReactNode
-> = {
+const SubdivisionIcons: Record<Subdivision, React.ReactNode> = {
   whole: "1",
   half: <Music3 />,
   quarter: "1/4",

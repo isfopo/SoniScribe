@@ -1,10 +1,14 @@
+import { useState } from "react";
 import "./App.css";
 import { SubdivisionSelector } from "./components/SubdivisionSelector";
 import { Transport } from "./components/Transport";
 import { useKeyPress } from "./hooks/useKeyPress";
 import { usePeaks } from "./hooks/usePeaks";
+import { Subdivision } from "./helpers/subdivisions";
 
 function App() {
+  const [subdivision, setSubdivision] = useState<Subdivision>("quarter");
+
   const {
     waveformElement,
     playPause,
@@ -40,12 +44,12 @@ function App() {
         nextPoint={nextPoint}
         previousPoint={previousPoint}
         isPlaying={isPlaying}
-        addPoint={() => addPoint({ subdivision: "quarter" })}
+        addPoint={() => addPoint({ subdivision })}
       />
       <SubdivisionSelector
         subdivisions={["whole", "half", "quarter"]}
-        currentSubdivision="whole"
-        onSelect={(subdivision) => console.log(subdivision)}
+        currentSubdivision={subdivision}
+        onSelect={setSubdivision}
       />
     </>
   );
