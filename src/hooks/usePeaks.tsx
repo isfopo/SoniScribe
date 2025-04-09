@@ -1,7 +1,7 @@
 import Peaks, { PeaksInstance, PeaksOptions } from "peaks.js";
 import { useRef, useEffect, useMemo, useState } from "react";
 import { WaveformView } from "../components/WaveformView";
-import { SubdivisionPoints } from "../helpers/consts";
+import { SubdivisionPoints } from "../helpers/subdivisions";
 
 export interface UsePeaksOptions {
   audioUrl: string;

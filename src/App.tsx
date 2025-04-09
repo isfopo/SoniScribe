@@ -1,4 +1,5 @@
 import "./App.css";
+import { SubdivisionSelector } from "./components/SubdivisionSelector";
 import { Transport } from "./components/Transport";
 import { useKeyPress } from "./hooks/useKeyPress";
 import { usePeaks } from "./hooks/usePeaks";
@@ -40,6 +41,11 @@ function App() {
         previousPoint={previousPoint}
         isPlaying={isPlaying}
         addPoint={() => addPoint({ subdivision: "quarter" })}
+      />
+      <SubdivisionSelector
+        subdivisions={["whole", "half", "quarter"]}
+        currentSubdivision="whole"
+        onSelect={(subdivision) => console.log(subdivision)}
       />
     </>
   );
