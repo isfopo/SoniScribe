@@ -5,9 +5,15 @@ import { WaveformView } from "../components/WaveformView";
 export interface UsePeaksOptions {
   audioUrl: string;
   audioContentType: string;
+  /** The amount of time that the previous point will go back to the one before. */
+  previousPointGap?: number;
 }
 
-export const usePeaks = ({ audioUrl, audioContentType }: UsePeaksOptions) => {
+export const usePeaks = ({
+  audioUrl,
+  audioContentType,
+  previousPointGap = 0.1,
+}: UsePeaksOptions) => {
   const viewRef = useRef<HTMLDivElement>(null);
   const audioElementRef = useRef<HTMLAudioElement>(null);
   const audioContext = useRef<AudioContext>(new AudioContext());
@@ -111,7 +117,7 @@ export const usePeaks = ({ audioUrl, audioContentType }: UsePeaksOptions) => {
       const previousPoint = points
         .slice()
         .reverse()
-        .find((point) => point.time < currentTime);
+        .find((point) => point.time < currentTime - previousPointGap);
 
       if (previousPoint) {
         peaksRef.current.player.seek(previousPoint.time);
