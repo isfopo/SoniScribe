@@ -35,9 +35,6 @@ export const usePeaks = ({
       webAudio: { audioContext: audioContext.current, multiChannel: true },
       keyboard: false,
       logger: console.error.bind(console),
-      // createSegmentMarker: createSegmentMarker,
-      // createSegmentLabel: createSegmentLabel,
-      // createPointMarker: createPointMarker
     };
 
     if (!audioElementRef.current) return;
