@@ -1,10 +1,17 @@
-import { Play, Pause, ArrowBigRightDash, ArrowBigLeftDash } from "lucide-react";
+import {
+  Play,
+  Pause,
+  ArrowBigRightDash,
+  ArrowBigLeftDash,
+  ArrowDownToDot,
+} from "lucide-react";
 
 export interface TransportProps {
   playPause: () => void;
   isPlaying: boolean;
   nextPoint: () => void;
   previousPoint: () => void;
+  addPoint: () => void;
 }
 
 export const Transport = ({
@@ -12,6 +19,7 @@ export const Transport = ({
   isPlaying,
   nextPoint,
   previousPoint,
+  addPoint,
 }: TransportProps) => {
   return (
     <div>
@@ -23,6 +31,9 @@ export const Transport = ({
       </button>
       <button type="button" onClick={nextPoint} title="Previous Point">
         <ArrowBigRightDash />
+      </button>
+      <button type="button" onClick={addPoint} title="Previous Point">
+        <ArrowDownToDot />
       </button>
     </div>
   );

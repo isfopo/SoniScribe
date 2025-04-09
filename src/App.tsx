@@ -33,6 +33,7 @@ function App() {
         nextPoint={nextPoint}
         previousPoint={previousPoint}
         isPlaying={isPlaying}
+        addPoint={addPoint}
       />
     </>
   );
