@@ -7,6 +7,7 @@ export interface UseKeyPressOptions {
 export const useKeyPress = ({ keymap }: UseKeyPressOptions) => {
   const handleKeyPress = useCallback(
     (event: KeyboardEvent) => {
+      event.preventDefault();
       const key = event.code;
       if (keymap[key]) {
         keymap[key]();
