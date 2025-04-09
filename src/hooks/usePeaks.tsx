@@ -1,6 +1,7 @@
 import Peaks, { PeaksInstance, PeaksOptions } from "peaks.js";
 import { useRef, useEffect, useMemo, useState } from "react";
 import { WaveformView } from "../components/WaveformView";
+import { SubdivisionPoints } from "../helpers/consts";
 
 export interface UsePeaksOptions {
   audioUrl: string;
@@ -83,13 +84,19 @@ export const usePeaks = ({
     }
   };
 
-  const addPoint = () => {
+  const addPoint = ({
+    subdivision,
+  }: {
+    subdivision: keyof typeof SubdivisionPoints;
+  }) => {
     if (peaksRef.current) {
       const time = peaksRef.current.player.getCurrentTime();
 
       peaksRef.current.points.add({
         time: time,
         editable: true,
+        id: subdivision + time,
+        ...SubdivisionPoints[subdivision],
       });
     }
   };

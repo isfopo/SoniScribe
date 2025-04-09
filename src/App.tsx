@@ -21,7 +21,13 @@ function App() {
       Space: playPause,
       ArrowLeft: previousPoint,
       ArrowRight: nextPoint,
-      KeyQ: addPoint,
+      KeyQ: () => addPoint({ subdivision: "whole" }),
+      KeyW: () => addPoint({ subdivision: "half" }),
+      KeyE: () => addPoint({ subdivision: "quarter" }),
+      KeyR: () => addPoint({ subdivision: "eighth" }),
+      KeyT: () => addPoint({ subdivision: "sixteenth" }),
+      KeyY: () => addPoint({ subdivision: "thirtySecond" }),
+      KeyU: () => addPoint({ subdivision: "sixtyFourth" }),
     },
   });
 
@@ -33,7 +39,7 @@ function App() {
         nextPoint={nextPoint}
         previousPoint={previousPoint}
         isPlaying={isPlaying}
-        addPoint={addPoint}
+        addPoint={() => addPoint({ subdivision: "quarter" })}
       />
     </>
   );
