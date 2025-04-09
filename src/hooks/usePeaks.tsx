@@ -65,8 +65,59 @@ export const usePeaks = ({ audioUrl, audioContentType }: UsePeaksOptions) => {
     );
   }, [audioContentType, audioUrl]);
 
+  const playPause = () => {
+    if (peaksRef.current) {
+      const player = peaksRef.current.player;
+
+      player.play();
+    }
+  };
+
+  const addPoint = () => {
+    if (peaksRef.current) {
+      const time = peaksRef.current.player.getCurrentTime();
+
+      peaksRef.current.points.add({
+        time: time,
+        editable: true,
+      });
+    }
+  };
+
+  const nextPoint = () => {
+    if (peaksRef.current) {
+      const points = peaksRef.current.points.getPoints();
+      const currentTime = peaksRef.current.player.getCurrentTime();
+
+      const nextPoint = points.find((point) => point.time > currentTime);
+
+      if (nextPoint) {
+        peaksRef.current.player.seek(nextPoint.time);
+      }
+    }
+  };
+
+  const previousPoint = () => {
+    if (peaksRef.current) {
+      const points = peaksRef.current.points.getPoints();
+      const currentTime = peaksRef.current.player.getCurrentTime();
+      const previousPoint = points
+        .slice()
+        .reverse()
+        .find((point) => point.time < currentTime);
+
+      if (previousPoint) {
+        peaksRef.current.player.seek(previousPoint.time);
+      }
+    }
+  };
+
   return {
     peaksRef,
     waveformElement,
+    playPause,
+    addPoint,
+    nextPoint,
+    previousPoint,
   };
 };
