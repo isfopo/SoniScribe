@@ -1,7 +1,12 @@
 import Peaks, { PeaksInstance, PeaksOptions } from "peaks.js";
 import { useRef, useEffect, useMemo, useState } from "react";
 import { WaveformView } from "../components/WaveformView";
-import { Subdivision, SubdivisionPoints } from "../helpers/subdivisions";
+import {
+  isSubdivision,
+  Subdivision,
+  SubdivisionPoint,
+  SubdivisionPoints,
+} from "../helpers/subdivisions";
 
 export interface UsePeaksOptions {
   audioUrl: string;
@@ -15,7 +20,7 @@ export const usePeaks = ({
   audioUrl,
   audioContentType,
   previousPointGap = 0.1,
-  subdivision = "whole",
+  subdivision = 1,
 }: UsePeaksOptions) => {
   const viewRef = useRef<HTMLDivElement>(null);
   const audioElementRef = useRef<HTMLAudioElement>(null);
@@ -97,7 +102,8 @@ export const usePeaks = ({
       peaksRef.current.points.add({
         time: time,
         editable: true,
-        id: subdivision + time,
+        id: `${subdivision}-${time}`,
+        subdivision: subdivision,
         ...SubdivisionPoints[subdivision],
       });
     }
@@ -105,11 +111,14 @@ export const usePeaks = ({
 
   const nextPoint = () => {
     if (peaksRef.current) {
-      const points = peaksRef.current.points.getPoints();
+      const points = peaksRef.current.points.getPoints() as SubdivisionPoint[];
       const currentTime = peaksRef.current.player.getCurrentTime();
+      console.log(points);
 
       const nextPoint = points.find(
-        (point) => point.id?.includes(subdivision) && point.time > currentTime
+        (point) =>
+          isSubdivision(point.subdivision, subdivision) &&
+          point.time > currentTime
       );
 
       if (nextPoint) {
@@ -123,14 +132,14 @@ export const usePeaks = ({
 
   const previousPoint = () => {
     if (peaksRef.current) {
-      const points = peaksRef.current.points.getPoints();
+      const points = peaksRef.current.points.getPoints() as SubdivisionPoint[];
       const currentTime = peaksRef.current.player.getCurrentTime();
       const previousPoint = points
         .slice()
         .reverse()
         .find(
           (point) =>
-            point.id?.includes(subdivision) &&
+            isSubdivision(point.subdivision, subdivision) &&
             point.time < currentTime - previousPointGap
         );
 
@@ -139,9 +148,6 @@ export const usePeaks = ({
       } else {
         // If no previous point is found, seek to the beginning of the audio
         peaksRef.current.player.seek(0);
-
-      if (previousPoint) {
-        peaksRef.current.player.seek(previousPoint.time);
       }
     }
   };

@@ -1,5 +1,4 @@
 import { Subdivision } from "../../helpers/subdivisions";
-import { Music2, Music3, Music4 } from "lucide-react";
 import styles from "./index.module.css";
 
 export interface SubdivisionSelectorProps {
@@ -13,13 +12,13 @@ export interface SubdivisionSelectorProps {
 
 /** The icons for each subdivision. Will need to add SVGs - lucide doesn't have all of them. */
 const SubdivisionIcons: Record<Subdivision, React.ReactNode> = {
-  whole: "1",
-  half: <Music3 />,
-  quarter: "1/4",
-  eighth: <Music2 />,
-  sixteenth: <Music4 />,
-  thirtySecond: "1/32",
-  sixtyFourth: "1/64",
+  1: "1",
+  2: "1/2",
+  4: "1/4",
+  8: "1/8",
+  16: "1/16",
+  32: "1/32",
+  64: "1/64",
 } as const;
 
 export const SubdivisionSelector = ({

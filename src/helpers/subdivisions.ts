@@ -1,47 +1,54 @@
-import { PointOptions } from "peaks.js";
+import { Point, PointOptions } from "peaks.js";
 
 export type SubdivisionValue = 1 | 2 | 4 | 8 | 16 | 32 | 64;
 
-export interface SubdivisionPointOptions extends PointOptions {
-  value: SubdivisionValue;
+export interface SubdivisionPoint extends Point {
+  subdivision: SubdivisionValue;
 }
 
 export const SubdivisionPoints: Record<
-  string,
-  Omit<SubdivisionPointOptions, "time">
+  SubdivisionValue,
+  Omit<PointOptions, "time">
 > = {
-  whole: {
+  1: {
     color: "#fff",
-    value: 1,
   },
-  half: {
+  2: {
     color: "#ccc",
-    value: 2,
   },
-  quarter: {
+  4: {
     color: "#aaa",
-    value: 4,
   },
-  eighth: {
+  8: {
     color: "#999",
-    value: 8,
   },
-  sixteenth: {
+  16: {
     color: "#777",
-    value: 16,
   },
-  thirtySecond: {
+  32: {
     color: "#666",
-    value: 32,
   },
-  sixtyFourth: {
+  64: {
     color: "#555 ",
-    value: 64,
   },
 } as const;
 
 export type Subdivision = keyof typeof SubdivisionPoints;
 
+/**
+ * Get the value of a subdivision.
+ * @param subdivision is the subdivision to get the value of.
+ * @returns the value of the subdivision.
+ */
 export const getSubdivisionValue = (
   subdivision: Subdivision
 ): SubdivisionValue => SubdivisionPoints[subdivision].value as SubdivisionValue;
+
+/**
+ * Determine if a subdivision is a subdivision of another.
+ * @param a Subdivision to test
+ * @param b subdivision to test against
+ * @returns true if a is a subdivision of b, false otherwise
+ */
+export const isSubdivision = (a: Subdivision, b: Subdivision): boolean =>
+  b % a == 0;

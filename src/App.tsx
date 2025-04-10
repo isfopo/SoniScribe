@@ -26,13 +26,13 @@ function App() {
       Space: playPause,
       ArrowLeft: previousPoint,
       ArrowRight: nextPoint,
-      KeyQ: () => addPoint({ subdivision: "whole" }),
-      KeyW: () => addPoint({ subdivision: "half" }),
-      KeyE: () => addPoint({ subdivision: "quarter" }),
-      KeyR: () => addPoint({ subdivision: "eighth" }),
-      KeyT: () => addPoint({ subdivision: "sixteenth" }),
-      KeyY: () => addPoint({ subdivision: "thirtySecond" }),
-      KeyU: () => addPoint({ subdivision: "sixtyFourth" }),
+      KeyQ: () => addPoint({ subdivision: 1 }),
+      KeyW: () => addPoint({ subdivision: 2 }),
+      KeyE: () => addPoint({ subdivision: 4 }),
+      KeyR: () => addPoint({ subdivision: 8 }),
+      KeyT: () => addPoint({ subdivision: 16 }),
+      KeyY: () => addPoint({ subdivision: 32 }),
+      KeyU: () => addPoint({ subdivision: 64 }),
     },
   });
 
@@ -47,7 +47,7 @@ function App() {
         addPoint={() => addPoint({ subdivision })}
       />
       <SubdivisionSelector
-        subdivisions={["whole", "half", "quarter"]}
+        subdivisions={[1, 2, 4, 8, 16, 32, 64]}
         currentSubdivision={subdivision}
         onSelect={setSubdivision}
       />
