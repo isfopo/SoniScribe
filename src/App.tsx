@@ -18,6 +18,7 @@ function App() {
   } = usePeaks({
     audioUrl: "/audio/brand-new-bike.mp3",
     audioContentType: "audio/mpeg",
+    subdivision,
   });
 
   useKeyPress({

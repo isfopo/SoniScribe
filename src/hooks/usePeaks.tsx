@@ -1,19 +1,21 @@
 import Peaks, { PeaksInstance, PeaksOptions } from "peaks.js";
 import { useRef, useEffect, useMemo, useState } from "react";
 import { WaveformView } from "../components/WaveformView";
-import { SubdivisionPoints } from "../helpers/subdivisions";
+import { Subdivision, SubdivisionPoints } from "../helpers/subdivisions";
 
 export interface UsePeaksOptions {
   audioUrl: string;
   audioContentType: string;
   /** The amount of time that the previous point will go back to the one before. */
   previousPointGap?: number;
+  subdivision?: Subdivision;
 }
 
 export const usePeaks = ({
   audioUrl,
   audioContentType,
   previousPointGap = 0.1,
+  subdivision = "whole",
 }: UsePeaksOptions) => {
   const viewRef = useRef<HTMLDivElement>(null);
   const audioElementRef = useRef<HTMLAudioElement>(null);
@@ -106,7 +108,9 @@ export const usePeaks = ({
       const points = peaksRef.current.points.getPoints();
       const currentTime = peaksRef.current.player.getCurrentTime();
 
-      const nextPoint = points.find((point) => point.time > currentTime);
+      const nextPoint = points.find(
+        (point) => point.id?.includes(subdivision) && point.time > currentTime
+      );
 
       if (nextPoint) {
         peaksRef.current.player.seek(nextPoint.time);
@@ -121,7 +125,11 @@ export const usePeaks = ({
       const previousPoint = points
         .slice()
         .reverse()
-        .find((point) => point.time < currentTime - previousPointGap);
+        .find(
+          (point) =>
+            point.id?.includes(subdivision) &&
+            point.time < currentTime - previousPointGap
+        );
 
       if (previousPoint) {
         peaksRef.current.player.seek(previousPoint.time);
