@@ -114,6 +114,9 @@ export const usePeaks = ({
 
       if (nextPoint) {
         peaksRef.current.player.seek(nextPoint.time);
+      } else {
+        // If no next point is found, seek to the end of the audio
+        peaksRef.current.player.seek(peaksRef.current.player.getDuration());
       }
     }
   };
@@ -130,6 +133,12 @@ export const usePeaks = ({
             point.id?.includes(subdivision) &&
             point.time < currentTime - previousPointGap
         );
+
+      if (previousPoint) {
+        peaksRef.current.player.seek(previousPoint.time);
+      } else {
+        // If no previous point is found, seek to the beginning of the audio
+        peaksRef.current.player.seek(0);
 
       if (previousPoint) {
         peaksRef.current.player.seek(previousPoint.time);
