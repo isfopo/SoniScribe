@@ -43,6 +43,7 @@ export const usePeaks = ({
       webAudio: { audioContext: audioContext.current, multiChannel: true },
       keyboard: false,
       logger: console.error.bind(console),
+      points: [],
     };
 
     if (!audioElementRef.current) return;
@@ -63,6 +64,7 @@ export const usePeaks = ({
       peaksRef.current = peaks;
 
       // Add any additional setup or event listeners here
+      peaksRef.current?.on("points.add", (event) => console.log(event));
     });
   }, [audioUrl]);
 
