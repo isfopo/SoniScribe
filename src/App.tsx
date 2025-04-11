@@ -4,6 +4,7 @@ import { useKeyPress } from "./hooks/useKeyPress";
 import { usePeaks } from "./hooks/usePeaks";
 import { useSettingsStore } from "./stores/settings";
 import "./App.css";
+import { FileDropArea } from "./components/FileDropArea";
 
 function App() {
   const { subdivision, setSubdivision } = useSettingsStore();
@@ -38,6 +39,7 @@ function App() {
 
   return (
     <>
+      <FileDropArea />
       {waveformElement}
       <Transport
         playPause={playPause}
