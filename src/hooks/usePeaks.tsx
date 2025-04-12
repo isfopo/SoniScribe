@@ -1,6 +1,5 @@
 import Peaks, { PeaksInstance, PeaksOptions } from "peaks.js";
-import { useRef, useEffect, useMemo, useState } from "react";
-import { WaveformView } from "../components/WaveformView";
+import { useRef, useState, useCallback } from "react";
 import {
   isSubdivision,
   Subdivision,
@@ -17,8 +16,6 @@ export interface UsePeaksOptions {
 }
 
 export const usePeaks = ({
-  audioUrl,
-  audioContentType,
   previousPointGap = 0.1,
   subdivision = 1,
 }: UsePeaksOptions) => {
@@ -29,7 +26,7 @@ export const usePeaks = ({
 
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
-  useEffect(() => {
+  const initialize = useCallback((audioUrl: string) => {
     const options: PeaksOptions = {
       zoomview: {
         container: viewRef.current,
@@ -66,19 +63,7 @@ export const usePeaks = ({
       // Add any additional setup or event listeners here
       peaksRef.current?.on("points.add", (event) => console.log(event));
     });
-  }, [audioUrl]);
-
-  const waveformElement = useMemo<React.ReactElement>(() => {
-    return (
-      <>
-        <WaveformView viewRef={viewRef} />
-        <audio ref={audioElementRef}>
-          <source src={audioUrl} type={audioContentType} />
-          Your browser does not support the audio element.
-        </audio>
-      </>
-    );
-  }, [audioContentType, audioUrl]);
+  }, []);
 
   const playPause = () => {
     if (peaksRef.current) {
@@ -156,7 +141,9 @@ export const usePeaks = ({
 
   return {
     peaksRef,
-    waveformElement,
+    viewRef,
+    audioElementRef,
+    initialize,
     playPause,
     addPoint,
     nextPoint,

@@ -5,17 +5,23 @@ import { usePeaks } from "./hooks/usePeaks";
 import { useSettingsStore } from "./stores/settings";
 import "./App.css";
 import { FileDropArea } from "./components/FileDropArea";
+import { WaveformView } from "./components/WaveformView";
+import { useState } from "react";
 
 function App() {
   const { subdivision, setSubdivision } = useSettingsStore();
 
+  const [file, setFile] = useState<File | null>(null);
+
   const {
-    waveformElement,
+    viewRef,
+    audioElementRef,
     playPause,
     addPoint,
     nextPoint,
     previousPoint,
     isPlaying,
+    initialize,
   } = usePeaks({
     audioUrl: "/audio/brand-new-bike.mp3",
     audioContentType: "audio/mpeg",
@@ -37,10 +43,27 @@ function App() {
     },
   });
 
+  const handleDrop = (files: File[]) => {
+    if (files.length > 0) {
+      const file = files[0];
+      if (file.type.startsWith("audio/")) {
+        setFile(file);
+        const url = URL.createObjectURL(file);
+        initialize(url);
+      } else {
+        console.error("Invalid file type. Please drop an audio file.");
+      }
+    }
+  };
+
   return (
     <>
-      <FileDropArea onDrop={(files) => console.log(files)} />
-      {waveformElement}
+      <FileDropArea onDrop={handleDrop} />
+      <WaveformView viewRef={viewRef} />
+      <audio ref={audioElementRef}>
+        <source src={file ? URL.createObjectURL(file) : ""} type={file?.type} />
+        Your browser does not support the audio element.
+      </audio>
       <Transport
         playPause={playPause}
         nextPoint={nextPoint}
