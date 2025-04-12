@@ -132,7 +132,11 @@ export const FileDropArea = ({
   }, [handleDragEnter, handleDragLeave, handleDragOver, handleDrop]);
 
   return (
-    <div ref={dropAreaRef} className={styles["drop-area"]}>
+    <div
+      ref={dropAreaRef}
+      className={styles["drop-area"]}
+      onClick={(e) => e.stopPropagation()}
+    >
       {children}
     </div>
   );

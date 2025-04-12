@@ -67,7 +67,9 @@ function App() {
   return (
     <>
       <button onClick={() => openDialog()}>New</button>
+
       <DragAndDropDialog dialogRef={dialogRef} onDrop={handleDrop} />
+
       <WaveformView viewRef={viewRef} />
       <audio ref={audioElementRef}>
         <source src={file ? URL.createObjectURL(file) : ""} type={file?.type} />
