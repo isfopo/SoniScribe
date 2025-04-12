@@ -6,6 +6,9 @@ export interface FileDropAreaProps {
   onDragOver?: (event: DragEvent) => void;
   onDragLeave?: (event: DragEvent) => void;
   onDragEnter?: (event: DragEvent) => void;
+  allowedFileTypes?: string[];
+  maxCount?: number;
+  onDropError?: (errors: Error[]) => void;
 }
 
 export const FileDropArea = ({
@@ -13,6 +16,9 @@ export const FileDropArea = ({
   onDragEnter,
   onDragLeave,
   onDragOver,
+  allowedFileTypes,
+  maxCount,
+  onDropError,
 }: FileDropAreaProps) => {
   const dropAreaRef = useRef<HTMLDivElement>(null);
 
@@ -59,6 +65,42 @@ export const FileDropArea = ({
 
       if (!event.dataTransfer) return;
 
+      const errors: Error[] = [];
+
+      if (event.dataTransfer.items.length === 0) {
+        errors.push(new Error("No files dropped"));
+      }
+
+      if (maxCount && event.dataTransfer.files.length > maxCount) {
+        errors.push(
+          new Error(`Maximum file count exceeded. Limit: ${maxCount}`)
+        );
+      }
+
+      if (allowedFileTypes) {
+        const files = Array.from(event.dataTransfer.files);
+        const validFiles = files.filter((file) =>
+          allowedFileTypes.includes(file.type)
+        );
+        if (validFiles.length === 0) {
+          errors.push(
+            new Error(
+              `No valid file types dropped. Allowed: ${allowedFileTypes.join(
+                ", "
+              )}`
+            )
+          );
+        }
+      }
+
+      if (errors.length > 0) {
+        // Call the onDropError callback if provided
+        if (onDropError) {
+          onDropError(errors);
+        }
+        return;
+      }
+
       const files = Array.from(event.dataTransfer.files);
       if (files.length > 0) {
         // Handle the dropped files
@@ -69,7 +111,7 @@ export const FileDropArea = ({
         }
       }
     },
-    [onDrop]
+    [allowedFileTypes, maxCount, onDrop, onDropError]
   );
 
   useEffect(() => {

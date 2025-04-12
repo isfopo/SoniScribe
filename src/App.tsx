@@ -39,7 +39,7 @@ function App() {
 
   return (
     <>
-      <FileDropArea />
+      <FileDropArea onDrop={(files) => console.log(files)} />
       {waveformElement}
       <Transport
         playPause={playPause}
