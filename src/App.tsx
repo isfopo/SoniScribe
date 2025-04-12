@@ -4,9 +4,9 @@ import { useKeyPress } from "./hooks/useKeyPress";
 import { usePeaks } from "./hooks/usePeaks";
 import { useSettingsStore } from "./stores/settings";
 import "./App.css";
-import { FileDropArea } from "./components/FileDropArea";
 import { WaveformView } from "./components/WaveformView";
 import { useRef, useState } from "react";
+import { DragAndDropDialog } from "./components/Dialogs/DragAndDropDialog";
 
 function App() {
   const { subdivision, setSubdivision } = useSettingsStore();
@@ -66,13 +66,8 @@ function App() {
 
   return (
     <>
-      <dialog ref={dialogRef} className="file-drop-dialog">
-        <FileDropArea onDrop={handleDrop}>
-          <h2>Drop a song here</h2>
-        </FileDropArea>
-        <button onClick={() => setFile(null)}>Close</button>
-      </dialog>
       <button onClick={() => openDialog()}>New</button>
+      <DragAndDropDialog dialogRef={dialogRef} onDrop={handleDrop} />
       <WaveformView viewRef={viewRef} />
       <audio ref={audioElementRef}>
         <source src={file ? URL.createObjectURL(file) : ""} type={file?.type} />
