@@ -103,8 +103,6 @@ export const FileDropArea = ({
 
       const files = Array.from(event.dataTransfer.files);
       if (files.length > 0) {
-        // Handle the dropped files
-        console.log("Dropped files:", files);
         // Call the onDrop callback if provided
         if (onDrop) {
           onDrop(files);
