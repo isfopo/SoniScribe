@@ -6,12 +6,20 @@ import { useSettingsStore } from "./stores/settings";
 import "./App.css";
 import { FileDropArea } from "./components/FileDropArea";
 import { WaveformView } from "./components/WaveformView";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 function App() {
   const { subdivision, setSubdivision } = useSettingsStore();
 
   const [file, setFile] = useState<File | null>(null);
+
+  const dialogRef = useRef<HTMLDialogElement | null>(null);
+
+  const openDialog = () => {
+    if (dialogRef.current) {
+      dialogRef.current.showModal();
+    }
+  };
 
   const {
     viewRef,
@@ -48,8 +56,8 @@ function App() {
       const file = files[0];
       if (file.type.startsWith("audio/")) {
         setFile(file);
-        const url = URL.createObjectURL(file);
-        initialize(url);
+        initialize(URL.createObjectURL(file));
+        dialogRef.current?.close();
       } else {
         console.error("Invalid file type. Please drop an audio file.");
       }
@@ -58,7 +66,13 @@ function App() {
 
   return (
     <>
-      <FileDropArea onDrop={handleDrop} />
+      <dialog ref={dialogRef} className="file-drop-dialog">
+        <FileDropArea onDrop={handleDrop}>
+          <h2>Drop a song here</h2>
+        </FileDropArea>
+        <button onClick={() => setFile(null)}>Close</button>
+      </dialog>
+      <button onClick={() => openDialog()}>New</button>
       <WaveformView viewRef={viewRef} />
       <audio ref={audioElementRef}>
         <source src={file ? URL.createObjectURL(file) : ""} type={file?.type} />

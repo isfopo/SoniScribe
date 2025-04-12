@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useRef } from "react";
+import { PropsWithChildren, useCallback, useEffect, useRef } from "react";
 import styles from "./index.module.css";
 
-export interface FileDropAreaProps {
+export interface FileDropAreaProps extends PropsWithChildren {
   onDrop?: (files: File[]) => void;
   onDragOver?: (event: DragEvent) => void;
   onDragLeave?: (event: DragEvent) => void;
@@ -19,6 +19,7 @@ export const FileDropArea = ({
   allowedFileTypes,
   maxCount,
   onDropError,
+  children,
 }: FileDropAreaProps) => {
   const dropAreaRef = useRef<HTMLDivElement>(null);
 
@@ -132,7 +133,7 @@ export const FileDropArea = ({
 
   return (
     <div ref={dropAreaRef} className={styles["drop-area"]}>
-      Drop a song here
+      {children}
     </div>
   );
 };
