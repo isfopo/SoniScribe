@@ -101,7 +101,7 @@ export const FileDropArea = ({
         return;
       }
 
-      const files = Array.from(event.dataTransfer.files);
+      const files = Array.from(event.dataTransfer.files || []);
       if (files.length > 0) {
         // Call the onDrop callback if provided
         if (onDrop) {
