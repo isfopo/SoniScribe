@@ -7,6 +7,7 @@ import "./App.css";
 import { WaveformView } from "./components/WaveformView";
 import { useRef, useState } from "react";
 import { DragAndDropDialog } from "./components/Dialogs/DragAndDropDialog";
+import { useFileSystem } from "./hooks/useFileSystem";
 
 function App() {
   const { subdivision, setSubdivision } = useSettingsStore();
@@ -20,6 +21,10 @@ function App() {
       dialogRef.current.showModal();
     }
   };
+
+  useFileSystem({
+    dirName: import.meta.env.VITE_FILE_SYSTEM_DIRECTORY_NAME || "",
+  });
 
   const {
     viewRef,
