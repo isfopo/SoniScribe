@@ -72,7 +72,10 @@ function App() {
 
       <WaveformView viewRef={viewRef} />
       <audio ref={audioElementRef}>
-        <source src={file ? URL.createObjectURL(file) : ""} type={file?.type} />
+        <source
+          src={file ? URL.createObjectURL(file) : undefined}
+          type={file?.type}
+        />
         Your browser does not support the audio element.
       </audio>
       <Transport
