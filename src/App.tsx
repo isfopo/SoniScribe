@@ -104,8 +104,6 @@ function App() {
   return (
     <>
       <DragAndDropDialog dialogRef={dialogRef} onDrop={handleDrop} />
-      <WaveformView viewRef={viewRef} />
-      <AudioPlayer audioElementRef={audioElementRef} mediaFile={mediaFile} />
       <Transport
         playPause={playPause}
         nextPoint={nextPoint}
@@ -113,6 +111,8 @@ function App() {
         isPlaying={isPlaying}
         addPoint={() => addPoint({ subdivision })}
       />
+      <WaveformView viewRef={viewRef} />
+      <AudioPlayer audioElementRef={audioElementRef} mediaFile={mediaFile} />
       <SubdivisionSelector
         subdivisions={[1, 2, 4, 8, 16, 32, 64]}
         currentSubdivision={subdivision}
