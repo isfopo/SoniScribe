@@ -9,6 +9,7 @@ import { DragAndDropDialog } from "./components/Dialogs/DragAndDropDialog";
 import { useFileSystem } from "./hooks/useFileSystem";
 import { stripExtension } from "./helpers/files";
 import "./App.css";
+import { AudioPlayer } from "./components/AudioPlayer";
 
 function App() {
   const { subdivision, setSubdivision } = useSettingsStore();
@@ -103,13 +104,7 @@ function App() {
     <>
       <DragAndDropDialog dialogRef={dialogRef} onDrop={handleDrop} />
       <WaveformView viewRef={viewRef} />
-      <audio ref={audioElementRef}>
-        <source
-          src={mediaFile ? URL.createObjectURL(mediaFile) : undefined}
-          type={mediaFile?.type}
-        />
-        Your browser does not support the audio element.
-      </audio>
+      <AudioPlayer audioElementRef={audioElementRef} mediaFile={mediaFile} />
       <Transport
         playPause={playPause}
         nextPoint={nextPoint}
