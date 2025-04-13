@@ -8,8 +8,6 @@ import {
 } from "../helpers/subdivisions";
 
 export interface UsePeaksOptions {
-  audioUrl: string;
-  audioContentType: string;
   /** The amount of time that the previous point will go back to the one before. */
   previousPointGap?: number;
   subdivision?: Subdivision;
