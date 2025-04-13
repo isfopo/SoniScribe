@@ -2,9 +2,10 @@ import { useState, useEffect, useMemo } from "react";
 
 export interface UseFileSystemOptions {
   dirName: string;
+  onError?: (error: Error) => void;
 }
 
-export const useFileSystem = ({ dirName }: UseFileSystemOptions) => {
+export const useFileSystem = ({ dirName, onError }: UseFileSystemOptions) => {
   const [root, setRoot] = useState<FileSystemDirectoryHandle | null>(null);
 
   const entries = useMemo(() => {
@@ -20,14 +21,14 @@ export const useFileSystem = ({ dirName }: UseFileSystemOptions) => {
         });
         setRoot(root);
       } catch (error) {
-        console.error("Error accessing file system:", error);
+        onError?.(error as Error);
       }
     };
 
     init();
 
     return () => {};
-  }, [dirName]);
+  }, [dirName, onError]);
 
   return { entries, root };
 };
