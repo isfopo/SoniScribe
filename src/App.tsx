@@ -7,7 +7,7 @@ import "./App.css";
 import { WaveformView } from "./components/WaveformView";
 import { useRef } from "react";
 import { DragAndDropDialog } from "./components/Dialogs/DragAndDropDialog";
-import { useFs } from "use-fs";
+import { useFileSystem } from "./hooks/useFileSystem";
 
 function App() {
   const { subdivision, setSubdivision } = useSettingsStore();
@@ -20,7 +20,7 @@ function App() {
     }
   };
 
-  const { files, isBrowserSupported, writeFile } = useFs({});
+  const { write, entries, remove } = useFileSystem({});
 
   const {
     viewRef,
@@ -35,20 +35,20 @@ function App() {
   } = usePeaks({
     subdivision,
     onInitialize: async (peaks, file) => {
-      await writeFile(
+      await write(
         `${file.name}-${crypto.randomUUID()}.json`,
-        JSON.stringify({
-          name: file.name,
-          type: file.type,
-          size: file.size,
-
-          data: peaks.getWaveformData().toJSON(),
-          points: peaks.points.getPoints(),
-        }),
-        {
-          create: true,
-          truncate: true,
-        }
+        new Blob(
+          [
+            JSON.stringify({
+              name: file.name,
+              type: file.type,
+              size: file.size,
+              data: peaks.getWaveformData().toJSON(),
+              points: peaks.points.getPoints(),
+            }),
+          ],
+          { type: "application/json" }
+        )
       );
     },
   });
@@ -80,16 +80,18 @@ function App() {
     }
   };
 
-  if (!isBrowserSupported) {
-    return <div>Browser not supported</div>;
-  }
-
   return (
     <>
       <button onClick={() => openDialog()}>New</button>
+      {entries.map((entry) => (
+        <div key={entry.name}>
+          <span>{entry.name}</span>
+          <button onClick={() => {}}>Open</button>
+          <button onClick={() => remove(entry)}>Remove</button>
+        </div>
+      ))}
 
       <DragAndDropDialog dialogRef={dialogRef} onDrop={handleDrop} />
-
       <WaveformView viewRef={viewRef} />
       <audio ref={audioElementRef}>
         <source
