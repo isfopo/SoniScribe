@@ -23,8 +23,14 @@ function App() {
     }
   };
 
-  const { write, remove, projects, currentProject, setCurrentProject } =
-    useProjects({});
+  const {
+    write,
+    remove,
+    projects,
+    currentProject,
+    setCurrentProject,
+    addPointsToCurrentProject,
+  } = useProjects();
 
   const {
     viewRef,
@@ -72,6 +78,7 @@ function App() {
 
       setCurrentProject(projectFile);
     },
+    onPointAdd: addPointsToCurrentProject,
   });
 
   useKeyPress({
@@ -103,10 +110,16 @@ function App() {
     }
   };
 
+  const handleProjectOpen = async (file: FileSystemHandle) => {
+    open(file);
+    setCurrentProject(file as FileSystemFileHandle);
+  };
+
   return (
     <>
       <DragAndDropDialog dialogRef={dialogRef} onDrop={handleDrop} />
 
+      <p>{currentProject?.name}</p>
       <Transport
         playPause={playPause}
         nextPoint={nextPoint}
@@ -129,7 +142,7 @@ function App() {
       {projects.map((entry) => (
         <div key={entry.name}>
           <span>{entry.name}</span>
-          <button onClick={() => open(entry)}>Open</button>
+          <button onClick={() => handleProjectOpen(entry)}>Open</button>
           <button onClick={() => remove(entry)}>Remove</button>
         </div>
       ))}

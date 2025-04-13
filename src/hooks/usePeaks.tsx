@@ -23,8 +23,9 @@ export interface UsePeaksOptions {
     mediaFile: File,
     { isNewFile }: { isNewFile: boolean }
   ) => void;
-  onPointAdd?: (point: SubdivisionPoint) => void;
-  onPointRemove?: (point: SubdivisionPoint) => void;
+  onOpen?: (project: FileSystemFileHandle) => void;
+  onPointAdd?: (point: SubdivisionPoint[]) => void;
+  onPointRemove?: (point: SubdivisionPoint[]) => void;
   onError?: (error: Error) => void;
 }
 
@@ -32,6 +33,8 @@ export const usePeaks = ({
   previousPointGap = 0.1,
   subdivision = 1,
   onInitialize,
+  onPointAdd,
+  onPointRemove,
   onError,
 }: UsePeaksOptions) => {
   const viewRef = useRef<HTMLDivElement>(null);
@@ -98,9 +101,21 @@ export const usePeaks = ({
         if (onInitialize) {
           onInitialize(peaks, mediaFile, { isNewFile: isNewFile ?? false });
         }
+
+        if (onPointAdd) {
+          peaks.on("points.add", (event) => {
+            onPointAdd(event.points as SubdivisionPoint[]);
+          });
+        }
+
+        if (onPointRemove) {
+          peaks.on("points.remove", (event) => {
+            onPointRemove(event.points as SubdivisionPoint[]);
+          });
+        }
       });
     },
-    [onError, onInitialize]
+    [onError, onInitialize, onPointAdd, onPointRemove]
   );
 
   const open = useCallback(
