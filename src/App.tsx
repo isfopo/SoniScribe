@@ -41,7 +41,6 @@ function App() {
   } = usePeaks({
     subdivision,
     onInitialize: async (peaks) => {
-      console.log("Peaks initialized:", peaks);
       await save(
         "transcription.json",
         new Blob(
