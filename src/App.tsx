@@ -20,7 +20,7 @@ function App() {
     }
   };
 
-  const { files, isBrowserSupported, writeFile } = useFs();
+  const { files, isBrowserSupported, writeFile } = useFs({});
 
   const {
     viewRef,
