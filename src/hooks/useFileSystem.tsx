@@ -11,6 +11,7 @@ export const useFileSystem = ({ onError }: UseFileSystemOptions) => {
   const getEntries = useCallback(async () => {
     const root = await navigator.storage.getDirectory();
     const entries: FileSystemHandle[] = [];
+    // @ts-expect-error .value() method is not available in the type definition
     for await (const entry of root.values()) {
       entries.push(entry);
     }
@@ -34,11 +35,15 @@ export const useFileSystem = ({ onError }: UseFileSystemOptions) => {
 
   const remove = useCallback(
     async (file: FileSystemHandle) => {
-      const root = await navigator.storage.getDirectory();
-      root.removeEntry(file.name, { recursive: true });
-      setEntries(await getEntries());
+      try {
+        const root = await navigator.storage.getDirectory();
+        root.removeEntry(file.name, { recursive: true });
+        setEntries(await getEntries());
+      } catch (error) {
+        onError?.(error as Error);
+      }
     },
-    [getEntries]
+    [getEntries, onError]
   );
 
   useEffect(() => {
