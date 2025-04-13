@@ -8,8 +8,9 @@ import { useRef } from "react";
 import { DragAndDropDialog } from "./components/Dialogs/DragAndDropDialog";
 import { useFileSystem } from "./hooks/useFileSystem";
 import { stripExtension } from "./helpers/files";
-import "./App.css";
 import { AudioPlayer } from "./components/AudioPlayer";
+
+import "./App.css";
 
 function App() {
   const { subdivision, setSubdivision } = useSettingsStore();
