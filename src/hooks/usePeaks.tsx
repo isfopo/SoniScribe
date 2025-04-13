@@ -11,7 +11,7 @@ export interface UsePeaksOptions {
   /** The amount of time that the previous point will go back to the one before. */
   previousPointGap?: number;
   subdivision?: Subdivision;
-  onInitialize?: (peaks: PeaksInstance) => void;
+  onInitialize?: (peaks: PeaksInstance, file: File) => void;
   onError?: (error: Error) => void;
 }
 
@@ -27,9 +27,10 @@ export const usePeaks = ({
   const peaksRef = useRef<PeaksInstance>(undefined);
 
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [file, setFile] = useState<File | null>(null);
 
   const initialize = useCallback(
-    (audioUrl: string) => {
+    (file: File) => {
       const options: PeaksOptions = {
         zoomview: {
           container: viewRef.current,
@@ -48,7 +49,7 @@ export const usePeaks = ({
 
       if (!audioElementRef.current) return;
 
-      audioElementRef.current.src = audioUrl;
+      audioElementRef.current.src = URL.createObjectURL(file);
 
       if (peaksRef.current) {
         peaksRef.current.destroy();
@@ -73,12 +74,13 @@ export const usePeaks = ({
         }
 
         peaksRef.current = peaks;
+        setFile(file);
 
         // Add any additional setup or event listeners here
         peaksRef.current?.on("points.add", (event) => console.log(event));
 
         if (onInitialize) {
-          onInitialize(peaks);
+          onInitialize(peaks, file);
         }
       });
     },
@@ -169,5 +171,6 @@ export const usePeaks = ({
     nextPoint,
     previousPoint,
     isPlaying,
+    file,
   };
 };

@@ -5,14 +5,12 @@ import { usePeaks } from "./hooks/usePeaks";
 import { useSettingsStore } from "./stores/settings";
 import "./App.css";
 import { WaveformView } from "./components/WaveformView";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { DragAndDropDialog } from "./components/Dialogs/DragAndDropDialog";
-import { useFileSystem } from "./hooks/useFileSystem";
+import { useFs } from "use-fs";
 
 function App() {
   const { subdivision, setSubdivision } = useSettingsStore();
-
-  const [file, setFile] = useState<File | null>(null);
 
   const dialogRef = useRef<HTMLDialogElement | null>(null);
 
@@ -22,12 +20,7 @@ function App() {
     }
   };
 
-  const { save } = useFileSystem({
-    dirName: import.meta.env.VITE_FILE_SYSTEM_DIRECTORY_NAME || "",
-    onError: (error) => {
-      console.error("Error accessing file system:", error);
-    },
-  });
+  const { files, isBrowserSupported, writeFile } = useFs();
 
   const {
     viewRef,
@@ -38,20 +31,24 @@ function App() {
     previousPoint,
     isPlaying,
     initialize,
+    file,
   } = usePeaks({
     subdivision,
-    onInitialize: async (peaks) => {
-      await save(
-        "transcription.json",
-        new Blob(
-          [
-            JSON.stringify({
-              data: peaks.getWaveformData().toJSON(),
-              points: peaks.points.getPoints(),
-            }),
-          ],
-          { type: "application/json" }
-        )
+    onInitialize: async (peaks, file) => {
+      await writeFile(
+        `${file.name}-${crypto.randomUUID()}.json`,
+        JSON.stringify({
+          name: file.name,
+          type: file.type,
+          size: file.size,
+
+          data: peaks.getWaveformData().toJSON(),
+          points: peaks.points.getPoints(),
+        }),
+        {
+          create: true,
+          truncate: true,
+        }
       );
     },
   });
@@ -75,14 +72,17 @@ function App() {
     if (files.length > 0) {
       const file = files[0];
       if (file.type.startsWith("audio/")) {
-        setFile(file);
-        initialize(URL.createObjectURL(file));
+        initialize(file);
         dialogRef.current?.close();
       } else {
         console.error("Invalid file type. Please drop an audio file.");
       }
     }
   };
+
+  if (!isBrowserSupported) {
+    return <div>Browser not supported</div>;
+  }
 
   return (
     <>
