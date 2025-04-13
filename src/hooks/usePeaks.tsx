@@ -11,11 +11,15 @@ export interface UsePeaksOptions {
   /** The amount of time that the previous point will go back to the one before. */
   previousPointGap?: number;
   subdivision?: Subdivision;
+  onInitialize?: (peaks: PeaksInstance) => void;
+  onError?: (error: Error) => void;
 }
 
 export const usePeaks = ({
   previousPointGap = 0.1,
   subdivision = 1,
+  onInitialize,
+  onError,
 }: UsePeaksOptions) => {
   const viewRef = useRef<HTMLDivElement>(null);
   const audioElementRef = useRef<HTMLAudioElement>(null);
@@ -24,44 +28,62 @@ export const usePeaks = ({
 
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
-  const initialize = useCallback((audioUrl: string) => {
-    const options: PeaksOptions = {
-      zoomview: {
-        container: viewRef.current,
-        waveformColor: "#ddd",
-        playheadColor: "#fff",
-        autoScroll: true,
-        enableSegments: false,
-        autoScrollOffset: 1,
-      },
-      mediaElement: audioElementRef.current as Element,
-      webAudio: { audioContext: audioContext.current, multiChannel: true },
-      keyboard: false,
-      logger: console.error.bind(console),
-      points: [],
-    };
+  const initialize = useCallback(
+    (audioUrl: string) => {
+      const options: PeaksOptions = {
+        zoomview: {
+          container: viewRef.current,
+          waveformColor: "#ddd",
+          playheadColor: "#fff",
+          autoScroll: true,
+          enableSegments: false,
+          autoScrollOffset: 1,
+        },
+        mediaElement: audioElementRef.current as Element,
+        webAudio: { audioContext: audioContext.current, multiChannel: true },
+        keyboard: false,
+        logger: console.error.bind(console),
+        points: [],
+      };
 
-    if (!audioElementRef.current) return;
+      if (!audioElementRef.current) return;
 
-    audioElementRef.current.src = audioUrl;
+      audioElementRef.current.src = audioUrl;
 
-    if (peaksRef.current) {
-      peaksRef.current.destroy();
-      peaksRef.current = undefined;
-    }
-
-    Peaks.init(options, (error, peaks) => {
-      if (error) {
-        console.error("Error initializing Peaks:", error);
-        return;
+      if (peaksRef.current) {
+        peaksRef.current.destroy();
+        peaksRef.current = undefined;
       }
 
-      peaksRef.current = peaks;
+      Peaks.init(options, (error, peaks) => {
+        if (error) {
+          console.error("Error initializing Peaks:", error);
+          if (onError) {
+            onError(error);
+          }
+          return;
+        }
 
-      // Add any additional setup or event listeners here
-      peaksRef.current?.on("points.add", (event) => console.log(event));
-    });
-  }, []);
+        if (!peaks) {
+          console.error("Failed to initialize Peaks.");
+          if (onError) {
+            onError(new Error("Failed to initialize Peaks."));
+          }
+          return;
+        }
+
+        peaksRef.current = peaks;
+
+        // Add any additional setup or event listeners here
+        peaksRef.current?.on("points.add", (event) => console.log(event));
+
+        if (onInitialize) {
+          onInitialize(peaks);
+        }
+      });
+    },
+    [onError, onInitialize]
+  );
 
   const playPause = () => {
     if (peaksRef.current) {
