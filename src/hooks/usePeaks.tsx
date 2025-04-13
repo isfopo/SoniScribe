@@ -1,4 +1,4 @@
-import Peaks, { PeaksInstance, PeaksOptions } from "peaks.js";
+import Peaks, { PeaksInstance, PeaksOptions, Point } from "peaks.js";
 import { useRef, useState, useCallback } from "react";
 import {
   isSubdivision,
@@ -7,11 +7,23 @@ import {
   SubdivisionPoints,
 } from "../helpers/subdivisions";
 
+export interface SavedProjectData {
+  name: string;
+  media: string;
+  type: string;
+  size: number;
+  points: SubdivisionPoint[];
+}
+
 export interface UsePeaksOptions {
   /** The amount of time that the previous point will go back to the one before. */
   previousPointGap?: number;
   subdivision?: Subdivision;
-  onInitialize?: (peaks: PeaksInstance, file: File) => void;
+  onInitialize?: (
+    peaks: PeaksInstance,
+    file: File,
+    { isNewFile }: { isNewFile: boolean }
+  ) => void;
   onError?: (error: Error) => void;
 }
 
@@ -30,7 +42,13 @@ export const usePeaks = ({
   const [file, setFile] = useState<File | null>(null);
 
   const initialize = useCallback(
-    (file: File) => {
+    (
+      file: File,
+      { points, isNewFile }: { points?: Point[]; isNewFile?: boolean } = {
+        points: [],
+        isNewFile: false,
+      }
+    ) => {
       const options: PeaksOptions = {
         zoomview: {
           container: viewRef.current,
@@ -44,7 +62,7 @@ export const usePeaks = ({
         webAudio: { audioContext: audioContext.current, multiChannel: true },
         keyboard: false,
         logger: console.error.bind(console),
-        points: [],
+        points,
       };
 
       if (!audioElementRef.current) return;
@@ -80,11 +98,38 @@ export const usePeaks = ({
         peaksRef.current?.on("points.add", (event) => console.log(event));
 
         if (onInitialize) {
-          onInitialize(peaks, file);
+          onInitialize(peaks, file, { isNewFile: isNewFile ?? false });
         }
       });
     },
     [onError, onInitialize]
+  );
+
+  const open = useCallback(
+    async (file: FileSystemHandle) => {
+      if (file.kind === "file") {
+        const fileHandle = file as FileSystemFileHandle;
+
+        const saveData = await fileHandle.getFile();
+        const { points, media } = JSON.parse(
+          await saveData.text()
+        ) as SavedProjectData;
+
+        const root = await navigator.storage.getDirectory();
+        const mediaFileHandle = await root.getFileHandle(media);
+
+        initialize(await mediaFileHandle.getFile(), {
+          points,
+          isNewFile: false,
+        });
+      } else {
+        console.error("Invalid file handle:", file);
+        if (onError) {
+          onError(new Error("Invalid file handle"));
+        }
+      }
+    },
+    [initialize, onError]
   );
 
   const playPause = () => {
@@ -172,5 +217,6 @@ export const usePeaks = ({
     previousPoint,
     isPlaying,
     file,
+    open,
   };
 };

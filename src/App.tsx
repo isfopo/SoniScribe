@@ -1,7 +1,7 @@
 import { SubdivisionSelector } from "./components/SubdivisionSelector";
 import { Transport } from "./components/Transport";
 import { useKeyPress } from "./hooks/useKeyPress";
-import { usePeaks } from "./hooks/usePeaks";
+import { SavedProjectData, usePeaks } from "./hooks/usePeaks";
 import { useSettingsStore } from "./stores/settings";
 import { WaveformView } from "./components/WaveformView";
 import { useRef } from "react";
@@ -32,27 +32,35 @@ function App() {
     previousPoint,
     isPlaying,
     initialize,
+    open,
     file,
   } = usePeaks({
     subdivision,
-    onInitialize: async (peaks, file) => {
-      const name = prompt("Enter a name for the file:", file.name);
+    onInitialize: async (peaks, file, { isNewFile }) => {
+      if (!isNewFile) return;
+
+      const name = prompt(
+        "Enter a name for the file:",
+        stripExtension(file.name)
+      );
 
       if (!name) {
         return;
       }
 
+      await write(file.name, file);
+
       await write(
-        `${stripExtension(name)}.json`,
+        `${name}.json`,
         new Blob(
           [
             JSON.stringify({
-              name: file.name,
+              name: name,
+              media: file.name,
               type: file.type,
               size: file.size,
-              data: peaks.getWaveformData().toJSON(),
               points: peaks.points.getPoints(),
-            }),
+            } as SavedProjectData),
           ],
           { type: "application/json" }
         )
@@ -79,7 +87,9 @@ function App() {
     if (files.length > 0) {
       const file = files[0];
       if (file.type.startsWith("audio/")) {
-        initialize(file);
+        initialize(file, {
+          isNewFile: true,
+        });
         dialogRef.current?.close();
       } else {
         console.error("Invalid file type. Please drop an audio file.");
@@ -115,7 +125,7 @@ function App() {
       {entries.map((entry) => (
         <div key={entry.name}>
           <span>{entry.name}</span>
-          <button onClick={() => {}}>Open</button>
+          <button onClick={() => open(entry)}>Open</button>
           <button onClick={() => remove(entry)}>Remove</button>
         </div>
       ))}
