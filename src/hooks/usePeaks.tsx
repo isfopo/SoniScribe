@@ -8,7 +8,6 @@ import {
 } from "../helpers/subdivisions";
 
 export interface SavedProjectData {
-  name: string;
   media: string;
   type: string;
   size: number;
@@ -42,9 +41,6 @@ export const usePeaks = ({
 
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [mediaFile, setMediaFile] = useState<File | null>(null);
-  const [projectFile, setProjectFile] = useState<FileSystemFileHandle | null>(
-    null
-  );
 
   const initialize = useCallback(
     (
@@ -102,8 +98,6 @@ export const usePeaks = ({
         if (onInitialize) {
           onInitialize(peaks, mediaFile, { isNewFile: isNewFile ?? false });
         }
-
-        peaksRef.current?.on("points.add", (event) => console.log(event));
       });
     },
     [onError, onInitialize]

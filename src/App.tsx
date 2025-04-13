@@ -6,11 +6,11 @@ import { useSettingsStore } from "./stores/settings";
 import { WaveformView } from "./components/WaveformView";
 import { useRef } from "react";
 import { DragAndDropDialog } from "./components/Dialogs/DragAndDropDialog";
-import { useFileSystem } from "./hooks/useFileSystem";
 import { stripExtension } from "./helpers/files";
 import { AudioPlayer } from "./components/AudioPlayer";
 
 import "./App.css";
+import { useProjects } from "./hooks/useProjects";
 
 function App() {
   const { subdivision, setSubdivision } = useSettingsStore();
@@ -23,7 +23,8 @@ function App() {
     }
   };
 
-  const { write, entries, remove } = useFileSystem({});
+  const { write, remove, projects, currentProject, setCurrentProject } =
+    useProjects({});
 
   const {
     viewRef,
@@ -54,12 +55,11 @@ function App() {
       await write(mediaFile.name, mediaFile);
 
       // Write the project data to the file system
-      await write(
+      const projectFile = await write(
         `${name}.json`,
         new Blob(
           [
             JSON.stringify({
-              name: name,
               media: mediaFile.name,
               type: mediaFile.type,
               size: mediaFile.size,
@@ -69,6 +69,8 @@ function App() {
           { type: "application/json" }
         )
       );
+
+      setCurrentProject(projectFile);
     },
   });
 
@@ -104,6 +106,7 @@ function App() {
   return (
     <>
       <DragAndDropDialog dialogRef={dialogRef} onDrop={handleDrop} />
+
       <Transport
         playPause={playPause}
         nextPoint={nextPoint}
@@ -111,8 +114,11 @@ function App() {
         isPlaying={isPlaying}
         addPoint={() => addPoint({ subdivision })}
       />
+
       <WaveformView viewRef={viewRef} />
+
       <AudioPlayer audioElementRef={audioElementRef} mediaFile={mediaFile} />
+
       <SubdivisionSelector
         subdivisions={[1, 2, 4, 8, 16, 32, 64]}
         currentSubdivision={subdivision}
@@ -120,7 +126,7 @@ function App() {
       />
 
       <button onClick={() => openDialog()}>New</button>
-      {entries.map((entry) => (
+      {projects.map((entry) => (
         <div key={entry.name}>
           <span>{entry.name}</span>
           <button onClick={() => open(entry)}>Open</button>

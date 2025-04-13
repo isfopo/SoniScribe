@@ -8,7 +8,7 @@ export const useFileSystem = ({ onError }: UseFileSystemOptions) => {
   // const [root, setRoot] = useState<FileSystemDirectoryHandle | null>(null);
   const [entries, setEntries] = useState<FileSystemHandle[]>([]);
 
-  const getEntries = useCallback(async () => {
+  const getEntries = useCallback(async (): Promise<FileSystemHandle[]> => {
     const root = await navigator.storage.getDirectory();
     const entries: FileSystemHandle[] = [];
     // @ts-expect-error .value() method is not available in the type definition
@@ -19,13 +19,17 @@ export const useFileSystem = ({ onError }: UseFileSystemOptions) => {
   }, []);
 
   const write = useCallback(
-    async (fileName: string, data: Blob) => {
+    async (
+      fileName: string,
+      data: Blob
+    ): Promise<FileSystemFileHandle | undefined> => {
       try {
         const root = await navigator.storage.getDirectory();
         const fileHandle = await root.getFileHandle(fileName, { create: true });
         const writable = await fileHandle.createWritable();
         await writable.write(data);
         await writable.close();
+        return fileHandle;
       } catch (error) {
         onError?.(error as Error);
       } finally {
@@ -36,7 +40,7 @@ export const useFileSystem = ({ onError }: UseFileSystemOptions) => {
   );
 
   const remove = useCallback(
-    async (file: FileSystemHandle) => {
+    async (file: FileSystemHandle): Promise<void> => {
       try {
         const root = await navigator.storage.getDirectory();
         root.removeEntry(file.name, { recursive: true });
