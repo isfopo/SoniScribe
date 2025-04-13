@@ -22,8 +22,11 @@ function App() {
     }
   };
 
-  useFileSystem({
+  const { save } = useFileSystem({
     dirName: import.meta.env.VITE_FILE_SYSTEM_DIRECTORY_NAME || "",
+    onError: (error) => {
+      console.error("Error accessing file system:", error);
+    },
   });
 
   const {
@@ -37,6 +40,21 @@ function App() {
     initialize,
   } = usePeaks({
     subdivision,
+    onInitialize: async (peaks) => {
+      console.log("Peaks initialized:", peaks);
+      await save(
+        "transcription.json",
+        new Blob(
+          [
+            JSON.stringify({
+              data: peaks.getWaveformData().toJSON(),
+              points: peaks.points.getPoints(),
+            }),
+          ],
+          { type: "application/json" }
+        )
+      );
+    },
   });
 
   useKeyPress({

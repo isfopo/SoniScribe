@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useCallback } from "react";
 
 export interface UseFileSystemOptions {
   dirName: string;
@@ -6,29 +6,22 @@ export interface UseFileSystemOptions {
 }
 
 export const useFileSystem = ({ dirName, onError }: UseFileSystemOptions) => {
-  const [root, setRoot] = useState<FileSystemDirectoryHandle | null>(null);
+  // const [root, setRoot] = useState<FileSystemDirectoryHandle | null>(null);
 
-  const entries = useMemo(() => {
-    if (!root) return [];
-  }, [root]);
-
-  useEffect(() => {
-    const init = async () => {
+  const save = useCallback(
+    async (fileName: string, data: Blob) => {
       try {
-        const rootHandle = await navigator.storage.getDirectory();
-        const root = await rootHandle.getDirectoryHandle(dirName, {
-          create: true,
-        });
-        setRoot(root);
+        const root = await navigator.storage.getDirectory();
+        const fileHandle = await root.getFileHandle(fileName, { create: true });
+        const writable = await fileHandle.createWritable();
+        await writable.write(data);
+        await writable.close();
       } catch (error) {
         onError?.(error as Error);
       }
-    };
+    },
+    [onError]
+  );
 
-    init();
-
-    return () => {};
-  }, [dirName, onError]);
-
-  return { entries, root };
+  return { save };
 };
