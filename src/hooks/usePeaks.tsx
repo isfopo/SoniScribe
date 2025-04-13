@@ -21,9 +21,11 @@ export interface UsePeaksOptions {
   subdivision?: Subdivision;
   onInitialize?: (
     peaks: PeaksInstance,
-    file: File,
+    mediaFile: File,
     { isNewFile }: { isNewFile: boolean }
   ) => void;
+  onPointAdd?: (point: SubdivisionPoint) => void;
+  onPointRemove?: (point: SubdivisionPoint) => void;
   onError?: (error: Error) => void;
 }
 
@@ -39,11 +41,14 @@ export const usePeaks = ({
   const peaksRef = useRef<PeaksInstance>(undefined);
 
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [file, setFile] = useState<File | null>(null);
+  const [mediaFile, setMediaFile] = useState<File | null>(null);
+  const [projectFile, setProjectFile] = useState<FileSystemFileHandle | null>(
+    null
+  );
 
   const initialize = useCallback(
     (
-      file: File,
+      mediaFile: File,
       { points, isNewFile }: { points?: Point[]; isNewFile?: boolean } = {
         points: [],
         isNewFile: false,
@@ -67,7 +72,7 @@ export const usePeaks = ({
 
       if (!audioElementRef.current) return;
 
-      audioElementRef.current.src = URL.createObjectURL(file);
+      audioElementRef.current.src = URL.createObjectURL(mediaFile);
 
       if (peaksRef.current) {
         peaksRef.current.destroy();
@@ -92,14 +97,13 @@ export const usePeaks = ({
         }
 
         peaksRef.current = peaks;
-        setFile(file);
-
-        // Add any additional setup or event listeners here
-        peaksRef.current?.on("points.add", (event) => console.log(event));
+        setMediaFile(mediaFile);
 
         if (onInitialize) {
-          onInitialize(peaks, file, { isNewFile: isNewFile ?? false });
+          onInitialize(peaks, mediaFile, { isNewFile: isNewFile ?? false });
         }
+
+        peaksRef.current?.on("points.add", (event) => console.log(event));
       });
     },
     [onError, onInitialize]
@@ -216,7 +220,7 @@ export const usePeaks = ({
     nextPoint,
     previousPoint,
     isPlaying,
-    file,
+    mediaFile,
     open,
   };
 };

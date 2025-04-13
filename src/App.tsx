@@ -33,32 +33,34 @@ function App() {
     isPlaying,
     initialize,
     open,
-    file,
+    mediaFile,
   } = usePeaks({
     subdivision,
-    onInitialize: async (peaks, file, { isNewFile }) => {
+    onInitialize: async (peaks, mediaFile, { isNewFile }) => {
       if (!isNewFile) return;
 
       const name = prompt(
         "Enter a name for the file:",
-        stripExtension(file.name)
+        stripExtension(mediaFile.name)
       );
 
       if (!name) {
         return;
       }
 
-      await write(file.name, file);
+      // Write the media file to the file system
+      await write(mediaFile.name, mediaFile);
 
+      // Write the project data to the file system
       await write(
         `${name}.json`,
         new Blob(
           [
             JSON.stringify({
               name: name,
-              media: file.name,
-              type: file.type,
-              size: file.size,
+              media: mediaFile.name,
+              type: mediaFile.type,
+              size: mediaFile.size,
               points: peaks.points.getPoints(),
             } as SavedProjectData),
           ],
@@ -103,8 +105,8 @@ function App() {
       <WaveformView viewRef={viewRef} />
       <audio ref={audioElementRef}>
         <source
-          src={file ? URL.createObjectURL(file) : undefined}
-          type={file?.type}
+          src={mediaFile ? URL.createObjectURL(mediaFile) : undefined}
+          type={mediaFile?.type}
         />
         Your browser does not support the audio element.
       </audio>
