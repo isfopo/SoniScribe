@@ -38,7 +38,7 @@ function App() {
     mediaFile,
   } = usePeaks({
     subdivision,
-    onInitialize: async (peaks, mediaFile, { isNewFile }) => {
+    onInitialize: async (_, mediaFile, { isNewFile }) => {
       if (!isNewFile) return;
 
       const name = prompt(
@@ -63,7 +63,7 @@ function App() {
               media: mediaFile.name,
               type: mediaFile.type,
               size: mediaFile.size,
-              points: peaks.points.getPoints(),
+              points: [],
             } as SavedProjectData),
           ],
           { type: "application/json" }
