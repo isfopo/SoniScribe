@@ -21,7 +21,7 @@ export const FileDropArea = ({
   onDropError,
   children,
 }: FileDropAreaProps) => {
-  const dropAreaRef = useRef<HTMLDivElement>(null);
+  const dropInputRef = useRef<HTMLInputElement>(null);
 
   const handleDragEnter = useCallback(
     (event: DragEvent) => {
@@ -113,13 +113,33 @@ export const FileDropArea = ({
     [allowedFileTypes, maxCount, onDrop, onDropError]
   );
 
+  const handleFileInputChange = useCallback(
+    (event: Event) => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      if (!dropInputRef.current?.files) return;
+
+      const files = Array.from(dropInputRef.current.files);
+
+      if (files.length > 0) {
+        // Call the onDrop callback if provided
+        if (onDrop) {
+          onDrop(files);
+        }
+      }
+    },
+    [onDrop]
+  );
+
   useEffect(() => {
-    const dropArea = dropAreaRef.current;
+    const dropArea = dropInputRef.current;
     if (dropArea) {
       dropArea.addEventListener("dragenter", handleDragEnter);
       dropArea.addEventListener("dragleave", handleDragLeave);
       dropArea.addEventListener("dragover", handleDragOver);
       dropArea.addEventListener("drop", handleDrop);
+      dropArea.addEventListener("change", handleFileInputChange);
     }
     return () => {
       if (dropArea) {
@@ -127,16 +147,34 @@ export const FileDropArea = ({
         dropArea.removeEventListener("dragleave", handleDragLeave);
         dropArea.removeEventListener("dragover", handleDragOver);
         dropArea.removeEventListener("drop", handleDrop);
+        dropArea.removeEventListener("change", handleFileInputChange);
       }
     };
-  }, [handleDragEnter, handleDragLeave, handleDragOver, handleDrop]);
+  }, [
+    handleDragEnter,
+    handleDragLeave,
+    handleDragOver,
+    handleDrop,
+    handleFileInputChange,
+  ]);
+
+  const handleClick = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
+    dropInputRef.current?.click();
+  }, []);
 
   return (
-    <div
-      ref={dropAreaRef}
-      className={styles["drop-area"]}
-      onClick={(e) => e.stopPropagation()}
-    >
+    <div className={styles["drop-area"]} onClick={handleClick}>
+      <input
+        id="file-drop-area"
+        name="file-drop-area"
+        type="file"
+        ref={dropInputRef}
+        className={styles["file-drop-input"]}
+        accept={allowedFileTypes?.join(",")}
+        aria-label="File Drop Area"
+      />
+
       {children}
     </div>
   );
