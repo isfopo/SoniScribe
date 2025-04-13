@@ -89,15 +89,6 @@ function App() {
 
   return (
     <>
-      <button onClick={() => openDialog()}>New</button>
-      {entries.map((entry) => (
-        <div key={entry.name}>
-          <span>{entry.name}</span>
-          <button onClick={() => {}}>Open</button>
-          <button onClick={() => remove(entry)}>Remove</button>
-        </div>
-      ))}
-
       <DragAndDropDialog dialogRef={dialogRef} onDrop={handleDrop} />
       <WaveformView viewRef={viewRef} />
       <audio ref={audioElementRef}>
@@ -119,6 +110,15 @@ function App() {
         currentSubdivision={subdivision}
         onSelect={setSubdivision}
       />
+
+      <button onClick={() => openDialog()}>New</button>
+      {entries.map((entry) => (
+        <div key={entry.name}>
+          <span>{entry.name}</span>
+          <button onClick={() => {}}>Open</button>
+          <button onClick={() => remove(entry)}>Remove</button>
+        </div>
+      ))}
     </>
   );
 }
