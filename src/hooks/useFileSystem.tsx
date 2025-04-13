@@ -28,9 +28,11 @@ export const useFileSystem = ({ onError }: UseFileSystemOptions) => {
         await writable.close();
       } catch (error) {
         onError?.(error as Error);
+      } finally {
+        setEntries(await getEntries());
       }
     },
-    [onError]
+    [getEntries, onError]
   );
 
   const remove = useCallback(
@@ -38,9 +40,10 @@ export const useFileSystem = ({ onError }: UseFileSystemOptions) => {
       try {
         const root = await navigator.storage.getDirectory();
         root.removeEntry(file.name, { recursive: true });
-        setEntries(await getEntries());
       } catch (error) {
         onError?.(error as Error);
+      } finally {
+        setEntries(await getEntries());
       }
     },
     [getEntries, onError]

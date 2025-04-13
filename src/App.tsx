@@ -3,11 +3,12 @@ import { Transport } from "./components/Transport";
 import { useKeyPress } from "./hooks/useKeyPress";
 import { usePeaks } from "./hooks/usePeaks";
 import { useSettingsStore } from "./stores/settings";
-import "./App.css";
 import { WaveformView } from "./components/WaveformView";
 import { useRef } from "react";
 import { DragAndDropDialog } from "./components/Dialogs/DragAndDropDialog";
 import { useFileSystem } from "./hooks/useFileSystem";
+import { stripExtension } from "./helpers/files";
+import "./App.css";
 
 function App() {
   const { subdivision, setSubdivision } = useSettingsStore();
@@ -35,8 +36,14 @@ function App() {
   } = usePeaks({
     subdivision,
     onInitialize: async (peaks, file) => {
+      const name = prompt("Enter a name for the file:", file.name);
+
+      if (!name) {
+        return;
+      }
+
       await write(
-        `${file.name}-${crypto.randomUUID()}.json`,
+        `${stripExtension(name)}.json`,
         new Blob(
           [
             JSON.stringify({
