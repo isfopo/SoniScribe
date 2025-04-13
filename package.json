@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "tunnel": "devtunnel host -p 5173",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
