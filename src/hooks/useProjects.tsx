@@ -65,15 +65,18 @@ export const useProjects = () => {
         console.error("No current project selected");
         return;
       }
-      const writable = await currentProject.current.createWritable();
+
       const file = await currentProject.current.getFile();
       const data = await file.text();
       const projectData = JSON.parse(data) as SavedProjectData;
       projectData.points = [...projectData.points, ...points];
-      await writable.write(stringify(projectData));
-      await writable.close();
+
+      await write(
+        currentProject.current.name,
+        new Blob([stringify(projectData)], { type: "application/json" })
+      );
     },
-    [currentProject]
+    [write]
   );
 
   const removePointsFromCurrentProject = useCallback(
@@ -82,7 +85,7 @@ export const useProjects = () => {
         console.error("No current project selected");
         return;
       }
-      const writable = await currentProject.current.createWritable();
+
       const file = await currentProject.current.getFile();
       const data = await file.text();
       const projectData = JSON.parse(data) as SavedProjectData;
@@ -90,10 +93,13 @@ export const useProjects = () => {
         (point: SubdivisionPointOptions) =>
           !points.some((p) => p.id === point.id)
       );
-      await writable.write(stringify(projectData));
-      await writable.close();
+
+      await write(
+        currentProject.current.name,
+        new Blob([stringify(projectData)], { type: "application/json" })
+      );
     },
-    [currentProject]
+    [write]
   );
 
   return {
