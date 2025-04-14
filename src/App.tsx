@@ -6,9 +6,8 @@ import { useSettingsStore } from "./stores/settings";
 import { WaveformView } from "./components/WaveformView";
 import { useRef } from "react";
 import { DragAndDropDialog } from "./components/Dialogs/DragAndDropDialog";
-import { stripExtension } from "./helpers/files";
 import { AudioPlayer } from "./components/AudioPlayer";
-import { SavedProjectData, useProjects } from "./hooks/useProjects";
+import { useProjects } from "./hooks/useProjects";
 import { mapSubdivisionPointToSubdivisionPointOption } from "./helpers/points";
 import "./App.css";
 
@@ -24,7 +23,7 @@ function App() {
   };
 
   const {
-    write,
+    createNewProject,
     remove,
     projects,
     currentProject,
@@ -48,35 +47,7 @@ function App() {
     subdivision,
     onInitialize: async (_, mediaFile, { isNewFile }) => {
       if (!isNewFile) return;
-
-      const name = prompt(
-        "Enter a name for the file:",
-        stripExtension(mediaFile.name)
-      );
-
-      if (!name) {
-        return;
-      }
-
-      // Write the media file to the file system
-      await write(mediaFile.name, mediaFile);
-
-      // Write the project data to the file system
-      const projectFile = await write(
-        `${name}.json`,
-        new Blob(
-          [
-            JSON.stringify({
-              media: mediaFile.name,
-              type: mediaFile.type,
-              size: mediaFile.size,
-              points: [],
-            } as SavedProjectData),
-          ],
-          { type: "application/json" }
-        )
-      );
-      setCurrentProject(projectFile);
+      createNewProject(mediaFile);
     },
     onPointAdd: (points) =>
       addPointsToCurrentProject(
