@@ -1,5 +1,5 @@
 import { Point, PointOptions } from "peaks.js";
-import { SubdivisionValue } from "./subdivisions";
+import { SubdivisionPointOptions, SubdivisionValue } from "./subdivisions";
 
 /**
  * Maps a Point to a PointOptions object. Removes the update property from the Point, which is non-serializable.
@@ -10,7 +10,13 @@ export const mapPointToPointOptions = (point: Point): PointOptions => ({
   time: point._time as number,
   color: point._color as string,
   label: point._label as string,
-  subdivision: point.subdivision as SubdivisionValue,
   editable: point._editable as boolean,
   id: point._id as string,
+});
+
+export const mapSubdivisionPointToSubdivisionPointOption = (
+  point: Point
+): SubdivisionPointOptions => ({
+  ...mapPointToPointOptions(point),
+  subdivision: point._subdivision as SubdivisionValue,
 });

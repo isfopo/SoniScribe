@@ -9,8 +9,7 @@ import { DragAndDropDialog } from "./components/Dialogs/DragAndDropDialog";
 import { stripExtension } from "./helpers/files";
 import { AudioPlayer } from "./components/AudioPlayer";
 import { SavedProjectData, useProjects } from "./hooks/useProjects";
-import { mapPointToPointOptions } from "./helpers/points";
-import { SubdivisionPointOptions } from "./helpers/subdivisions";
+import { mapSubdivisionPointToSubdivisionPointOption } from "./helpers/points";
 import "./App.css";
 
 function App() {
@@ -81,14 +80,14 @@ function App() {
     },
     onPointAdd: (points) =>
       addPointsToCurrentProject(
-        points.map(
-          (point) => mapPointToPointOptions(point) as SubdivisionPointOptions
+        points.map((point) =>
+          mapSubdivisionPointToSubdivisionPointOption(point)
         )
       ),
     onPointRemove: (points) =>
       removePointsFromCurrentProject(
-        points.map(
-          (point) => mapPointToPointOptions(point) as SubdivisionPointOptions
+        points.map((point) =>
+          mapSubdivisionPointToSubdivisionPointOption(point)
         )
       ),
   });
