@@ -37,6 +37,26 @@ export const useProjects = () => {
     [currentProject]
   );
 
+  const removePointsFromCurrentProject = useCallback(
+    async (points: SubdivisionPointOptions[]) => {
+      if (!currentProject.current) {
+        console.error("No current project selected");
+        return;
+      }
+      const writable = await currentProject.current.createWritable();
+      const file = await currentProject.current.getFile();
+      const data = await file.text();
+      const projectData = JSON.parse(data) as SavedProjectData;
+      projectData.points = projectData.points.filter(
+        (point: SubdivisionPointOptions) =>
+          !points.some((p) => p.id === point.id)
+      );
+      await writable.write(stringify(projectData));
+      await writable.close();
+    },
+    [currentProject]
+  );
+
   return {
     write,
     remove,
@@ -44,5 +64,6 @@ export const useProjects = () => {
     currentProject: currentProject.current,
     setCurrentProject,
     addPointsToCurrentProject,
+    removePointsFromCurrentProject,
   };
 };

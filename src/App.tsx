@@ -31,6 +31,7 @@ function App() {
     currentProject,
     setCurrentProject,
     addPointsToCurrentProject,
+    removePointsFromCurrentProject,
   } = useProjects();
 
   const {
@@ -80,6 +81,12 @@ function App() {
     },
     onPointAdd: (points) =>
       addPointsToCurrentProject(
+        points.map(
+          (point) => mapPointToPointOptions(point) as SubdivisionPointOptions
+        )
+      ),
+    onPointRemove: (points) =>
+      removePointsFromCurrentProject(
         points.map(
           (point) => mapPointToPointOptions(point) as SubdivisionPointOptions
         )
