@@ -10,6 +10,7 @@ import { AudioPlayer } from "./components/AudioPlayer";
 import { useProjects } from "./hooks/useProjects";
 import { mapSubdivisionPointToSubdivisionPointOption } from "./helpers/points";
 import "./App.css";
+import { ProjectList } from "./components/ProjectList";
 
 function App() {
   const { subdivision, setSubdivision } = useSettingsStore();
@@ -121,13 +122,11 @@ function App() {
       />
 
       <button onClick={() => openDialog()}>New</button>
-      {projects.map((project) => (
-        <div key={project.name}>
-          <span>{project.name}</span>
-          <button onClick={() => handleProjectOpen(project)}>Open</button>
-          <button onClick={() => remove(project)}>Remove</button>
-        </div>
-      ))}
+      <ProjectList
+        projects={projects}
+        open={handleProjectOpen}
+        remove={remove}
+      />
     </>
   );
 }
