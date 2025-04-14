@@ -1,16 +1,17 @@
 import { SubdivisionSelector } from "./components/SubdivisionSelector";
 import { Transport } from "./components/Transport";
 import { useKeyPress } from "./hooks/useKeyPress";
-import { SavedProjectData, usePeaks } from "./hooks/usePeaks";
+import { usePeaks } from "./hooks/usePeaks";
 import { useSettingsStore } from "./stores/settings";
 import { WaveformView } from "./components/WaveformView";
 import { useRef } from "react";
 import { DragAndDropDialog } from "./components/Dialogs/DragAndDropDialog";
 import { stripExtension } from "./helpers/files";
 import { AudioPlayer } from "./components/AudioPlayer";
-
+import { SavedProjectData, useProjects } from "./hooks/useProjects";
+import { mapPointToPointOptions } from "./helpers/points";
+import { SubdivisionPointOptions } from "./helpers/subdivisions";
 import "./App.css";
-import { useProjects } from "./hooks/useProjects";
 
 function App() {
   const { subdivision, setSubdivision } = useSettingsStore();
@@ -75,10 +76,14 @@ function App() {
           { type: "application/json" }
         )
       );
-
       setCurrentProject(projectFile);
     },
-    onPointAdd: addPointsToCurrentProject,
+    onPointAdd: (points) =>
+      addPointsToCurrentProject(
+        points.map(
+          (point) => mapPointToPointOptions(point) as SubdivisionPointOptions
+        )
+      ),
   });
 
   useKeyPress({

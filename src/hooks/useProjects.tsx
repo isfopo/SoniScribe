@@ -1,7 +1,14 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useFileSystem } from "./useFileSystem";
-import { SubdivisionPoint } from "../helpers/subdivisions";
+import { SubdivisionPointOptions } from "../helpers/subdivisions";
+import { stringify } from "../helpers/objects";
 
+export interface SavedProjectData {
+  media: string;
+  type: string;
+  size: number;
+  points: SubdivisionPointOptions[];
+}
 export const useProjects = () => {
   const { write, entries, remove } = useFileSystem({});
 
@@ -9,20 +16,23 @@ export const useProjects = () => {
     FileSystemFileHandle | undefined
   >();
 
-  const addPointsToCurrentProject = async (points: SubdivisionPoint[]) => {
-    if (!currentProject) {
-      console.error("No current project selected");
-      return;
-    }
-    const fileHandle = currentProject;
-    const writable = await fileHandle.createWritable();
-    const file = await fileHandle.getFile();
-    const data = await file.text();
-    const projectData = JSON.parse(data);
-    projectData.points.push(points);
-    await writable.write(JSON.stringify(projectData));
-    await writable.close();
-  };
+  const addPointsToCurrentProject = useCallback(
+    async (points: SubdivisionPointOptions[]) => {
+      if (!currentProject) {
+        console.error("No current project selected");
+        return;
+      }
+      const fileHandle = currentProject;
+      const writable = await fileHandle.createWritable();
+      const file = await fileHandle.getFile();
+      const data = await file.text();
+      const projectData = JSON.parse(data) as SavedProjectData;
+      projectData.points = [...projectData.points, ...points];
+      await writable.write(stringify(projectData));
+      await writable.close();
+    },
+    [currentProject]
+  );
 
   return {
     write,

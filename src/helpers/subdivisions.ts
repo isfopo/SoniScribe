@@ -6,6 +6,10 @@ export interface SubdivisionPoint extends Point {
   subdivision: SubdivisionValue;
 }
 
+export interface SubdivisionPointOptions extends PointOptions {
+  subdivision: SubdivisionValue;
+}
+
 export const SubdivisionPoints: Record<
   SubdivisionValue,
   Omit<PointOptions, "time">

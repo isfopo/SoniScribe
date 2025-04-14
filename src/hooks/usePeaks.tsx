@@ -1,18 +1,13 @@
-import Peaks, { PeaksInstance, PeaksOptions, Point } from "peaks.js";
+import Peaks, { PeaksInstance, PeaksOptions } from "peaks.js";
 import { useRef, useState, useCallback } from "react";
 import {
   isSubdivision,
   Subdivision,
   SubdivisionPoint,
+  SubdivisionPointOptions,
   SubdivisionPoints,
 } from "../helpers/subdivisions";
-
-export interface SavedProjectData {
-  media: string;
-  type: string;
-  size: number;
-  points: SubdivisionPoint[];
-}
+import { SavedProjectData } from "./useProjects";
 
 export interface UsePeaksOptions {
   /** The amount of time that the previous point will go back to the one before. */
@@ -48,7 +43,10 @@ export const usePeaks = ({
   const initialize = useCallback(
     (
       mediaFile: File,
-      { points, isNewFile }: { points?: Point[]; isNewFile?: boolean } = {
+      {
+        points,
+        isNewFile,
+      }: { points?: SubdivisionPointOptions[]; isNewFile?: boolean } = {
         points: [],
         isNewFile: false,
       }
@@ -180,7 +178,6 @@ export const usePeaks = ({
     if (peaksRef.current) {
       const points = peaksRef.current.points.getPoints() as SubdivisionPoint[];
       const currentTime = peaksRef.current.player.getCurrentTime();
-      console.log(points);
 
       const nextPoint = points.find(
         (point) =>
