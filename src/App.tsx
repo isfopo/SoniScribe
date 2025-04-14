@@ -121,11 +121,11 @@ function App() {
       />
 
       <button onClick={() => openDialog()}>New</button>
-      {projects.map((entry) => (
-        <div key={entry.name}>
-          <span>{entry.name}</span>
-          <button onClick={() => handleProjectOpen(entry)}>Open</button>
-          <button onClick={() => remove(entry)}>Remove</button>
+      {projects.map((project) => (
+        <div key={project.name}>
+          <span>{project.name}</span>
+          <button onClick={() => handleProjectOpen(project)}>Open</button>
+          <button onClick={() => remove(project)}>Remove</button>
         </div>
       ))}
     </>
