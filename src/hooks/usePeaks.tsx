@@ -16,7 +16,7 @@ export interface UsePeaksOptions {
   onInitialize?: (
     peaks: PeaksInstance,
     mediaFile: File,
-    { isNewFile }: { isNewFile: boolean }
+    { isNewProject }: { isNewProject: boolean }
   ) => void;
   onOpen?: (project: FileSystemFileHandle) => void;
   onPointAdd?: (point: SubdivisionPoint[]) => void;
@@ -45,10 +45,10 @@ export const usePeaks = ({
       mediaFile: File,
       {
         points,
-        isNewFile,
-      }: { points?: SubdivisionPointOptions[]; isNewFile?: boolean } = {
+        isNewProject,
+      }: { points?: SubdivisionPointOptions[]; isNewProject?: boolean } = {
         points: [],
-        isNewFile: false,
+        isNewProject: false,
       }
     ) => {
       const options: PeaksOptions = {
@@ -97,7 +97,9 @@ export const usePeaks = ({
         setMediaFile(mediaFile);
 
         if (onInitialize) {
-          onInitialize(peaks, mediaFile, { isNewFile: isNewFile ?? false });
+          onInitialize(peaks, mediaFile, {
+            isNewProject: isNewProject ?? false,
+          });
         }
 
         if (onPointAdd) {
@@ -131,7 +133,7 @@ export const usePeaks = ({
 
         initialize(await mediaFileHandle.getFile(), {
           points,
-          isNewFile: false,
+          isNewProject: false,
         });
       } else {
         console.error("Invalid file handle:", file);

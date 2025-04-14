@@ -45,8 +45,8 @@ function App() {
     mediaFile,
   } = usePeaks({
     subdivision,
-    onInitialize: async (_, mediaFile, { isNewFile }) => {
-      if (!isNewFile) return;
+    onInitialize: async (_, mediaFile, { isNewProject }) => {
+      if (!isNewProject) return;
       createNewProject(mediaFile);
     },
     onPointAdd: (points) =>
@@ -83,7 +83,7 @@ function App() {
       const file = files[0];
       if (file.type.startsWith("audio/")) {
         initialize(file, {
-          isNewFile: true,
+          isNewProject: true,
         });
         dialogRef.current?.close();
       } else {
