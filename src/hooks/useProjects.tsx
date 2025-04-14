@@ -89,6 +89,7 @@ export const useProjects = () => {
       const file = await currentProject.current.getFile();
       const data = await file.text();
       const projectData = JSON.parse(data) as SavedProjectData;
+
       projectData.points = projectData.points.filter(
         (point: SubdivisionPointOptions) =>
           !points.some((p) => p.id === point.id)
