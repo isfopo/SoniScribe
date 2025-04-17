@@ -14,6 +14,11 @@ export const mapPointToPointOptions = (point: Point): PointOptions => ({
   id: point._id as string,
 });
 
+/**
+ * Maps a Point to a SubdivisionPointOptions object. Removes the update property from the Point, which is non-serializable.
+ * @param point The Point to map.
+ * @returns The SubdivisionPointOptions object.
+ */
 export const mapSubdivisionPointToSubdivisionPointOption = (
   point: Point
 ): SubdivisionPointOptions => ({

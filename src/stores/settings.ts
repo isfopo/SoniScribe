@@ -10,7 +10,9 @@ export interface SettingsState {
 export const useSettingsStore = create<SettingsState>()(
   persist(
     (set) => ({
+      /** Current subdivision  */
       subdivision: 1,
+      /** Sets the current subdivision */
       setSubdivision: (subdivision) => {
         set({ subdivision });
       },

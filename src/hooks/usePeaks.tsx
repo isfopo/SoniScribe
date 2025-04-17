@@ -12,18 +12,28 @@ import { SavedProjectData } from "./useProjects";
 export interface UsePeaksOptions {
   /** The amount of time that the previous point will go back to the one before. */
   previousPointGap?: number;
+  /** The subdivision to use for the points. */
   subdivision?: Subdivision;
+  /** Callback function to be called when Peaks is initialized. */
   onInitialize?: (
     peaks: PeaksInstance,
     mediaFile: File,
     { isNewProject }: { isNewProject: boolean }
   ) => void;
+  /** Callback function to be called when a point is added. */
   onOpen?: (project: FileSystemFileHandle) => void;
+  /** Callback function to be called when a point is added. */
   onPointAdd?: (point: SubdivisionPoint[]) => void;
+  /** Callback function to be called when a point is removed. */
   onPointRemove?: (point: SubdivisionPoint[]) => void;
+  /** Callback function to be called when an error occurs. */
   onError?: (error: Error) => void;
 }
 
+/**
+ * Custom hook to manage Peaks.js instance and audio playback.
+ * It provides functions to initialize Peaks, play/pause audio, add points, and navigate through points.
+ */
 export const usePeaks = ({
   previousPointGap = 0.1,
   subdivision = 1,
@@ -40,6 +50,17 @@ export const usePeaks = ({
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [mediaFile, setMediaFile] = useState<File | null>(null);
 
+  /**
+   * Initializes Peaks.js with the given media file and options.
+   * @param mediaFile The media file to be played.
+   * @param options The options to be passed to Peaks.js.
+   * @param options.points The points to be added to the Peaks instance.
+   * @param options.isNewProject Whether the project is new or not.
+   * @returns void
+   * @throws Error if Peaks.js fails to initialize.
+   * @throws Error if the media file is not provided.
+   * @throws Error if the audio element is not found.
+   */
   const initialize = useCallback(
     (
       mediaFile: File,
@@ -118,6 +139,11 @@ export const usePeaks = ({
     [onError, onInitialize, onPointAdd, onPointRemove]
   );
 
+  /**
+   * Opens a file using the File System Access API.
+   * @param file The file to be opened.
+   * @returns void
+   */
   const open = useCallback(
     async (file: FileSystemHandle) => {
       if (file.kind === "file") {
@@ -145,6 +171,10 @@ export const usePeaks = ({
     [initialize, onError]
   );
 
+  /**
+   * Plays or pauses the audio playback.
+   * @returns void
+   */
   const playPause = () => {
     if (peaksRef.current) {
       const player = peaksRef.current.player;
@@ -158,6 +188,11 @@ export const usePeaks = ({
     }
   };
 
+  /**
+   * Adds a point to the Peaks instance.
+   * @param subdivision The subdivision to be added.
+   * @returns void
+   */
   const addPoint = ({
     subdivision,
   }: {
@@ -176,6 +211,10 @@ export const usePeaks = ({
     }
   };
 
+  /**
+   * Seeks to the next point in the Peaks instance.
+   * @returns void
+   */
   const nextPoint = () => {
     if (peaksRef.current) {
       const points = peaksRef.current.points.getPoints() as SubdivisionPoint[];
@@ -196,6 +235,10 @@ export const usePeaks = ({
     }
   };
 
+  /**
+   * Seeks to the previous point in the Peaks instance.
+   * @returns void
+   */
   const previousPoint = () => {
     if (peaksRef.current) {
       const points = peaksRef.current.points.getPoints() as SubdivisionPoint[];
