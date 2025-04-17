@@ -25,7 +25,7 @@ function App() {
 
   const {
     createNewProject,
-    remove,
+    deleteProject,
     projects,
     currentProject,
     setCurrentProject,
@@ -48,6 +48,7 @@ function App() {
     subdivision,
     onInitialize: async (_, mediaFile, { isNewProject }) => {
       if (!isNewProject) return;
+      // Create a new project if the user drops a file
       createNewProject(mediaFile);
     },
     onPointAdd: (points) =>
@@ -125,7 +126,7 @@ function App() {
       <ProjectList
         projects={projects}
         open={handleProjectOpen}
-        remove={remove}
+        remove={deleteProject}
       />
     </>
   );

@@ -1,3 +1,9 @@
+/**
+ * Stringifies an object, handling circular references by removing non-serializable members.
+ * @param obj - The object to stringify.
+ * @template T - The type of the object.
+ * @returns The object as a JSON string.
+ */
 export const stringify = <T extends object>(obj: T) => {
   let cache: Array<unknown> | null = [];
   const str = JSON.stringify(obj, (_, value) => {

@@ -1,15 +1,27 @@
 import { Point, PointOptions } from "peaks.js";
 
+/**
+ * Possible subdivisions.
+ */
 export type SubdivisionValue = 1 | 2 | 4 | 8 | 16 | 32 | 64;
 
+/**
+ * A point with a subdivision value.
+ */
 export interface SubdivisionPoint extends Point {
   subdivision: SubdivisionValue;
 }
 
+/**
+ * Options for a subdivision point.
+ */
 export interface SubdivisionPointOptions extends PointOptions {
   subdivision: SubdivisionValue;
 }
 
+/**
+ * A map of given subdivision values to a PointOptions object.
+ */
 export const SubdivisionPoints: Record<
   SubdivisionValue,
   Omit<PointOptions, "time">
@@ -37,6 +49,9 @@ export const SubdivisionPoints: Record<
   },
 } as const;
 
+/**
+ * The keys of the SubdivisionPoints object.
+ */
 export type Subdivision = keyof typeof SubdivisionPoints;
 
 /**

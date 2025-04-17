@@ -10,10 +10,26 @@ export interface SavedProjectData {
   size: number;
   points: SubdivisionPointOptions[];
 }
+
+/**
+ * Custom hook to manage projects in the file system.
+ * It provides functions to create, open, and remove projects.
+ * It also provides functions to add and remove points from the current project.
+ */
 export const useProjects = () => {
   const { write, entries, remove } = useFileSystem({});
+
   const currentProject = useRef<FileSystemFileHandle | undefined>(undefined);
 
+  /** The projects found on the users' folder */
+  const projects = entries.filter((entry) =>
+    entry.name.endsWith(".json")
+  ) as FileSystemFileHandle[];
+
+  /**
+   * Sets the current project to the given project.
+   * @param project The project to set as the current project.
+   */
   const setCurrentProject = useCallback(
     (project: FileSystemFileHandle | undefined) => {
       currentProject.current = project;
@@ -21,6 +37,10 @@ export const useProjects = () => {
     [currentProject]
   );
 
+  /**
+   * Creates a new project with the given media file.
+   * @param mediaFile The media file to create a project for.
+   */
   const createNewProject = useCallback(
     async (mediaFile: File) => {
       const name = prompt(
@@ -59,6 +79,26 @@ export const useProjects = () => {
     [write, setCurrentProject]
   );
 
+  /**
+   * Removes a project from the file system.
+   */
+  const deleteProject = useCallback(
+    async (file: FileSystemFileHandle) => {
+      if (
+        currentProject.current &&
+        (await file.isSameEntry(currentProject.current))
+      ) {
+        currentProject.current = undefined;
+      }
+      remove(file);
+    },
+    [remove]
+  );
+
+  /**
+   * Adds points to the current project.
+   * @param points The points to add to the current project.
+   */
   const addPointsToCurrentProject = useCallback(
     async (points: SubdivisionPointOptions[]) => {
       if (!currentProject.current) {
@@ -79,6 +119,10 @@ export const useProjects = () => {
     [write]
   );
 
+  /**
+   * Removes points from the current project.
+   * @param points The points to remove from the current project.
+   */
   const removePointsFromCurrentProject = useCallback(
     async (points: SubdivisionPointOptions[]) => {
       if (!currentProject.current) {
@@ -104,12 +148,12 @@ export const useProjects = () => {
   );
 
   return {
-    write,
-    remove,
-    projects: entries.filter((entry) => entry.name.endsWith(".json")),
+    projects,
+    /** The current project */
     currentProject: currentProject.current,
     setCurrentProject,
     createNewProject,
+    deleteProject,
     addPointsToCurrentProject,
     removePointsFromCurrentProject,
   };

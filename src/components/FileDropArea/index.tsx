@@ -2,15 +2,47 @@ import { PropsWithChildren, useCallback, useEffect, useRef } from "react";
 import styles from "./index.module.css";
 
 export interface FileDropAreaProps extends PropsWithChildren {
-  onDrop?: (files: File[]) => void;
-  onDragOver?: (event: DragEvent) => void;
-  onDragLeave?: (event: DragEvent) => void;
-  onDragEnter?: (event: DragEvent) => void;
+  /**
+   * Array of allowed file types for the drop area.
+   * If provided, only files with these types will be accepted.
+   */
   allowedFileTypes?: string[];
+  /**
+   * Maximum number of files that can be dropped.
+   * If provided, the drop will be rejected if the number of files exceeds this limit.
+   */
   maxCount?: number;
+  /**
+   * Callback function called when files are dropped into the drop area.
+   * @param files - Array of dropped files.
+   */
+  onDrop?: (files: File[]) => void;
+  /**
+   * Callback function called when a drag event occurs.
+   * @param event - The drag event.
+   */
+  onDragOver?: (event: DragEvent) => void;
+  /**
+   * Callback function called when a drag event leaves the drop area.
+   * @param event - The drag event.
+   */
+  onDragLeave?: (event: DragEvent) => void;
+  /**
+   * Callback function called when a drag event enters the drop area.
+   * @param event - The drag event.
+   */
+  onDragEnter?: (event: DragEvent) => void;
+  /**
+   * Callback function called when there are errors during the drop.
+   * @param errors - Array of Error objects representing the errors.
+   */
   onDropError?: (errors: Error[]) => void;
 }
 
+/**
+ * FileDropArea component that renders a file input and handles drag-and-drop events.
+ *
+ */
 export const FileDropArea = ({
   onDrop,
   onDragEnter,
