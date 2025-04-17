@@ -1,7 +1,7 @@
 export interface ProjectListProps {
-  projects: FileSystemHandle[];
-  open: (file: FileSystemHandle) => void;
-  remove: (file: FileSystemHandle) => void;
+  projects: FileSystemFileHandle[];
+  open: (file: FileSystemFileHandle) => void;
+  remove: (file: FileSystemFileHandle) => void;
 }
 
 export const ProjectList = ({ projects, open, remove }: ProjectListProps) => {
