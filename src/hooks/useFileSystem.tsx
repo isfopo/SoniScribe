@@ -63,7 +63,7 @@ export const useFileSystem = ({ onError }: UseFileSystemOptions) => {
     async (file: FileSystemHandle): Promise<void> => {
       try {
         const root = await navigator.storage.getDirectory();
-        root.removeEntry(file.name, { recursive: true });
+        await root.removeEntry(file.name, { recursive: true });
       } catch (error) {
         onError?.(error as Error);
       } finally {
