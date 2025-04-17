@@ -1,60 +1,106 @@
-# React + TypeScript + Vite
+# Transcription App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Welcome to the **Transcription App**, a cutting-edge tool designed to streamline your audio transcription workflow. Leveraging modern web technologies, this application offers a seamless experience for uploading, playing, and annotating audio files with precision.
 
-Currently, two official plugins are available:
+## Table of Contents
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [Transcription App](#transcription-app)
+  - [Table of Contents](#table-of-contents)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Scripts](#scripts)
+  - [Project Structure](#project-structure)
 
-## Expanding the ESLint configuration
+## Prerequisites
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Before you begin, ensure you have met the following requirements:
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-});
+- **Node.js**: Version 16 or higher. [Download Node.js](https://nodejs.org/)
+- **Git**: Installed on your machine. [Download Git](https://git-scm.com/)
+- **Microsoft Dev Tunnels**: [Install Dev Tunnels](https://learn.microsoft.com/en-us/azure/developer/dev-tunnels/get-started)
+
+## Installation
+
+1. **Clone the Repository**
+
+   ```bash
+   git clone https://github.com/your-username/transcription-app.git
+   cd transcription-app
+   ```
+
+2. Install Dependencies
+
+   ```bash
+   npm install
+   ```
+
+3. Start the Development Server
+
+   ```bash
+   npm run dev
+   ```
+
+4. Developing with HTTPS
+
+- Usage of the File System API requires the app to be hosted on HTTPS. Go to [Microsoft Dev Tunnels](https://learn.microsoft.com/en-us/azure/developer/dev-tunnels/get-started) to install Dev Tunnels on your machine. Then start the tunnel using:
+
+  ```bash
+  npm run tunnel
+  ```
+
+## Scripts
+
+The project includes several npm scripts to streamline development and deployment:
+
+Start Development Server
+
+```bash
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Build for Production
 
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    "react-x": reactX,
-    "react-dom": reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs["recommended-typescript"].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-});
+```bash
+npm run build
 ```
 
-## Developing with HTTPS
+Lint the Codebase
 
-Usage of the File System API requires the app to be hosted on HTTPS.
+```bash
+npm run lint
+```
 
-https://learn.microsoft.com/en-us/azure/developer/dev-tunnels/get-started?tabs=macos
+Preview the Production Build
+
+```bash
+npm run preview
+```
+
+## Project Structure
+
+Here's a brief overview of the project's structure:
+
+```file
+transcription-app/
+├── src/
+│ ├── components/
+│ ├── helpers/
+│ ├── hooks/
+│ ├── stores/
+│ ├── App.css
+│ ├── App.tsx
+│ └── main.tsx
+├── public/
+│ └── index.html
+├── eslint.config.js
+├── package.json
+├── tsconfig.json
+├── vite.config.ts
+└── README.md
+```
+
+- `components/`: Reusable UI components like AudioPlayer, FileDropArea, etc.
+- `helpers/`: Utility functions for file handling and object manipulation.
+- `hooks/`: Custom React hooks for enhanced functionality.
+- `stores/`: State management using Zustand.
+- `public/`: Static assets and the main `index.html` file.
