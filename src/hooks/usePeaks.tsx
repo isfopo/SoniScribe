@@ -273,16 +273,12 @@ export const usePeaks = ({
    * @param rate The playback rate to be set (between 0.5 and 2).
    * @returns void
    */
-  const setPlaybackRate = (rate: number) => {
+  const setPlaybackRate = (rate: 0.25 | 0.5 | 0.75 | 1) => {
     if (!audioElementRef.current) {
       handleError(new Error("Audio element not found"));
       return;
     }
 
-    if (rate < 0.5 || rate > 2) {
-      handleError(new Error("Playback rate must be between 0.5 and 2"));
-      return;
-    }
     audioElementRef.current.playbackRate = rate;
   };
 
