@@ -99,8 +99,6 @@ export const ProjectView = (): React.ReactElement => {
     setCurrentProject(file as FileSystemFileHandle);
   };
 
-  console.log("currentProject", currentProject);
-
   if (!currentProject) {
     return (
       <div>
