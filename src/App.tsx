@@ -43,6 +43,7 @@ function App() {
     isPlaying,
     initialize,
     open,
+    setPlaybackRate,
     mediaFile,
   } = usePeaks({
     subdivision,
@@ -122,12 +123,17 @@ function App() {
         onSelect={setSubdivision}
       />
 
-      <button onClick={() => openDialog()}>New</button>
-      <ProjectList
-        projects={projects}
-        open={handleProjectOpen}
-        remove={deleteProject}
-      />
+      <button onClick={() => setPlaybackRate(0.5)}>0.5x</button>
+      <button onClick={() => setPlaybackRate(1)}>1x</button>
+
+      <div>
+        <button onClick={() => openDialog()}>New</button>
+        <ProjectList
+          projects={projects}
+          open={handleProjectOpen}
+          remove={deleteProject}
+        />
+      </div>
     </>
   );
 }
