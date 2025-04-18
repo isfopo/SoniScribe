@@ -61,6 +61,13 @@ export const usePeaks = ({
    * @throws Error if the media file is not provided.
    * @throws Error if the audio element is not found.
    */
+  const handleError = (error: Error) => {
+    console.error(error.message);
+    if (onError) {
+      onError(error);
+    }
+  };
+
   const initialize = useCallback(
     (
       mediaFile: File,
@@ -261,17 +268,36 @@ export const usePeaks = ({
     }
   };
 
+  /**
+   * Sets the playback rate of the audio element.
+   * @param rate The playback rate to be set (between 0.5 and 2).
+   * @returns void
+   */
+  const setPlaybackRate = (rate: number) => {
+    if (!audioElementRef.current) {
+      handleError(new Error("Audio element not found"));
+      return;
+    }
+
+    if (rate < 0.5 || rate > 2) {
+      handleError(new Error("Playback rate must be between 0.5 and 2"));
+      return;
+    }
+    audioElementRef.current.playbackRate = rate;
+  };
+
   return {
     peaksRef,
     viewRef,
     audioElementRef,
+    isPlaying,
+    mediaFile,
+    open,
     initialize,
     playPause,
     addPoint,
     nextPoint,
     previousPoint,
-    isPlaying,
-    mediaFile,
-    open,
+    setPlaybackRate,
   };
 };
