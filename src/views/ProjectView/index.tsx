@@ -89,7 +89,7 @@ export const ProjectView = (): React.ReactElement => {
         });
         dialogRef.current?.close();
       } else {
-        console.error("Invalid file type. Please drop an audio file.");
+        alert("Invalid file type. Please drop an audio file.");
       }
     }
   };
