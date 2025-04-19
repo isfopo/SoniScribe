@@ -1,0 +1,15 @@
+.hidden {
+  display: none;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #242424;
+  z-index: 9999;
+}

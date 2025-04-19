@@ -10,6 +10,7 @@ import { useKeyPress } from "../../hooks/useKeyPress";
 import { usePeaks } from "../../hooks/usePeaks";
 import { useProjects } from "../../hooks/useProjects";
 import { useSettingsStore } from "../../stores/settings";
+import styles from "./index.module.css";
 
 export const ProjectView = (): React.ReactElement => {
   const { subdivision, setSubdivision } = useSettingsStore();
@@ -99,9 +100,10 @@ export const ProjectView = (): React.ReactElement => {
     setCurrentProject(file as FileSystemFileHandle);
   };
 
-  if (!currentProject) {
-    return (
-      <div>
+  return (
+    <>
+      <DragAndDropDialog dialogRef={dialogRef} onDrop={handleDrop} />
+      <div className={currentProject ? styles["hidden"] : styles["overlay"]}>
         <button onClick={() => openDialog()}>New</button>
         <ProjectList
           projects={projects}
@@ -109,12 +111,6 @@ export const ProjectView = (): React.ReactElement => {
           remove={deleteProject}
         />
       </div>
-    );
-  }
-
-  return (
-    <>
-      <DragAndDropDialog dialogRef={dialogRef} onDrop={handleDrop} />
 
       <p>{currentProject?.name}</p>
       <Transport
