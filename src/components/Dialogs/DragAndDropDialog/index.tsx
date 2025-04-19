@@ -1,4 +1,5 @@
 import { FileDropArea } from "../../FileDropArea";
+import { Dialog } from "../Dialog";
 
 export interface DragAndDropDialogProps {
   /**
@@ -59,11 +60,7 @@ export const DragAndDropDialog = ({
   maxCount,
 }: DragAndDropDialogProps) => {
   return (
-    <dialog
-      ref={dialogRef}
-      className="file-drop-dialog"
-      onClick={() => dialogRef.current?.close()}
-    >
+    <Dialog ref={dialogRef} onClick={() => dialogRef.current?.close()}>
       <FileDropArea
         onDrop={onDrop}
         onDragOver={onDragOver}
@@ -75,6 +72,6 @@ export const DragAndDropDialog = ({
       >
         <h2>Drop a song here</h2>
       </FileDropArea>
-    </dialog>
+    </Dialog>
   );
 };
