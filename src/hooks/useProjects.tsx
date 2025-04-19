@@ -1,8 +1,9 @@
-import { useCallback, useRef } from "react";
+import { useCallback } from "react";
 import { useFileSystem } from "./useFileSystem";
 import { SubdivisionPointOptions } from "../helpers/subdivisions";
 import { stringify } from "../helpers/objects";
 import { stripExtension } from "../helpers/files";
+import { useProjectStore } from "../stores/project";
 
 export interface SavedProjectData {
   media: string;
@@ -18,24 +19,12 @@ export interface SavedProjectData {
  */
 export const useProjects = () => {
   const { write, entries, remove } = useFileSystem({});
-
-  const currentProject = useRef<FileSystemFileHandle | undefined>(undefined);
+  const { currentProject, setCurrentProject } = useProjectStore();
 
   /** The projects found on the users' folder */
   const projects = entries.filter((entry) =>
     entry.name.endsWith(".json")
   ) as FileSystemFileHandle[];
-
-  /**
-   * Sets the current project to the given project.
-   * @param project The project to set as the current project.
-   */
-  const setCurrentProject = useCallback(
-    (project: FileSystemFileHandle | undefined) => {
-      currentProject.current = project;
-    },
-    [currentProject]
-  );
 
   /**
    * Creates a new project with the given media file.
@@ -84,15 +73,12 @@ export const useProjects = () => {
    */
   const deleteProject = useCallback(
     async (file: FileSystemFileHandle) => {
-      if (
-        currentProject.current &&
-        (await file.isSameEntry(currentProject.current))
-      ) {
-        currentProject.current = undefined;
+      if (currentProject && (await file.isSameEntry(currentProject))) {
+        setCurrentProject(null);
       }
       remove(file);
     },
-    [remove]
+    [currentProject, remove, setCurrentProject]
   );
 
   /**
@@ -101,22 +87,22 @@ export const useProjects = () => {
    */
   const addPointsToCurrentProject = useCallback(
     async (points: SubdivisionPointOptions[]) => {
-      if (!currentProject.current) {
+      if (!currentProject) {
         console.error("No current project selected");
         return;
       }
 
-      const file = await currentProject.current.getFile();
+      const file = await currentProject.getFile();
       const data = await file.text();
       const projectData = JSON.parse(data) as SavedProjectData;
       projectData.points = [...projectData.points, ...points];
 
       await write(
-        currentProject.current.name,
+        currentProject.name,
         new Blob([stringify(projectData)], { type: "application/json" })
       );
     },
-    [write]
+    [currentProject, write]
   );
 
   /**
@@ -125,12 +111,12 @@ export const useProjects = () => {
    */
   const removePointsFromCurrentProject = useCallback(
     async (points: SubdivisionPointOptions[]) => {
-      if (!currentProject.current) {
+      if (!currentProject) {
         console.error("No current project selected");
         return;
       }
 
-      const file = await currentProject.current.getFile();
+      const file = await currentProject.getFile();
       const data = await file.text();
       const projectData = JSON.parse(data) as SavedProjectData;
 
@@ -140,17 +126,17 @@ export const useProjects = () => {
       );
 
       await write(
-        currentProject.current.name,
+        currentProject.name,
         new Blob([stringify(projectData)], { type: "application/json" })
       );
     },
-    [write]
+    [currentProject, write]
   );
 
   return {
     projects,
     /** The current project */
-    currentProject: currentProject.current,
+    currentProject,
     setCurrentProject,
     createNewProject,
     deleteProject,
