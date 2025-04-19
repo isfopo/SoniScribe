@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useFileSystem } from "./useFileSystem";
 import { SubdivisionPointOptions } from "../helpers/subdivisions";
 import { stringify } from "../helpers/objects";
@@ -19,7 +19,20 @@ export interface SavedProjectData {
  */
 export const useProjects = () => {
   const { write, entries, remove } = useFileSystem({});
-  const { currentProject, setCurrentProject } = useProjectStore();
+  const { getCurrentProject, setCurrentProject } = useProjectStore();
+
+  const [currentProject, setCurrentProjectState] =
+    useState<FileSystemFileHandle>();
+
+  useEffect(() => {
+    const loadCurrentProject = async () => {
+      const project = await getCurrentProject();
+      if (project) {
+        setCurrentProjectState(project);
+      }
+    };
+    loadCurrentProject();
+  }, [getCurrentProject]);
 
   /** The projects found on the users' folder */
   const projects = entries.filter((entry) =>
@@ -73,12 +86,14 @@ export const useProjects = () => {
    */
   const deleteProject = useCallback(
     async (file: FileSystemFileHandle) => {
+      const currentProject = await getCurrentProject();
+
       if (currentProject && (await file.isSameEntry(currentProject))) {
         setCurrentProject(null);
       }
       remove(file);
     },
-    [currentProject, remove, setCurrentProject]
+    [getCurrentProject, remove, setCurrentProject]
   );
 
   /**
@@ -87,6 +102,8 @@ export const useProjects = () => {
    */
   const addPointsToCurrentProject = useCallback(
     async (points: SubdivisionPointOptions[]) => {
+      const currentProject = await getCurrentProject();
+
       if (!currentProject) {
         console.error("No current project selected");
         return;
@@ -102,7 +119,7 @@ export const useProjects = () => {
         new Blob([stringify(projectData)], { type: "application/json" })
       );
     },
-    [currentProject, write]
+    [getCurrentProject, write]
   );
 
   /**
@@ -111,6 +128,8 @@ export const useProjects = () => {
    */
   const removePointsFromCurrentProject = useCallback(
     async (points: SubdivisionPointOptions[]) => {
+      const currentProject = await getCurrentProject();
+
       if (!currentProject) {
         console.error("No current project selected");
         return;
@@ -130,7 +149,7 @@ export const useProjects = () => {
         new Blob([stringify(projectData)], { type: "application/json" })
       );
     },
-    [currentProject, write]
+    [getCurrentProject, write]
   );
 
   return {
@@ -138,7 +157,9 @@ export const useProjects = () => {
     /** The current project */
     currentProject,
     setCurrentProject,
+    /** The function to create a new project */
     createNewProject,
+    /** The function to delete a project */
     deleteProject,
     addPointsToCurrentProject,
     removePointsFromCurrentProject,

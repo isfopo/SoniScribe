@@ -24,3 +24,11 @@ export const stringify = <T extends object>(obj: T) => {
   cache = null; // reset the cache
   return str;
 };
+
+export const isEmpty = <T extends object>(obj: T) => {
+  return Object.keys(obj).length === 0;
+};
+
+export const isNullOrEmpty = <T extends object>(obj: T | null) => {
+  return obj === null || isEmpty(obj);
+};

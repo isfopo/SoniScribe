@@ -288,6 +288,7 @@ export const usePeaks = ({
     audioElementRef,
     isPlaying,
     mediaFile,
+    isInitialized: !!peaksRef.current,
     open,
     initialize,
     playPause,

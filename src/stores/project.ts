@@ -2,16 +2,30 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 export interface ProjectState {
-  currentProject: FileSystemFileHandle | null;
+  currentProject: string | null;
+  getCurrentProject: () => Promise<FileSystemFileHandle | null>;
   setCurrentProject: (project: FileSystemFileHandle | null) => void;
 }
 
 export const useProjectStore = create<ProjectState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       currentProject: null,
+      getCurrentProject: async () => {
+        const { currentProject } = get();
+
+        if (!currentProject) {
+          return null;
+        }
+
+        const root = await navigator.storage.getDirectory();
+        return await root.getFileHandle(currentProject, {
+          create: true,
+        });
+      },
       setCurrentProject: (project) => {
-        set({ currentProject: project });
+        debugger;
+        set({ currentProject: project?.name });
       },
     }),
     {

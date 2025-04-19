@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { AudioPlayer } from "../../components/AudioPlayer";
 import { DragAndDropDialog } from "../../components/Dialogs/DragAndDropDialog";
 import { ProjectList } from "../../components/ProjectList";
@@ -40,6 +40,7 @@ export const ProjectView = (): React.ReactElement => {
     addPoint,
     nextPoint,
     previousPoint,
+    isInitialized,
     isPlaying,
     initialize,
     open,
@@ -99,6 +100,12 @@ export const ProjectView = (): React.ReactElement => {
     open(file);
     setCurrentProject(file as FileSystemFileHandle);
   };
+
+  useEffect(() => {
+    if (currentProject && !isInitialized) {
+      open(currentProject);
+    }
+  }, [currentProject, isInitialized, open]);
 
   return (
     <>
