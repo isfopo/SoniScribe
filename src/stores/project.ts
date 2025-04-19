@@ -4,8 +4,6 @@ import { persist, createJSONStorage } from "zustand/middleware";
 export interface ProjectState {
   currentProject: FileSystemFileHandle | null;
   setCurrentProject: (project: FileSystemFileHandle | null) => void;
-  projects: FileSystemFileHandle[];
-  setProjects: (projects: FileSystemFileHandle[]) => void;
 }
 
 export const useProjectStore = create<ProjectState>()(
@@ -14,10 +12,6 @@ export const useProjectStore = create<ProjectState>()(
       currentProject: null,
       setCurrentProject: (project) => {
         set({ currentProject: project });
-      },
-      projects: [],
-      setProjects: (projects) => {
-        set({ projects });
       },
     }),
     {
