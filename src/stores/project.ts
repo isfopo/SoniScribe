@@ -24,7 +24,6 @@ export const useProjectStore = create<ProjectState>()(
         });
       },
       setCurrentProject: (project) => {
-        debugger;
         set({ currentProject: project?.name });
       },
     }),
