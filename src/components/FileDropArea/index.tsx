@@ -35,17 +35,17 @@ export interface FileDropAreaProps {
    * Callback function called when a drag event occurs.
    * @param event - The drag event.
    */
-  onDragOver?: (event: React.DragEvent<HTMLDivElement>) => void;
+  onDragOver?: DragEventHandler<HTMLDivElement>;
   /**
    * Callback function called when a drag event leaves the drop area.
    * @param event - The drag event.
    */
-  onDragLeave?: (event: React.DragEvent<HTMLDivElement>) => void;
+  onDragLeave?: DragEventHandler<HTMLDivElement>;
   /**
    * Callback function called when a drag event enters the drop area.
    * @param event - The drag event.
    */
-  onDragEnter?: (event: React.DragEvent<HTMLDivElement>) => void;
+  onDragEnter?: DragEventHandler<HTMLDivElement>;
   /**
    * Callback function called when there are errors during the drop.
    * @param errors - Array of Error objects representing the errors.

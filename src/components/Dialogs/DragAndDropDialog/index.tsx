@@ -1,3 +1,4 @@
+import { DragEventHandler } from "react";
 import { FileDropArea } from "../../FileDropArea";
 import { Dialog } from "../Dialog";
 
@@ -31,17 +32,17 @@ export interface DragAndDropDialogProps {
    * Callback function to be called when a drag event occurs.
    * @param event - The drag event.
    */
-  onDragOver?: (event: DragEvent) => void;
+  onDragOver?: DragEventHandler<HTMLDivElement>;
   /**
    * Callback function to be called when a drag event leaves the drop area.
    * @param event - The drag event.
    */
-  onDragLeave?: (event: DragEvent) => void;
+  onDragLeave?: DragEventHandler<HTMLDivElement>;
   /**
    * Callback function to be called when a drag event enters the drop area.
    * @param event - The drag event.
    */
-  onDragEnter?: (event: DragEvent) => void;
+  onDragEnter?: DragEventHandler<HTMLDivElement>;
   /**
    * Callback function to be called when there are errors during the drop.
    * @param errors - Array of Error objects representing the errors.
