@@ -1,3 +1,4 @@
+import { XIcon } from "lucide-react";
 import styles from "./index.module.css";
 
 export interface DialogProps
@@ -37,7 +38,7 @@ export const Dialog = ({
             if (dialogRef.current) dialogRef.current.close();
           }}
         >
-          Close
+          <XIcon />
         </button>
         <h2 className={styles["dialog-title"]}>{props.title}</h2>
       </header>
