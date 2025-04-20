@@ -102,7 +102,12 @@ export const ProjectView = (): React.ReactElement => {
 
   return (
     <>
-      <DragAndDropDialog dialogRef={dialogRef} onDrop={handleDrop} />
+      <DragAndDropDialog
+        dialogRef={dialogRef}
+        onDrop={handleDrop}
+        allowedFileTypes={["audio/mpeg", "audio/wav", "audio/ogg"]}
+        maxCount={1}
+      />
       <div className={currentProject ? styles["hidden"] : styles["overlay"]}>
         <button onClick={() => openDialog()}>New</button>
         <ProjectList

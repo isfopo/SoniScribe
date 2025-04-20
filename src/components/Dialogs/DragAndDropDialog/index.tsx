@@ -1,4 +1,6 @@
+import { DragEventHandler } from "react";
 import { FileDropArea } from "../../FileDropArea";
+import { Dialog } from "../Dialog";
 
 export interface DragAndDropDialogProps {
   /**
@@ -17,6 +19,11 @@ export interface DragAndDropDialogProps {
    */
   maxCount?: number;
   /**
+   * Maximum size of files that can be dropped in bytes.
+   * If not provided, there is no limit on the file size.
+   */
+  maxSize?: number;
+  /**
    * Callback function to be called when files are dropped.
    * @param files - Array of File objects representing the dropped files.
    */
@@ -25,17 +32,17 @@ export interface DragAndDropDialogProps {
    * Callback function to be called when a drag event occurs.
    * @param event - The drag event.
    */
-  onDragOver?: (event: DragEvent) => void;
+  onDragOver?: DragEventHandler<HTMLDivElement>;
   /**
    * Callback function to be called when a drag event leaves the drop area.
    * @param event - The drag event.
    */
-  onDragLeave?: (event: DragEvent) => void;
+  onDragLeave?: DragEventHandler<HTMLDivElement>;
   /**
    * Callback function to be called when a drag event enters the drop area.
    * @param event - The drag event.
    */
-  onDragEnter?: (event: DragEvent) => void;
+  onDragEnter?: DragEventHandler<HTMLDivElement>;
   /**
    * Callback function to be called when there are errors during the drop.
    * @param errors - Array of Error objects representing the errors.
@@ -57,13 +64,10 @@ export const DragAndDropDialog = ({
   onDropError,
   allowedFileTypes,
   maxCount,
+  maxSize,
 }: DragAndDropDialogProps) => {
   return (
-    <dialog
-      ref={dialogRef}
-      className="file-drop-dialog"
-      onClick={() => dialogRef.current?.close()}
-    >
+    <Dialog dialogRef={dialogRef} onClick={() => dialogRef.current?.close()}>
       <FileDropArea
         onDrop={onDrop}
         onDragOver={onDragOver}
@@ -71,10 +75,9 @@ export const DragAndDropDialog = ({
         onDragEnter={onDragEnter}
         allowedFileTypes={allowedFileTypes}
         maxCount={maxCount}
+        maxSize={maxSize}
         onDropError={onDropError}
-      >
-        <h2>Drop a song here</h2>
-      </FileDropArea>
-    </dialog>
+      ></FileDropArea>
+    </Dialog>
   );
 };
