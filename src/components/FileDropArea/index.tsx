@@ -212,6 +212,8 @@ export const FileDropArea = ({
     dropInputRef.current?.click();
   }, []);
 
+  const fileText = maxCount === 1 ? "file" : "files";
+
   return (
     <div className={styles["drop-area"]} onClick={handleClick}>
       <input
@@ -224,9 +226,11 @@ export const FileDropArea = ({
         aria-label="File Drop Area"
       />
       <div className={styles["drop-area-overlay"]}>
-        <p>Drag and drop files here or click to select files</p>
+        <p>
+          Drag and drop {fileText} here or click to select {fileText}
+        </p>
         <p>or</p>
-        <Button onClick={handleClick}>Click to select files</Button>
+        <Button onClick={handleClick}>Click to select {fileText}</Button>
 
         {allowedFileTypes && (
           <p className={styles["allowed-file-types"]}>
@@ -234,9 +238,9 @@ export const FileDropArea = ({
           </p>
         )}
 
-        {maxCount && (
+        {maxCount && maxCount > 1 && (
           <p className={styles["max-file-count"]}>
-            Maximum file count: {maxCount}
+            Maximum number of files: {maxCount}
           </p>
         )}
 
