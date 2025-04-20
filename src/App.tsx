@@ -4,5 +4,6 @@ import { ProjectView } from "./views/ProjectView";
 
 export const App = (): React.ReactElement => {
   useTheme();
+
   return <ProjectView />;
 };
