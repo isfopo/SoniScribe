@@ -41,6 +41,7 @@ export const Dialog = ({
           <XIcon />
         </button>
         <h2 className={styles["dialog-title"]}>{props.title}</h2>
+        <hr />
       </header>
       {children}
     </dialog>
