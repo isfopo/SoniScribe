@@ -1,8 +1,9 @@
-import { PropsWithChildren, useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import styles from "./index.module.css";
 import { Button } from "../Button";
+import { displayBytes } from "../../helpers/files";
 
-export interface FileDropAreaProps extends PropsWithChildren {
+export interface FileDropAreaProps {
   /**
    * Array of allowed file types for the drop area.
    * If provided, only files with these types will be accepted.
@@ -13,6 +14,11 @@ export interface FileDropAreaProps extends PropsWithChildren {
    * If provided, the drop will be rejected if the number of files exceeds this limit.
    */
   maxCount?: number;
+  /**
+   * Maximum size of files that can be dropped in bytes.
+   * If provided, the drop will be rejected if the file size exceeds this limit.
+   */
+  maxSize?: number;
   /**
    * Callback function called when files are dropped into the drop area.
    * @param files - Array of dropped files.
@@ -51,8 +57,8 @@ export const FileDropArea = ({
   onDragOver,
   allowedFileTypes,
   maxCount,
+  maxSize,
   onDropError,
-  children,
 }: FileDropAreaProps) => {
   const dropInputRef = useRef<HTMLInputElement>(null);
 
@@ -111,6 +117,16 @@ export const FileDropArea = ({
         );
       }
 
+      if (maxSize) {
+        const files = Array.from(event.dataTransfer.files);
+        const invalidFiles = files.filter((file) => file.size > maxSize);
+        if (invalidFiles.length > 0) {
+          errors.push(
+            new Error(`File size exceeded. Maximum size: ${maxSize} bytes`)
+          );
+        }
+      }
+
       if (allowedFileTypes) {
         const files = Array.from(event.dataTransfer.files);
         const validFiles = files.filter((file) =>
@@ -143,7 +159,7 @@ export const FileDropArea = ({
         }
       }
     },
-    [allowedFileTypes, maxCount, onDrop, onDropError]
+    [allowedFileTypes, maxCount, maxSize, onDrop, onDropError]
   );
 
   const handleFileInputChange = useCallback(
@@ -207,8 +223,29 @@ export const FileDropArea = ({
         accept={allowedFileTypes?.join(",")}
         aria-label="File Drop Area"
       />
+      <div className={styles["drop-area-overlay"]}>
+        <p>Drag and drop files here or click to select files</p>
+        <p>or</p>
+        <Button onClick={handleClick}>Click to select files</Button>
 
-      {children}
+        {allowedFileTypes && (
+          <p className={styles["allowed-file-types"]}>
+            Allowed file types: {allowedFileTypes.join(", ")}
+          </p>
+        )}
+
+        {maxCount && (
+          <p className={styles["max-file-count"]}>
+            Maximum file count: {maxCount}
+          </p>
+        )}
+
+        {maxSize && (
+          <p className={styles["max-file-size"]}>
+            Maximum file size: {displayBytes(maxSize)}
+          </p>
+        )}
+      </div>
     </div>
   );
 };

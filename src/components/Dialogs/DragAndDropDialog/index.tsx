@@ -18,6 +18,11 @@ export interface DragAndDropDialogProps {
    */
   maxCount?: number;
   /**
+   * Maximum size of files that can be dropped in bytes.
+   * If not provided, there is no limit on the file size.
+   */
+  maxSize?: number;
+  /**
    * Callback function to be called when files are dropped.
    * @param files - Array of File objects representing the dropped files.
    */
@@ -58,6 +63,7 @@ export const DragAndDropDialog = ({
   onDropError,
   allowedFileTypes,
   maxCount,
+  maxSize,
 }: DragAndDropDialogProps) => {
   return (
     <Dialog dialogRef={dialogRef} onClick={() => dialogRef.current?.close()}>
@@ -68,10 +74,9 @@ export const DragAndDropDialog = ({
         onDragEnter={onDragEnter}
         allowedFileTypes={allowedFileTypes}
         maxCount={maxCount}
+        maxSize={maxSize}
         onDropError={onDropError}
-      >
-        <h2>Drop a song here</h2>
-      </FileDropArea>
+      ></FileDropArea>
     </Dialog>
   );
 };
