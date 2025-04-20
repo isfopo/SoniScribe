@@ -1,4 +1,5 @@
 import { DetailedHTMLProps, ButtonHTMLAttributes } from "react";
+import styles from "./index.module.css";
 
 export interface ButtonProps
   extends Omit<
@@ -10,5 +11,5 @@ export interface ButtonProps
   > {}
 
 export const Button = (props: ButtonProps) => {
-  return <button {...props}></button>;
+  return <button className={styles["button"]} {...props}></button>;
 };
