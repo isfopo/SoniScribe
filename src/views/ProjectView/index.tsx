@@ -107,7 +107,6 @@ export const ProjectView = (): React.ReactElement => {
         onDrop={handleDrop}
         allowedFileTypes={["audio/mpeg", "audio/wav", "audio/ogg"]}
         maxCount={1}
-        maxSize={10 * 1024 * 1024} // 10MB
       />
       <div className={currentProject ? styles["hidden"] : styles["overlay"]}>
         <button onClick={() => openDialog()}>New</button>
