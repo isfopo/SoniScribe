@@ -1,4 +1,3 @@
-import "./App.css";
 import { useTheme } from "./theme/useTheme";
 import { ProjectView } from "./views/ProjectView";
 
