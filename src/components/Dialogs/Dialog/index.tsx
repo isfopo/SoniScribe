@@ -32,16 +32,21 @@ export const Dialog = ({
     <dialog ref={dialogRef} className={styles["dialog"]} {...props}>
       <header>
         <button
+          type="button"
+          aria-label="Close"
+          title="Close"
+          tabIndex={0}
           className={styles["close-button"]}
           onClick={() => {
             if (onClose) onClose();
             if (dialogRef.current) dialogRef.current.close();
           }}
         >
+          {/* Close button shown on desktop*/}
           <XIcon />
         </button>
         <h2 className={styles["dialog-title"]}>{props.title}</h2>
-        <hr />
+        <hr /> {/* hr shown on mobile */}
       </header>
       {children}
     </dialog>
