@@ -226,19 +226,19 @@ export const FileDropArea = ({
 
         {allowedFileTypes && (
           <p className={styles["allowed-file-types"]}>
-            Allowed file types: {allowedFileTypes.join(", ")}
+            Allowed file types: <strong>{allowedFileTypes.join(", ")}</strong>
           </p>
         )}
 
         {maxCount && maxCount > 1 && (
           <p className={styles["max-file-count"]}>
-            Maximum number of files: {maxCount}
+            Maximum number of files: <strong>{maxCount}</strong>
           </p>
         )}
 
         {maxSize && (
           <p className={styles["max-file-size"]}>
-            Maximum file size: {displayBytes(maxSize)}
+            Maximum file size: <strong>{displayBytes(maxSize)}</strong>
           </p>
         )}
       </div>
