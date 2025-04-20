@@ -60,7 +60,7 @@ export const DragAndDropDialog = ({
   maxCount,
 }: DragAndDropDialogProps) => {
   return (
-    <Dialog ref={dialogRef} onClick={() => dialogRef.current?.close()}>
+    <Dialog dialogRef={dialogRef} onClick={() => dialogRef.current?.close()}>
       <FileDropArea
         onDrop={onDrop}
         onDragOver={onDragOver}

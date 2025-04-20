@@ -1,6 +1,7 @@
 import styles from "./index.module.css";
 
-export interface DialogProps extends React.HTMLProps<HTMLDialogElement> {
+export interface DialogProps
+  extends Omit<React.HTMLProps<HTMLDialogElement>, "className"> {
   /**
    * Ref to the dialog element.
    * This is used to control the dialog element (open, close, etc.).
@@ -20,8 +21,27 @@ export interface DialogProps extends React.HTMLProps<HTMLDialogElement> {
   onCancel?: () => void;
 }
 
-export const Dialog = (
-  props: Omit<React.HTMLProps<HTMLDialogElement>, "className">
-) => {
-  return <dialog className={styles["dialog"]} {...props}></dialog>;
+export const Dialog = ({
+  children,
+  dialogRef,
+  onClose,
+  ...props
+}: DialogProps) => {
+  return (
+    <dialog ref={dialogRef} className={styles["dialog"]} {...props}>
+      <header>
+        <button
+          className={styles["close-button"]}
+          onClick={() => {
+            if (onClose) onClose();
+            if (dialogRef.current) dialogRef.current.close();
+          }}
+        >
+          Close
+        </button>
+        <h2 className={styles["dialog-title"]}>{props.title}</h2>
+      </header>
+      {children}
+    </dialog>
+  );
 };
