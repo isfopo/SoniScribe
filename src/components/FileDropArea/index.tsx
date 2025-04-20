@@ -204,7 +204,6 @@ export const FileDropArea = ({
       onDragLeave={handleDragLeave}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
-      onChange={handleFileInputChange}
     >
       <input
         id="file-drop-area"
@@ -214,6 +213,7 @@ export const FileDropArea = ({
         className={styles["file-drop-input"]}
         accept={allowedFileTypes?.join(",")}
         aria-label="File Drop Area"
+        onChange={handleFileInputChange}
       />
       <div className={styles["drop-area-overlay"]}>
         <span className={styles["drop-area-text"]}>
