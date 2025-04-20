@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useRef } from "react";
+import {
+  DragEventHandler,
+  FormEvent,
+  FormEventHandler,
+  MouseEventHandler,
+  useCallback,
+  useRef,
+} from "react";
 import styles from "./index.module.css";
 import { Button } from "../Button";
 import { displayBytes } from "../../helpers/files";
@@ -28,17 +35,17 @@ export interface FileDropAreaProps {
    * Callback function called when a drag event occurs.
    * @param event - The drag event.
    */
-  onDragOver?: (event: DragEvent) => void;
+  onDragOver?: (event: React.DragEvent<HTMLDivElement>) => void;
   /**
    * Callback function called when a drag event leaves the drop area.
    * @param event - The drag event.
    */
-  onDragLeave?: (event: DragEvent) => void;
+  onDragLeave?: (event: React.DragEvent<HTMLDivElement>) => void;
   /**
    * Callback function called when a drag event enters the drop area.
    * @param event - The drag event.
    */
-  onDragEnter?: (event: DragEvent) => void;
+  onDragEnter?: (event: React.DragEvent<HTMLDivElement>) => void;
   /**
    * Callback function called when there are errors during the drop.
    * @param errors - Array of Error objects representing the errors.
@@ -62,8 +69,8 @@ export const FileDropArea = ({
 }: FileDropAreaProps) => {
   const dropInputRef = useRef<HTMLInputElement>(null);
 
-  const handleDragEnter = useCallback(
-    (event: DragEvent) => {
+  const handleDragEnter: DragEventHandler<HTMLDivElement> = useCallback(
+    (event: React.DragEvent<HTMLDivElement>) => {
       event.preventDefault();
       event.stopPropagation();
       // Call the onDragEnter callback if provided
@@ -74,8 +81,8 @@ export const FileDropArea = ({
     [onDragEnter]
   );
 
-  const handleDragLeave = useCallback(
-    (event: DragEvent) => {
+  const handleDragLeave: DragEventHandler<HTMLDivElement> = useCallback(
+    (event: React.DragEvent<HTMLDivElement>) => {
       event.preventDefault();
       event.stopPropagation();
       // Call the onDragLeave callback if provided
@@ -86,8 +93,8 @@ export const FileDropArea = ({
     [onDragLeave]
   );
 
-  const handleDragOver = useCallback(
-    (event: DragEvent) => {
+  const handleDragOver: DragEventHandler<HTMLDivElement> = useCallback(
+    (event: React.DragEvent<HTMLDivElement>) => {
       event.preventDefault();
       event.stopPropagation();
       // Call the onDragOver callback if provided
@@ -98,8 +105,8 @@ export const FileDropArea = ({
     [onDragOver]
   );
 
-  const handleDrop = useCallback(
-    (event: DragEvent) => {
+  const handleDrop: DragEventHandler<HTMLDivElement> = useCallback(
+    (event: React.DragEvent<HTMLDivElement>) => {
       event.preventDefault();
       event.stopPropagation();
 
@@ -162,8 +169,8 @@ export const FileDropArea = ({
     [allowedFileTypes, maxCount, maxSize, onDrop, onDropError]
   );
 
-  const handleFileInputChange = useCallback(
-    (event: Event) => {
+  const handleFileInputChange: FormEventHandler<HTMLDivElement> = useCallback(
+    (event: FormEvent<HTMLDivElement>) => {
       event.preventDefault();
       event.stopPropagation();
 
@@ -181,41 +188,24 @@ export const FileDropArea = ({
     [onDrop]
   );
 
-  useEffect(() => {
-    const dropArea = dropInputRef.current;
-    if (dropArea) {
-      dropArea.addEventListener("dragenter", handleDragEnter);
-      dropArea.addEventListener("dragleave", handleDragLeave);
-      dropArea.addEventListener("dragover", handleDragOver);
-      dropArea.addEventListener("drop", handleDrop);
-      dropArea.addEventListener("change", handleFileInputChange);
-    }
-    return () => {
-      if (dropArea) {
-        dropArea.removeEventListener("dragenter", handleDragEnter);
-        dropArea.removeEventListener("dragleave", handleDragLeave);
-        dropArea.removeEventListener("dragover", handleDragOver);
-        dropArea.removeEventListener("drop", handleDrop);
-        dropArea.removeEventListener("change", handleFileInputChange);
-      }
-    };
-  }, [
-    handleDragEnter,
-    handleDragLeave,
-    handleDragOver,
-    handleDrop,
-    handleFileInputChange,
-  ]);
-
-  const handleClick = useCallback((event: React.MouseEvent<HTMLElement>) => {
-    event.stopPropagation();
-    dropInputRef.current?.click();
-  }, []);
+  const handleClick: MouseEventHandler<HTMLDivElement | HTMLButtonElement> =
+    useCallback((event: React.MouseEvent<HTMLElement>) => {
+      event.stopPropagation();
+      dropInputRef.current?.click();
+    }, []);
 
   const fileText = maxCount === 1 ? "file" : "files";
 
   return (
-    <div className={styles["drop-area"]} onClick={handleClick}>
+    <div
+      className={styles["drop-area"]}
+      onClick={handleClick}
+      onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
+      onChange={handleFileInputChange}
+    >
       <input
         id="file-drop-area"
         name="file-drop-area"
