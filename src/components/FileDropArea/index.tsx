@@ -1,5 +1,6 @@
 import { PropsWithChildren, useCallback, useEffect, useRef } from "react";
 import styles from "./index.module.css";
+import { Button } from "../Button";
 
 export interface FileDropAreaProps extends PropsWithChildren {
   /**
@@ -190,7 +191,7 @@ export const FileDropArea = ({
     handleFileInputChange,
   ]);
 
-  const handleClick = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
+  const handleClick = useCallback((event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     dropInputRef.current?.click();
   }, []);
