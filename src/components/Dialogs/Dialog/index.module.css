@@ -1,6 +1,5 @@
 .dialog {
   width: 80vw;
-  max-width: 720px;
 
   padding: 1rem;
   box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
@@ -15,7 +14,6 @@
     inset-block-start: 0;
     inset-inline-start: 0;
     inset-inline-end: 0;
-    padding: 0;
 
     transition: display 0.5s allow-discrete, overlay 0.5s allow-discrete,
       translate 0.5s, opacity 0.2s 0.4s;
