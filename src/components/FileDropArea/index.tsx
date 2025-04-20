@@ -226,10 +226,12 @@ export const FileDropArea = ({
         aria-label="File Drop Area"
       />
       <div className={styles["drop-area-overlay"]}>
-        <p>
-          Drag and drop {fileText} here or click to select {fileText}
-        </p>
-        <p>or</p>
+        <span className={styles["drop-area-text"]}>
+          <p>
+            Drag and drop {fileText} here or click to select {fileText}
+          </p>
+          <p>or</p>
+        </span>
         <Button onClick={handleClick}>Click to select {fileText}</Button>
 
         {allowedFileTypes && (

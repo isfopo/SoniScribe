@@ -20,3 +20,10 @@
 .file-drop-input {
   display: none;
 }
+
+.drop-area-text {
+  display: none;
+  @media screen and (min-width: 600px) {
+    display: block;
+  }
+}
