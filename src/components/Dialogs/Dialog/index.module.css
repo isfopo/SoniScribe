@@ -1,4 +1,13 @@
 .dialog {
+  width: 80vw;
+  max-width: 720px;
+
+  padding: 1rem;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+    rgba(0, 0, 0, 0.12) 0px -12px 30px;
+  border: none;
+  border-radius: 25px;
+
   @media screen and (max-width: 600px) {
     height: 100vh;
     width: 100vw;
@@ -14,11 +23,7 @@
     translate: 0 100vh;
     height: 80vb;
     width: 100vi;
-    padding: 1rem;
     border-radius: 25px 25px 0 0;
-    border: none;
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
-      rgba(0, 0, 0, 0.12) 0px -12px 30px;
     inset-block-start: unset;
 
     &::backdrop {
