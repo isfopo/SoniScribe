@@ -1,5 +1,5 @@
 import Peaks, { PeaksInstance, PeaksOptions, ZoomViewOptions } from "peaks.js";
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useMemo } from "react";
 import {
   isSubdivision,
   Subdivision,
@@ -56,13 +56,16 @@ export const usePeaks = ({
     scheme: { onBackground },
   } = useTheme();
 
-  const viewOptions: ZoomViewOptions = {
-    waveformColor: onBackground,
-    playheadColor: onBackground,
-    axisLabelColor: onBackground,
-    axisGridlineColor: onBackground,
-    fontFamily: "Quicksand",
-  };
+  const viewOptions: ZoomViewOptions = useMemo(
+    () => ({
+      waveformColor: onBackground,
+      playheadColor: onBackground,
+      axisLabelColor: onBackground,
+      axisGridlineColor: onBackground,
+      fontFamily: "Quicksand",
+    }),
+    [onBackground]
+  );
 
   /**
    * Initializes Peaks.js with the given media file and options.
@@ -157,7 +160,7 @@ export const usePeaks = ({
         }
       });
     },
-    [onError, onInitialize, onPointAdd, onPointRemove]
+    [onError, onInitialize, onPointAdd, onPointRemove, viewOptions]
   );
 
   /**
