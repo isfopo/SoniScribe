@@ -52,7 +52,7 @@ export const usePeaks = ({
 
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [mediaFile, setMediaFile] = useState<File | null>(null);
-  const _localFileRef = useRef<File | null>(null);
+  const localFileRef = useRef<File | null>(null);
 
   const {
     scheme: { onBackground },
@@ -144,7 +144,7 @@ export const usePeaks = ({
 
         peaksRef.current = peaks;
         setMediaFile(mediaFile);
-        _localFileRef.current = mediaFile;
+        localFileRef.current = mediaFile;
 
         if (onInitialize) {
           onInitialize(peaks, mediaFile, {
@@ -169,9 +169,9 @@ export const usePeaks = ({
   );
 
   const reinitialize = useCallback(() => {
-    if (peaksRef.current && _localFileRef.current) {
+    if (peaksRef.current && localFileRef.current) {
       const points = peaksRef.current.points.getPoints() as SubdivisionPoint[];
-      initialize(_localFileRef.current, { points });
+      initialize(localFileRef.current, { points });
     }
   }, [initialize]);
 
