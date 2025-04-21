@@ -59,6 +59,8 @@ export const usePeaks = ({
   const viewOptions: ZoomViewOptions = {
     waveformColor: onBackground,
     playheadColor: onBackground,
+    axisLabelColor: onBackground,
+    axisGridlineColor: onBackground,
     fontFamily: "Quicksand",
   };
 
