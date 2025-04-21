@@ -64,6 +64,8 @@ export const usePeaks = ({
       playheadColor: onBackground,
       axisLabelColor: onBackground,
       axisGridlineColor: onBackground,
+      wheelMode: "scroll",
+      playheadWidth: 2,
       fontFamily: "Quicksand",
     }),
     [onBackground]
