@@ -35,6 +35,7 @@ export const ProjectView = (): React.ReactElement => {
 
   const {
     viewRef,
+    overviewRef,
     audioElementRef,
     playPause,
     addPoint,
@@ -126,7 +127,7 @@ export const ProjectView = (): React.ReactElement => {
         addPoint={() => addPoint({ subdivision })}
       />
 
-      <WaveformView viewRef={viewRef} />
+      <WaveformView viewRef={viewRef} overviewRef={overviewRef} />
 
       <AudioPlayer audioElementRef={audioElementRef} mediaFile={mediaFile} />
 

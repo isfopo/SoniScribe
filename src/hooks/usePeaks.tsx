@@ -43,6 +43,7 @@ export const usePeaks = ({
   onError,
 }: UsePeaksOptions) => {
   const viewRef = useRef<HTMLDivElement>(null);
+  const overviewRef = useRef<HTMLDivElement>(null);
   const audioElementRef = useRef<HTMLAudioElement>(null);
   const audioContext = useRef<AudioContext>(new AudioContext());
   const peaksRef = useRef<PeaksInstance>(undefined);
@@ -87,6 +88,9 @@ export const usePeaks = ({
           autoScroll: true,
           enableSegments: false,
           autoScrollOffset: 1,
+        },
+        overview: {
+          container: overviewRef.current,
         },
         mediaElement: audioElementRef.current as Element,
         webAudio: { audioContext: audioContext.current, multiChannel: true },
@@ -285,6 +289,7 @@ export const usePeaks = ({
   return {
     peaksRef,
     viewRef,
+    overviewRef,
     audioElementRef,
     isPlaying,
     mediaFile,
