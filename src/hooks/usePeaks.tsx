@@ -64,9 +64,15 @@ export const usePeaks = ({
       playheadColor: onBackground,
       axisLabelColor: onBackground,
       axisGridlineColor: onBackground,
+      showAxisLabels: true,
       wheelMode: "scroll",
       playheadWidth: 2,
       fontFamily: "Quicksand",
+      formatAxisTime: (time) => {
+        const minutes = Math.floor(time / 60);
+        const seconds = Math.floor(time % 60);
+        return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+      },
     }),
     [onBackground]
   );
@@ -108,6 +114,7 @@ export const usePeaks = ({
         overview: {
           container: overviewRef.current,
           ...viewOptions,
+          axisGridlineColor: "transparent",
         },
         mediaElement: audioElementRef.current as Element,
         webAudio: { audioContext: audioContext.current, multiChannel: true },
