@@ -9,6 +9,7 @@ import {
 } from "../helpers/subdivisions";
 import { SavedProjectData } from "./useProjects";
 import { useTheme } from "../theme/useTheme";
+import { useEventListener } from "./useEventListener";
 
 export interface UsePeaksOptions {
   /** The amount of time that the previous point will go back to the one before. */
@@ -51,6 +52,7 @@ export const usePeaks = ({
 
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [mediaFile, setMediaFile] = useState<File | null>(null);
+  const _localFileRef = useRef<File | null>(null);
 
   const {
     scheme: { onBackground },
@@ -140,6 +142,7 @@ export const usePeaks = ({
 
         peaksRef.current = peaks;
         setMediaFile(mediaFile);
+        _localFileRef.current = mediaFile;
 
         if (onInitialize) {
           onInitialize(peaks, mediaFile, {
@@ -162,6 +165,22 @@ export const usePeaks = ({
     },
     [onError, onInitialize, onPointAdd, onPointRemove, viewOptions]
   );
+
+  const reinitialize = useCallback(() => {
+    if (peaksRef.current && _localFileRef.current) {
+      const points = peaksRef.current.points.getPoints() as SubdivisionPoint[];
+      initialize(_localFileRef.current, { points });
+    }
+  }, [initialize]);
+
+  useEventListener({
+    event: "resize",
+    callback: () => {
+      if (peaksRef.current) {
+        reinitialize();
+      }
+    },
+  });
 
   /**
    * Opens a file using the File System Access API.
