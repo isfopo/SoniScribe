@@ -1,4 +1,4 @@
-import Peaks, { PeaksInstance, PeaksOptions } from "peaks.js";
+import Peaks, { PeaksInstance, PeaksOptions, ZoomViewOptions } from "peaks.js";
 import { useRef, useState, useCallback } from "react";
 import {
   isSubdivision,
@@ -8,6 +8,7 @@ import {
   SubdivisionPoints,
 } from "../helpers/subdivisions";
 import { SavedProjectData } from "./useProjects";
+import { useTheme } from "../theme/useTheme";
 
 export interface UsePeaksOptions {
   /** The amount of time that the previous point will go back to the one before. */
@@ -51,6 +52,16 @@ export const usePeaks = ({
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [mediaFile, setMediaFile] = useState<File | null>(null);
 
+  const {
+    scheme: { onBackground },
+  } = useTheme();
+
+  const viewOptions: ZoomViewOptions = {
+    waveformColor: onBackground,
+    playheadColor: onBackground,
+    fontFamily: "Quicksand",
+  };
+
   /**
    * Initializes Peaks.js with the given media file and options.
    * @param mediaFile The media file to be played.
@@ -83,14 +94,11 @@ export const usePeaks = ({
       const options: PeaksOptions = {
         zoomview: {
           container: viewRef.current,
-          waveformColor: "#ddd",
-          playheadColor: "#fff",
-          autoScroll: true,
-          enableSegments: false,
-          autoScrollOffset: 1,
+          ...viewOptions,
         },
         overview: {
           container: overviewRef.current,
+          ...viewOptions,
         },
         mediaElement: audioElementRef.current as Element,
         webAudio: { audioContext: audioContext.current, multiChannel: true },
