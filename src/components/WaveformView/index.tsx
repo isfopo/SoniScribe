@@ -11,7 +11,7 @@ export interface WaveformViewProps {
 export const WaveformView = ({ viewRef, overviewRef }: WaveformViewProps) => {
   return (
     <div>
-      <div ref={viewRef} className={styles["waveform-container"]}></div>;
+      <div ref={viewRef} className={styles["waveform-container"]}></div>
       <div ref={overviewRef} className={styles["overview-container"]}></div>
     </div>
   );
