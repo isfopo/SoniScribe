@@ -30,11 +30,25 @@ export const Dialog = ({ children, onClose, ...props }: DialogProps) => {
     }
   }, []);
 
+  useEffect(() => {
+    if (dialogRef.current) {
+      const handleClose = () => {
+        // Wait for the dialog to close before calling closeDialog
+        setTimeout(() => {
+          if (onClose) onClose();
+          closeDialog();
+        }, 500);
+      };
+
+      dialogRef.current.addEventListener("close", handleClose);
+    }
+  }, [onClose, closeDialog]);
+
   return (
     <dialog
       ref={dialogRef}
       className={styles["dialog"]}
-      onClick={closeDialog}
+      onClick={() => dialogRef.current?.close()}
       {...props}
     >
       <header>
@@ -46,7 +60,7 @@ export const Dialog = ({ children, onClose, ...props }: DialogProps) => {
           className={styles["close-button"]}
           onClick={() => {
             if (onClose) onClose();
-            closeDialog();
+            dialogRef.current?.close();
           }}
         >
           {/* Close button shown on desktop*/}
