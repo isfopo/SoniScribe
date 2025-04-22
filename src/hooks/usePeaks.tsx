@@ -1,5 +1,5 @@
-import Peaks, { PeaksInstance, PeaksOptions } from "peaks.js";
-import { useRef, useState, useCallback } from "react";
+import Peaks, { PeaksInstance, PeaksOptions, ZoomViewOptions } from "peaks.js";
+import { useRef, useState, useCallback, useMemo } from "react";
 import {
   isSubdivision,
   Subdivision,
@@ -8,6 +8,8 @@ import {
   SubdivisionPoints,
 } from "../helpers/subdivisions";
 import { SavedProjectData } from "./useProjects";
+import { useTheme } from "../theme/useTheme";
+import { useEventListener } from "./useEventListener";
 
 export interface UsePeaksOptions {
   /** The amount of time that the previous point will go back to the one before. */
@@ -43,12 +45,37 @@ export const usePeaks = ({
   onError,
 }: UsePeaksOptions) => {
   const viewRef = useRef<HTMLDivElement>(null);
+  const overviewRef = useRef<HTMLDivElement>(null);
   const audioElementRef = useRef<HTMLAudioElement>(null);
   const audioContext = useRef<AudioContext>(new AudioContext());
   const peaksRef = useRef<PeaksInstance>(undefined);
 
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [mediaFile, setMediaFile] = useState<File | null>(null);
+  const localFileRef = useRef<File | null>(null);
+
+  const {
+    scheme: { onBackground },
+  } = useTheme();
+
+  const viewOptions: ZoomViewOptions = useMemo(
+    () => ({
+      waveformColor: onBackground,
+      playheadColor: onBackground,
+      axisLabelColor: onBackground,
+      axisGridlineColor: onBackground,
+      showAxisLabels: true,
+      wheelMode: "scroll",
+      playheadWidth: 2,
+      fontFamily: "Quicksand",
+      formatAxisTime: (time) => {
+        const minutes = Math.floor(time / 60);
+        const seconds = Math.floor(time % 60);
+        return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+      },
+    }),
+    [onBackground]
+  );
 
   /**
    * Initializes Peaks.js with the given media file and options.
@@ -82,11 +109,13 @@ export const usePeaks = ({
       const options: PeaksOptions = {
         zoomview: {
           container: viewRef.current,
-          waveformColor: "#ddd",
-          playheadColor: "#fff",
-          autoScroll: true,
-          enableSegments: false,
-          autoScrollOffset: 1,
+          ...viewOptions,
+          autoScrollOffset: 50,
+        },
+        overview: {
+          container: overviewRef.current,
+          ...viewOptions,
+          axisGridlineColor: "transparent",
         },
         mediaElement: audioElementRef.current as Element,
         webAudio: { audioContext: audioContext.current, multiChannel: true },
@@ -123,6 +152,7 @@ export const usePeaks = ({
 
         peaksRef.current = peaks;
         setMediaFile(mediaFile);
+        localFileRef.current = mediaFile;
 
         if (onInitialize) {
           onInitialize(peaks, mediaFile, {
@@ -143,8 +173,25 @@ export const usePeaks = ({
         }
       });
     },
-    [onError, onInitialize, onPointAdd, onPointRemove]
+    [onError, onInitialize, onPointAdd, onPointRemove, viewOptions]
   );
+
+  const reinitialize = useCallback(() => {
+    if (peaksRef.current && localFileRef.current) {
+      const points = peaksRef.current.points.getPoints() as SubdivisionPoint[];
+      initialize(localFileRef.current, { points });
+    }
+  }, [initialize]);
+
+  useEventListener({
+    event: "resize",
+    callback: () => {
+      if (peaksRef.current) {
+        reinitialize();
+      }
+    },
+    debounce: 500,
+  });
 
   /**
    * Opens a file using the File System Access API.
@@ -285,6 +332,7 @@ export const usePeaks = ({
   return {
     peaksRef,
     viewRef,
+    overviewRef,
     audioElementRef,
     isPlaying,
     mediaFile,

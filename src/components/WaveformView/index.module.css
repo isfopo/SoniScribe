@@ -1,6 +1,23 @@
 .waveform-container {
   width: 100%;
-  height: 360px;
+  height: 20vh;
+  margin: 24px 0;
+
+  cursor: move; /* fallback if grab cursor is unsupported */
+  cursor: grab;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+
+  &:active {
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
+  }
+}
+
+.overview-container {
+  width: 100%;
+  height: 5vh;
   margin: 24px 0;
 
   cursor: move; /* fallback if grab cursor is unsupported */
