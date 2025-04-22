@@ -110,6 +110,7 @@ export const usePeaks = ({
         zoomview: {
           container: viewRef.current,
           ...viewOptions,
+          autoScrollOffset: 50,
         },
         overview: {
           container: overviewRef.current,
