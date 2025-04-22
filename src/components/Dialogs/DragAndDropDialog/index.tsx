@@ -61,7 +61,7 @@ export const DragAndDropDialog = ({
   maxSize,
 }: DragAndDropDialogProps) => {
   return (
-    <Dialog>
+    <Dialog header={"Create a New Project"}>
       <FileDropArea
         onDrop={onDrop}
         onDragOver={onDragOver}
