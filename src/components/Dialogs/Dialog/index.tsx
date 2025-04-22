@@ -1,13 +1,9 @@
+import React, { useEffect } from "react";
 import { XIcon } from "lucide-react";
 import styles from "./index.module.css";
 
 export interface DialogProps
   extends Omit<React.HTMLProps<HTMLDialogElement>, "className"> {
-  /**
-   * Ref to the dialog element.
-   * This is used to control the dialog element (open, close, etc.).
-   */
-  dialogRef: React.RefObject<HTMLDialogElement | null>;
   /**
    * Callback function to be called when the dialog is closed.
    */
@@ -22,12 +18,15 @@ export interface DialogProps
   onCancel?: () => void;
 }
 
-export const Dialog = ({
-  children,
-  dialogRef,
-  onClose,
-  ...props
-}: DialogProps) => {
+export const Dialog = ({ children, onClose, ...props }: DialogProps) => {
+  const dialogRef = React.useRef<HTMLDialogElement | null>(null);
+
+  useEffect(() => {
+    if (dialogRef.current) {
+      dialogRef.current.showModal();
+    }
+  }, []);
+
   return (
     <dialog ref={dialogRef} className={styles["dialog"]} {...props}>
       <header>

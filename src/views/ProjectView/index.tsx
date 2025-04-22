@@ -11,17 +11,14 @@ import { usePeaks } from "../../hooks/usePeaks";
 import { useProjects } from "../../hooks/useProjects";
 import { useSettingsStore } from "../../stores/settings";
 import styles from "./index.module.css";
+import { DialogManager } from "../../components/Dialogs/Dialog/DialogManager";
+import { useDialogStore } from "../../stores/dialogs";
 
 export const ProjectView = (): React.ReactElement => {
   const { subdivision, setSubdivision } = useSettingsStore();
+  const { addDialog } = useDialogStore();
 
   const dialogRef = useRef<HTMLDialogElement | null>(null);
-
-  const openDialog = () => {
-    if (dialogRef.current) {
-      dialogRef.current.showModal();
-    }
-  };
 
   const {
     createNewProject,
@@ -96,6 +93,20 @@ export const ProjectView = (): React.ReactElement => {
     }
   };
 
+  const openDialog = () => {
+    addDialog({
+      id: "drag-and-drop-dialog",
+      component: (
+        <DragAndDropDialog
+          dialogRef={dialogRef}
+          onDrop={handleDrop}
+          allowedFileTypes={["audio/mpeg", "audio/wav", "audio/ogg"]}
+          maxCount={1}
+        />
+      ),
+    });
+  };
+
   const handleProjectOpen = async (file: FileSystemHandle) => {
     open(file);
     setCurrentProject(file as FileSystemFileHandle);
@@ -103,12 +114,8 @@ export const ProjectView = (): React.ReactElement => {
 
   return (
     <>
-      <DragAndDropDialog
-        dialogRef={dialogRef}
-        onDrop={handleDrop}
-        allowedFileTypes={["audio/mpeg", "audio/wav", "audio/ogg"]}
-        maxCount={1}
-      />
+      <DialogManager />
+
       <div className={currentProject ? styles["hidden"] : styles["overlay"]}>
         <button onClick={() => openDialog()}>New</button>
         <ProjectList
