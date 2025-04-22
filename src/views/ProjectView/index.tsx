@@ -98,7 +98,6 @@ export const ProjectView = (): React.ReactElement => {
       id: "drag-and-drop-dialog",
       component: (
         <DragAndDropDialog
-          dialogRef={dialogRef}
           onDrop={handleDrop}
           allowedFileTypes={["audio/mpeg", "audio/wav", "audio/ogg"]}
           maxCount={1}

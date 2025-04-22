@@ -4,11 +4,6 @@ import { Dialog } from "../Dialog";
 
 export interface DragAndDropDialogProps {
   /**
-   * Ref to the dialog element.
-   * This is used to control the dialog element (open, close, etc.).
-   */
-  dialogRef: React.RefObject<HTMLDialogElement | null>;
-  /**
    * Array of allowed file types for the drop area.
    * If not provided, all file types are allowed.
    */
@@ -56,7 +51,6 @@ export interface DragAndDropDialogProps {
  * It also provides callbacks for drag and drop events.
  */
 export const DragAndDropDialog = ({
-  dialogRef,
   onDrop,
   onDragEnter,
   onDragLeave,
@@ -67,7 +61,7 @@ export const DragAndDropDialog = ({
   maxSize,
 }: DragAndDropDialogProps) => {
   return (
-    <Dialog onClick={() => dialogRef.current?.close()}>
+    <Dialog>
       <FileDropArea
         onDrop={onDrop}
         onDragOver={onDragOver}

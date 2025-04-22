@@ -8,6 +8,7 @@ export interface Dialog {
 export interface DialogState {
   activeDialogs: Dialog[];
   addDialog: (dialog: Dialog) => void;
+  closeDialog: () => void;
   removeDialog: (dialog: Dialog) => void;
   clearDialogs: () => void;
 }
@@ -22,6 +23,11 @@ export const useDialogStore = create<DialogState>()((set) => ({
   removeDialog: (dialog) => {
     set((state) => ({
       activeDialogs: state.activeDialogs.filter((d) => d.id !== dialog.id),
+    }));
+  },
+  closeDialog: () => {
+    set((state) => ({
+      activeDialogs: state.activeDialogs.slice(0, -1),
     }));
   },
   clearDialogs: () => set({ activeDialogs: [] }),

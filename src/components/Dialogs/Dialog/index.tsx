@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { XIcon } from "lucide-react";
 import styles from "./index.module.css";
+import { useDialogStore } from "../../../stores/dialogs";
 
 export interface DialogProps
   extends Omit<React.HTMLProps<HTMLDialogElement>, "className"> {
@@ -19,6 +20,8 @@ export interface DialogProps
 }
 
 export const Dialog = ({ children, onClose, ...props }: DialogProps) => {
+  const { closeDialog } = useDialogStore();
+
   const dialogRef = React.useRef<HTMLDialogElement | null>(null);
 
   useEffect(() => {
@@ -28,7 +31,12 @@ export const Dialog = ({ children, onClose, ...props }: DialogProps) => {
   }, []);
 
   return (
-    <dialog ref={dialogRef} className={styles["dialog"]} {...props}>
+    <dialog
+      ref={dialogRef}
+      className={styles["dialog"]}
+      onClick={closeDialog}
+      {...props}
+    >
       <header>
         <button
           type="button"
@@ -38,7 +46,7 @@ export const Dialog = ({ children, onClose, ...props }: DialogProps) => {
           className={styles["close-button"]}
           onClick={() => {
             if (onClose) onClose();
-            if (dialogRef.current) dialogRef.current.close();
+            closeDialog();
           }}
         >
           {/* Close button shown on desktop*/}
