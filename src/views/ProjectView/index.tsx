@@ -11,7 +11,6 @@ import { usePeaks } from "../../hooks/usePeaks";
 import { useProjects } from "../../hooks/useProjects";
 import { useSettingsStore } from "../../stores/settings";
 import styles from "./index.module.css";
-import { DialogManager } from "../../components/Dialogs/Dialog/DialogManager";
 import { useDialogStore } from "../../stores/dialogs";
 
 export const ProjectView = (): React.ReactElement => {
@@ -113,8 +112,6 @@ export const ProjectView = (): React.ReactElement => {
 
   return (
     <>
-      <DialogManager />
-
       <div className={currentProject ? styles["hidden"] : styles["overlay"]}>
         <button onClick={() => openDialog()}>New</button>
         <ProjectList
