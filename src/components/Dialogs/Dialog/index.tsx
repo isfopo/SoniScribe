@@ -53,6 +53,11 @@ export const Dialog = ({
     }
   }, [onClose, closeDialog]);
 
+  const handleClose = () => {
+    if (onClose) onClose();
+    closeDialog();
+  };
+
   return (
     <dialog
       {...props}
@@ -72,10 +77,8 @@ export const Dialog = ({
               title="Close"
               tabIndex={0}
               className={styles["close-button"]}
-              onClick={() => {
-                if (onClose) onClose();
-                dialogRef.current?.close();
-              }}
+              onClick={handleClose}
+              onTouchStart={handleClose}
             >
               {/* Close button shown on desktop*/}
               <XIcon />
