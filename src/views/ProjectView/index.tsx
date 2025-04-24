@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import { AudioPlayer } from "../../components/AudioPlayer";
 import { DragAndDropDialog } from "../../components/Dialogs/DragAndDropDialog";
 import { ProjectList } from "../../components/ProjectList";
@@ -11,17 +10,11 @@ import { usePeaks } from "../../hooks/usePeaks";
 import { useProjects } from "../../hooks/useProjects";
 import { useSettingsStore } from "../../stores/settings";
 import styles from "./index.module.css";
+import { useDialogStore } from "../../stores/dialogs";
 
 export const ProjectView = (): React.ReactElement => {
   const { subdivision, setSubdivision } = useSettingsStore();
-
-  const dialogRef = useRef<HTMLDialogElement | null>(null);
-
-  const openDialog = () => {
-    if (dialogRef.current) {
-      dialogRef.current.showModal();
-    }
-  };
+  const { addDialog, closeDialog } = useDialogStore();
 
   const {
     createNewProject,
@@ -89,11 +82,24 @@ export const ProjectView = (): React.ReactElement => {
         initialize(file, {
           isNewProject: true,
         });
-        dialogRef.current?.close();
+        closeDialog();
       } else {
         alert("Invalid file type. Please drop an audio file.");
       }
     }
+  };
+
+  const openDialog = () => {
+    addDialog({
+      id: "drag-and-drop-dialog",
+      component: (
+        <DragAndDropDialog
+          onDrop={handleDrop}
+          allowedFileTypes={["audio/mpeg", "audio/wav", "audio/ogg"]}
+          maxCount={1}
+        />
+      ),
+    });
   };
 
   const handleProjectOpen = async (file: FileSystemHandle) => {
@@ -103,12 +109,6 @@ export const ProjectView = (): React.ReactElement => {
 
   return (
     <>
-      <DragAndDropDialog
-        dialogRef={dialogRef}
-        onDrop={handleDrop}
-        allowedFileTypes={["audio/mpeg", "audio/wav", "audio/ogg"]}
-        maxCount={1}
-      />
       <div className={currentProject ? styles["hidden"] : styles["overlay"]}>
         <button onClick={() => openDialog()}>New</button>
         <ProjectList
