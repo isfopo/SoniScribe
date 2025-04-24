@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import { AudioPlayer } from "../../components/AudioPlayer";
 import { DragAndDropDialog } from "../../components/Dialogs/DragAndDropDialog";
 import { ProjectList } from "../../components/ProjectList";
@@ -15,9 +14,7 @@ import { useDialogStore } from "../../stores/dialogs";
 
 export const ProjectView = (): React.ReactElement => {
   const { subdivision, setSubdivision } = useSettingsStore();
-  const { addDialog } = useDialogStore();
-
-  const dialogRef = useRef<HTMLDialogElement | null>(null);
+  const { addDialog, closeDialog } = useDialogStore();
 
   const {
     createNewProject,
@@ -85,7 +82,7 @@ export const ProjectView = (): React.ReactElement => {
         initialize(file, {
           isNewProject: true,
         });
-        dialogRef.current?.close();
+        closeDialog();
       } else {
         alert("Invalid file type. Please drop an audio file.");
       }
