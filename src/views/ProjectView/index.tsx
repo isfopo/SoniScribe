@@ -38,6 +38,7 @@ export const ProjectView = (): React.ReactElement => {
     initialize,
     open,
     setPlaybackRate,
+    addSegment,
     mediaFile,
   } = usePeaks({
     subdivision,
@@ -139,6 +140,7 @@ export const ProjectView = (): React.ReactElement => {
 
       <button onClick={() => setPlaybackRate(0.5)}>0.5x</button>
       <button onClick={() => setPlaybackRate(1)}>1x</button>
+      <button onClick={() => addSegment(1, 10)}>addSegment</button>
     </>
   );
 };

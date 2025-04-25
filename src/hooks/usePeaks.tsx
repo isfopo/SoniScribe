@@ -316,6 +316,22 @@ export const usePeaks = ({
   };
 
   /**
+   * Adds a segment to the Peaks instance.
+   * @param start Start time of the segment
+   * @param end End time of the segment
+   * @returns void
+   */
+  const addSegment = (start: number, end: number) => {
+    if (peaksRef.current) {
+      peaksRef.current.segments.add({
+        startTime: start,
+        endTime: end,
+        editable: true,
+      });
+    }
+  };
+
+  /**
    * Sets the playback rate of the audio element.
    * @param rate The playback rate to be set (between 0.5 and 2).
    * @returns void
@@ -342,6 +358,7 @@ export const usePeaks = ({
     addPoint,
     nextPoint,
     previousPoint,
+    addSegment,
     setPlaybackRate,
   };
 };
