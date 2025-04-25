@@ -68,6 +68,9 @@ export const usePeaks = ({
       wheelMode: "scroll",
       playheadWidth: 2,
       fontFamily: "Quicksand",
+      segmentOptions: {
+        overlayFontSize: 16,
+      },
       formatAxisTime: (time) => {
         const minutes = Math.floor(time / 60);
         const seconds = Math.floor(time % 60);
@@ -327,6 +330,7 @@ export const usePeaks = ({
         startTime: start,
         endTime: end,
         editable: true,
+        labelText: "part A",
       });
     }
   };
