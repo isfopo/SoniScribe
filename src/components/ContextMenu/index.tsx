@@ -1,24 +1,37 @@
-import { AnchorPoint } from "../../hooks/useContextMenu";
+import { useCallback } from "react";
+import {
+  ContextMenuAction,
+  useContextMenuStore,
+} from "../../stores/contextMenu";
 
 import styles from "./index.module.css";
 
-export interface ContextMenuItem<T> {
-  label: string;
-  key: string;
-  action: () => void;
-}
+export const ContextMenu = () => {
+  const {
+    anchorPoint,
+    isShown,
+    items,
+    closeContextMenu,
+    initialEvent,
+    initialObject,
+  } = useContextMenuStore();
 
-export interface ContextMenuProps<T> {
-  items: Array<ContextMenuItem<T>>;
-  anchorPoint: AnchorPoint;
-  isShown: boolean;
-}
+  const handleSelection = useCallback(
+    (action: ContextMenuAction<unknown>) => {
+      if (!initialEvent || !initialObject) {
+        return;
+      }
 
-export const ContextMenu = <T,>({
-  items,
-  anchorPoint,
-  isShown,
-}: ContextMenuProps<T>) => {
+      action({
+        event: initialEvent,
+        object: initialObject,
+      });
+
+      closeContextMenu();
+    },
+    [closeContextMenu, initialEvent, initialObject]
+  );
+
   if (!isShown) {
     return null;
   }
@@ -26,11 +39,11 @@ export const ContextMenu = <T,>({
   return (
     <ul
       className={styles["context-menu"]}
-      onContextMenu={(e) => e.preventDefault()}
+      onMouseLeave={closeContextMenu}
       style={{ top: anchorPoint.y, left: anchorPoint.x }}
     >
       {items.map(({ label, action, key }) => (
-        <li key={key} onClick={action}>
+        <li key={key} onClick={() => handleSelection(action)}>
           {label}
         </li>
       ))}

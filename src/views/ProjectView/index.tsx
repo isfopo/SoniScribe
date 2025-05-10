@@ -11,12 +11,12 @@ import { useProjects } from "../../hooks/useProjects";
 import { useSettingsStore } from "../../stores/settings";
 import styles from "./index.module.css";
 import { useDialogStore } from "../../stores/dialogs";
-import { useContextMenu } from "../../hooks/useContextMenu";
-import { ContextMenu } from "../../components/ContextMenu";
+import { useContextMenuStore } from "../../stores/contextMenu";
 
 export const ProjectView = (): React.ReactElement => {
   const { subdivision, setSubdivision } = useSettingsStore();
   const { addDialog, closeDialog } = useDialogStore();
+  const { openContextMenu } = useContextMenuStore();
 
   const {
     createNewProject,
@@ -27,8 +27,6 @@ export const ProjectView = (): React.ReactElement => {
     addPointsToCurrentProject,
     removePointsFromCurrentProject,
   } = useProjects();
-
-  const { anchorPoint, isShown, handleContextMenu } = useContextMenu();
 
   const {
     viewRef,
@@ -64,7 +62,19 @@ export const ProjectView = (): React.ReactElement => {
         )
       ),
     onPointContextMenu: (event) => {
-      handleContextMenu(event.evt);
+      openContextMenu({
+        event: event.evt,
+        object: event.point,
+        items: [
+          {
+            label: "Create Section",
+            key: "create-section",
+            action: () => {
+              console.log("Create Section", event.point);
+            },
+          },
+        ],
+      });
     },
   });
 
@@ -125,20 +135,6 @@ export const ProjectView = (): React.ReactElement => {
           remove={deleteProject}
         />
       </div>
-
-      <ContextMenu
-        isShown={isShown}
-        anchorPoint={anchorPoint}
-        items={[
-          {
-            label: "Start Section",
-            key: "start-segment",
-            action: () => {
-              addSegment(0, 10);
-            },
-          },
-        ]}
-      />
 
       <p>{currentProject?.name}</p>
       <Transport
