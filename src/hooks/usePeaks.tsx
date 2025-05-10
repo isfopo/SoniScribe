@@ -1,4 +1,10 @@
-import Peaks, { PeaksInstance, PeaksOptions, ZoomViewOptions } from "peaks.js";
+import Peaks, {
+  PeaksInstance,
+  PeaksOptions,
+  Point,
+  PointClickEvent,
+  ZoomViewOptions,
+} from "peaks.js";
 import { useRef, useState, useCallback, useMemo } from "react";
 import {
   isSubdivision,
@@ -25,9 +31,13 @@ export interface UsePeaksOptions {
   /** Callback function to be called when a point is added. */
   onOpen?: (project: FileSystemFileHandle) => void;
   /** Callback function to be called when a point is added. */
-  onPointAdd?: (point: SubdivisionPoint[]) => void;
+  onPointAdd?: (point: Point[]) => void;
   /** Callback function to be called when a point is removed. */
-  onPointRemove?: (point: SubdivisionPoint[]) => void;
+  onPointRemove?: (point: Point[]) => void;
+  /** Callback function to be called when a point is double clicked. */
+  onPointDoubleClick?: (event: PointClickEvent) => void;
+  /** Callback function to be called when a point is right clicked. */
+  onPointContextMenu?: (event: PointClickEvent) => void;
   /** Callback function to be called when an error occurs. */
   onError?: (error: Error) => void;
 }
@@ -42,6 +52,8 @@ export const usePeaks = ({
   onInitialize,
   onPointAdd,
   onPointRemove,
+  onPointDoubleClick,
+  onPointContextMenu,
   onError,
 }: UsePeaksOptions) => {
   const viewRef = useRef<HTMLDivElement>(null);
@@ -80,6 +92,13 @@ export const usePeaks = ({
     [onBackground]
   );
 
+  const handleError = (error: Error) => {
+    console.error(error.message);
+    if (onError) {
+      onError(error);
+    }
+  };
+
   /**
    * Initializes Peaks.js with the given media file and options.
    * @param mediaFile The media file to be played.
@@ -91,13 +110,6 @@ export const usePeaks = ({
    * @throws Error if the media file is not provided.
    * @throws Error if the audio element is not found.
    */
-  const handleError = (error: Error) => {
-    console.error(error.message);
-    if (onError) {
-      onError(error);
-    }
-  };
-
   const initialize = useCallback(
     (
       mediaFile: File,
@@ -174,9 +186,25 @@ export const usePeaks = ({
             onPointRemove(event.points as SubdivisionPoint[]);
           });
         }
+
+        if (onPointDoubleClick) {
+          peaks.on("points.dblclick", onPointDoubleClick);
+        }
+
+        if (onPointContextMenu) {
+          peaks.on("points.contextmenu", onPointContextMenu);
+        }
       });
     },
-    [onError, onInitialize, onPointAdd, onPointRemove, viewOptions]
+    [
+      onError,
+      onInitialize,
+      onPointAdd,
+      onPointContextMenu,
+      onPointDoubleClick,
+      onPointRemove,
+      viewOptions,
+    ]
   );
 
   const reinitialize = useCallback(() => {

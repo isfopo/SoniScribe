@@ -11,6 +11,8 @@ import { useProjects } from "../../hooks/useProjects";
 import { useSettingsStore } from "../../stores/settings";
 import styles from "./index.module.css";
 import { useDialogStore } from "../../stores/dialogs";
+import { useContextMenu } from "../../hooks/useContextMenu";
+import { ContextMenu } from "../../components/ContextMenu";
 
 export const ProjectView = (): React.ReactElement => {
   const { subdivision, setSubdivision } = useSettingsStore();
@@ -25,6 +27,8 @@ export const ProjectView = (): React.ReactElement => {
     addPointsToCurrentProject,
     removePointsFromCurrentProject,
   } = useProjects();
+
+  const { anchorPoint, isShown, handleContextMenu } = useContextMenu();
 
   const {
     viewRef,
@@ -59,6 +63,9 @@ export const ProjectView = (): React.ReactElement => {
           mapSubdivisionPointToSubdivisionPointOption(point)
         )
       ),
+    onPointContextMenu: (event) => {
+      handleContextMenu(event.evt);
+    },
   });
 
   useKeyPress({
@@ -118,6 +125,20 @@ export const ProjectView = (): React.ReactElement => {
           remove={deleteProject}
         />
       </div>
+
+      <ContextMenu
+        isShown={isShown}
+        anchorPoint={anchorPoint}
+        items={[
+          {
+            label: "Start Section",
+            key: "start-segment",
+            action: () => {
+              addSegment(0, 10);
+            },
+          },
+        ]}
+      />
 
       <p>{currentProject?.name}</p>
       <Transport
