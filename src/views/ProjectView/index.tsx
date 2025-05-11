@@ -12,11 +12,13 @@ import { useSettingsStore } from "../../stores/settings";
 import styles from "./index.module.css";
 import { useDialogStore } from "../../stores/dialogs";
 import { useContextMenuStore } from "../../stores/contextMenu";
+import { useNewSegmentStore } from "../../stores/newSegment";
 
 export const ProjectView = (): React.ReactElement => {
   const { subdivision, setSubdivision } = useSettingsStore();
   const { addDialog, closeDialog } = useDialogStore();
   const { openContextMenu } = useContextMenuStore();
+  const { addStart, addEnd, isDrawing } = useNewSegmentStore();
 
   const {
     createNewProject,
@@ -40,7 +42,6 @@ export const ProjectView = (): React.ReactElement => {
     initialize,
     open,
     setPlaybackRate,
-    addSegment,
     mediaFile,
   } = usePeaks({
     subdivision,
@@ -67,10 +68,14 @@ export const ProjectView = (): React.ReactElement => {
         object: event.point,
         items: [
           {
-            label: "Create Section",
+            label: !isDrawing ? "Start Section" : "End Section",
             key: "create-section",
             action: () => {
-              console.log("Create Section", event.point);
+              if (!isDrawing) {
+                addStart(event.point);
+              } else {
+                addEnd(event.point);
+              }
             },
           },
         ],
@@ -157,7 +162,7 @@ export const ProjectView = (): React.ReactElement => {
 
       <button onClick={() => setPlaybackRate(0.5)}>0.5x</button>
       <button onClick={() => setPlaybackRate(1)}>1x</button>
-      <button onClick={() => addSegment(1, 10)}>addSegment</button>
+      {isDrawing && <p>adding segment</p>}
     </>
   );
 };

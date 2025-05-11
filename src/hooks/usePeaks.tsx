@@ -5,7 +5,7 @@ import Peaks, {
   PointClickEvent,
   ZoomViewOptions,
 } from "peaks.js";
-import { useRef, useState, useCallback, useMemo } from "react";
+import { useRef, useState, useCallback, useMemo, useEffect } from "react";
 import {
   isSubdivision,
   Subdivision,
@@ -190,22 +190,23 @@ export const usePeaks = ({
         if (onPointDoubleClick) {
           peaks.on("points.dblclick", onPointDoubleClick);
         }
-
-        if (onPointContextMenu) {
-          peaks.on("points.contextmenu", onPointContextMenu);
-        }
       });
     },
     [
       onError,
       onInitialize,
       onPointAdd,
-      onPointContextMenu,
       onPointDoubleClick,
       onPointRemove,
       viewOptions,
     ]
   );
+
+  useEffect(() => {
+    if (peaksRef.current && onPointContextMenu) {
+      peaksRef.current.on("points.contextmenu", onPointContextMenu);
+    }
+  }, [onPointContextMenu]);
 
   const reinitialize = useCallback(() => {
     if (peaksRef.current && localFileRef.current) {
