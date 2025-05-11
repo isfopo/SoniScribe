@@ -16,6 +16,7 @@ import {
 import { SavedProjectData } from "./useProjects";
 import { useTheme } from "../theme/useTheme";
 import { useEventListener } from "./useEventListener";
+import { useNewSegmentStore } from "../stores/newSegment";
 
 export interface UsePeaksOptions {
   /** The amount of time that the previous point will go back to the one before. */
@@ -69,6 +70,8 @@ export const usePeaks = ({
   const {
     scheme: { onBackground },
   } = useTheme();
+
+  const { start, end, clear } = useNewSegmentStore();
 
   const viewOptions: ZoomViewOptions = useMemo(
     () => ({
@@ -368,6 +371,13 @@ export const usePeaks = ({
       });
     }
   };
+
+  useEffect(() => {
+    if (start && end) {
+      addSegment(start.time, end.time);
+      clear();
+    }
+  }, [start, end, clear]);
 
   /**
    * Sets the playback rate of the audio element.
