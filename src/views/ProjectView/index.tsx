@@ -6,7 +6,7 @@ import { Transport } from "../../components/Transport";
 import { WaveformView } from "../../components/WaveformView";
 import { mapSubdivisionPointToSubdivisionPointOption } from "../../helpers/points";
 import { useKeyPress } from "../../hooks/useKeyPress";
-import { usePeaks } from "../../hooks/usePeaks";
+import { usePeaks } from "../../hooks/waveform/usePeaks";
 import { useProjects } from "../../hooks/useProjects";
 import { useSettingsStore } from "../../stores/settings";
 import styles from "./index.module.css";

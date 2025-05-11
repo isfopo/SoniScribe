@@ -12,11 +12,12 @@ import {
   SubdivisionPoint,
   SubdivisionPointOptions,
   SubdivisionPoints,
-} from "../helpers/subdivisions";
-import { SavedProjectData } from "./useProjects";
-import { useTheme } from "../theme/useTheme";
-import { useEventListener } from "./useEventListener";
-import { useNewSegmentStore } from "../stores/newSegment";
+} from "../../helpers/subdivisions";
+import { SavedProjectData } from "../useProjects";
+import { useTheme } from "../../theme/useTheme";
+import { useEventListener } from "../useEventListener";
+import { useNewSegmentStore } from "../../stores/newSegment";
+import { useSections } from "./useSections";
 
 export interface UsePeaksOptions {
   /** The amount of time that the previous point will go back to the one before. */
@@ -67,11 +68,11 @@ export const usePeaks = ({
   const [mediaFile, setMediaFile] = useState<File | null>(null);
   const localFileRef = useRef<File | null>(null);
 
+  const { addSegment } = useSections(peaksRef);
+
   const {
     scheme: { onBackground },
   } = useTheme();
-
-  const { start, end, clear } = useNewSegmentStore();
 
   const viewOptions: ZoomViewOptions = useMemo(
     () => ({
@@ -354,30 +355,6 @@ export const usePeaks = ({
       }
     }
   };
-
-  /**
-   * Adds a segment to the Peaks instance.
-   * @param start Start time of the segment
-   * @param end End time of the segment
-   * @returns void
-   */
-  const addSegment = (start: number, end: number) => {
-    if (peaksRef.current) {
-      peaksRef.current.segments.add({
-        startTime: start,
-        endTime: end,
-        editable: true,
-        labelText: "part A",
-      });
-    }
-  };
-
-  useEffect(() => {
-    if (start && end) {
-      addSegment(start.time, end.time);
-      clear();
-    }
-  }, [start, end, clear]);
 
   /**
    * Sets the playback rate of the audio element.
