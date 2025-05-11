@@ -206,6 +206,11 @@ export const usePeaks = ({
     if (peaksRef.current && onPointContextMenu) {
       peaksRef.current.on("points.contextmenu", onPointContextMenu);
     }
+    return () => {
+      if (peaksRef.current && onPointContextMenu) {
+        peaksRef.current.off("points.contextmenu", onPointContextMenu);
+      }
+    };
   }, [onPointContextMenu]);
 
   const reinitialize = useCallback(() => {
