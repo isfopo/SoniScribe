@@ -3,12 +3,14 @@ import { useFileSystem } from "./useFileSystem";
 import { SubdivisionPointOptions } from "../helpers/subdivisions";
 import { stringify } from "../helpers/objects";
 import { stripExtension } from "../helpers/files";
+import { SegmentOptions } from "peaks.js";
 
 export interface SavedProjectData {
   media: string;
   type: string;
   size: number;
   points: SubdivisionPointOptions[];
+  segments?: SegmentOptions[];
 }
 
 /**
@@ -63,6 +65,7 @@ export const useProjects = () => {
               type: mediaFile.type,
               size: mediaFile.size,
               points: [],
+              segments: [],
             } as SavedProjectData),
           ],
           { type: "application/json" }
@@ -147,6 +150,53 @@ export const useProjects = () => {
     [write]
   );
 
+  /**
+   * Adds segments to the current project.
+   * @param segments The segments to add to the current project.
+   */
+  const addSegmentsToCurrentProject = useCallback(
+    async (segments: SegmentOptions[]) => {
+      debugger;
+      if (!currentProject.current) {
+        console.error("No current project selected");
+        return;
+      }
+      const file = await currentProject.current.getFile();
+      const data = await file.text();
+      const projectData = JSON.parse(data) as SavedProjectData;
+      projectData.segments = [...(projectData.segments || []), ...segments];
+      await write(
+        currentProject.current.name,
+        new Blob([stringify(projectData)], { type: "application/json" })
+      );
+    },
+    [write]
+  );
+
+  /**
+   * Removes segments from the current project.
+   * @param segments The segments to remove from the current project.
+   */
+  const removeSegmentsFromCurrentProject = useCallback(
+    async (segments: SegmentOptions[]) => {
+      if (!currentProject.current) {
+        console.error("No current project selected");
+        return;
+      }
+      const file = await currentProject.current.getFile();
+      const data = await file.text();
+      const projectData = JSON.parse(data) as SavedProjectData;
+      projectData.segments = projectData.segments?.filter(
+        (segment: SegmentOptions) => !segments.some((s) => s.id === segment.id)
+      );
+      await write(
+        currentProject.current.name,
+        new Blob([stringify(projectData)], { type: "application/json" })
+      );
+    },
+    [write]
+  );
+
   return {
     projects,
     /** The current project */
@@ -156,5 +206,7 @@ export const useProjects = () => {
     deleteProject,
     addPointsToCurrentProject,
     removePointsFromCurrentProject,
+    addSegmentsToCurrentProject,
+    removeSegmentsFromCurrentProject,
   };
 };
