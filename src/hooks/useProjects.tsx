@@ -156,7 +156,6 @@ export const useProjects = () => {
    */
   const addSegmentsToCurrentProject = useCallback(
     async (segments: SegmentOptions[]) => {
-      debugger;
       if (!currentProject.current) {
         console.error("No current project selected");
         return;

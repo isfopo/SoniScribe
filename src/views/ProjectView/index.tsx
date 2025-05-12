@@ -65,7 +65,7 @@ export const ProjectView = (): React.ReactElement => {
           mapSubdivisionPointToSubdivisionPointOption(point)
         )
       ),
-    onPointContextMenu: (event) => {
+    onPointContextMenu: (event, peaks) => {
       openContextMenu({
         event: event.evt,
         object: event.point,
@@ -78,6 +78,15 @@ export const ProjectView = (): React.ReactElement => {
                 addStart(event.point);
               } else {
                 addEnd(event.point);
+              }
+            },
+          },
+          {
+            label: "Remove Point",
+            key: "remove-point",
+            action: () => {
+              if (event.point && event.point.id) {
+                peaks.points.removeById(event.point.id);
               }
             },
           },
