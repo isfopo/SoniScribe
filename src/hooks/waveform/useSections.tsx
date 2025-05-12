@@ -31,6 +31,20 @@ export const useSections = (
     [peaksRef]
   );
 
+  /**
+   * Removes a segment from the Peaks instance.
+   * @param segmentId ID of the segment to remove
+   * @returns void
+   */
+  const removeSegment = useCallback(
+    (segmentId: string) => {
+      if (peaksRef.current) {
+        peaksRef.current.segments.removeById(segmentId);
+      }
+    },
+    [peaksRef]
+  );
+
   useEffect(() => {
     if (start && end) {
       addSegment(start.time, end.time);
@@ -40,5 +54,6 @@ export const useSections = (
 
   return {
     addSegment,
+    removeSegment,
   };
 };

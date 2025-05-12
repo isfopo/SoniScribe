@@ -3,6 +3,7 @@ import Peaks, {
   PeaksOptions,
   Point,
   PointClickEvent,
+  SegmentClickEvent,
   SegmentOptions,
   ZoomViewOptions,
 } from "peaks.js";
@@ -46,11 +47,16 @@ export interface UsePeaksOptions {
   /** Callback function to be called when a point is double clicked. */
   onPointDoubleClick?: (event: PointClickEvent) => void;
   /** Callback function to be called when a point is right clicked. */
-  onPointContextMenu?: (event: PointClickEvent) => void;
+  onPointContextMenu?: (event: PointClickEvent, peaks: PeaksInstance) => void;
   /** Callback function to be called when a segment is added. */
   onSegmentAdd?: (segment: SegmentOptions[]) => void;
   /** Callback function to be called when a segment is removed. */
   onSegmentRemove?: (segment: SegmentOptions[]) => void;
+  /** Callback function to be called when a segment is right clicked. */
+  onSegmentContextMenu?: (
+    event: SegmentClickEvent,
+    peaks: PeaksInstance
+  ) => void;
   /** Callback function to be called when an error occurs. */
   onError?: (error: Error) => void;
 }
@@ -69,6 +75,7 @@ export const usePeaks = ({
   onPointContextMenu,
   onSegmentAdd,
   onSegmentRemove,
+  onSegmentContextMenu,
   onError,
 }: UsePeaksOptions) => {
   const viewRef = useRef<HTMLDivElement>(null);
@@ -242,7 +249,16 @@ export const usePeaks = ({
     event: "points.contextmenu",
     on: (event) => {
       if (onPointContextMenu) {
-        onPointContextMenu(event);
+        onPointContextMenu(event, peaksRef.current as PeaksInstance);
+      }
+    },
+  });
+
+  usePeaksListener(peaksRef, {
+    event: "segments.contextmenu",
+    on: (event) => {
+      if (onSegmentContextMenu) {
+        onSegmentContextMenu(event, peaksRef.current as PeaksInstance);
       }
     },
   });

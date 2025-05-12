@@ -102,6 +102,23 @@ export const ProjectView = (): React.ReactElement => {
           })
         )
       ),
+    onSegmentContextMenu: (event, peaks) => {
+      openContextMenu({
+        event: event.evt,
+        object: event.segment,
+        items: [
+          {
+            label: "Remove Segment",
+            key: "remove-segment",
+            action: () => {
+              if (event.segment && event.segment.id) {
+                peaks.segments.removeById(event.segment.id);
+              }
+            },
+          },
+        ],
+      });
+    },
   });
 
   useKeyPress({
