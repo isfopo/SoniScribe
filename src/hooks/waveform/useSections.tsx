@@ -20,10 +20,18 @@ export const useSections = (
         if (start > end) {
           span = { startTime: end, endTime: start };
         }
+
+        const name = prompt("Enter a name for the segment:", "part A");
+
+        if (!name) {
+          alert("No name provided for the segment");
+          return;
+        }
+
         peaksRef.current.segments.add({
           id: start.toString() + end.toString(),
           editable: true,
-          labelText: "part A",
+          labelText: name,
           ...span,
         });
       }
