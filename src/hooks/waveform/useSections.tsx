@@ -16,11 +16,15 @@ export const useSections = (
   const addSegment = useCallback(
     (start: number, end: number) => {
       if (peaksRef.current) {
+        let span = { startTime: start, endTime: end };
+        if (start > end) {
+          span = { startTime: end, endTime: start };
+        }
         peaksRef.current.segments.add({
-          startTime: start,
-          endTime: end,
+          id: start.toString() + end.toString(),
           editable: true,
           labelText: "part A",
+          ...span,
         });
       }
     },
