@@ -4,7 +4,6 @@
   color: var(--onPrimaryFixed);
   border: none;
   border-radius: 0.3rem;
-  width: 10rem;
   list-style: none;
   list-style-position: inside;
   padding: 0;
@@ -12,8 +11,11 @@
   z-index: 1000;
 
   li {
-    padding: 1rem;
     cursor: pointer;
+    padding: 0.4rem 1.6rem;
+    font-size: 12px;
+    font-weight: 500;
+    align-text: left;
 
     &:hover {
       background: var(--primaryFixedDim);
