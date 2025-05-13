@@ -106,8 +106,12 @@ export const usePeaks = ({
       playheadWidth: 2,
       fontFamily: "Quicksand",
       segmentOptions: {
-        overlayFontSize: 16,
         overlay: true,
+        overlayFontSize: 18,
+        overlayFontStyle: "bold",
+        overlayFontFamily: "Quicksand",
+        overlayLabelVerticalAlign: "middle",
+        overlayBorderWidth: 0,
       },
       formatAxisTime: (time) => {
         const minutes = Math.floor(time / 60);
