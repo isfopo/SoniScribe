@@ -8,7 +8,7 @@ export const useSections = (
 ) => {
   const { start, end, clear } = useNewSegmentStore();
   const {
-    scheme: { primary, secondary, tertiary },
+    scheme: { primary, primaryFixedDim },
   } = useTheme();
 
   /**
@@ -25,7 +25,7 @@ export const useSections = (
           span = { startTime: end, endTime: start };
         }
 
-        const name = prompt("Enter a name for the segment:", "Aart A");
+        const name = prompt("Enter a name for the segment:", "Part A");
 
         if (!name) {
           alert("No name provided for the segment");
@@ -35,13 +35,14 @@ export const useSections = (
         peaksRef.current.segments.add({
           id: name + start.toString() + end.toString(),
           editable: true,
-
+          color: primary,
+          colorFixedDim: primaryFixedDim,
           labelText: name,
           ...span,
         });
       }
     },
-    [peaksRef]
+    [peaksRef, primary, primaryFixedDim]
   );
 
   /**

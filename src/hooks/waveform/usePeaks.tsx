@@ -3,6 +3,7 @@ import Peaks, {
   PeaksOptions,
   Point,
   PointClickEvent,
+  Segment,
   SegmentClickEvent,
   SegmentOptions,
   ZoomViewOptions,
@@ -49,9 +50,9 @@ export interface UsePeaksOptions {
   /** Callback function to be called when a point is right clicked. */
   onPointContextMenu?: (event: PointClickEvent, peaks: PeaksInstance) => void;
   /** Callback function to be called when a segment is added. */
-  onSegmentAdd?: (segment: SegmentOptions[]) => void;
+  onSegmentAdd?: (segment: Segment[]) => void;
   /** Callback function to be called when a segment is removed. */
-  onSegmentRemove?: (segment: SegmentOptions[]) => void;
+  onSegmentRemove?: (segment: Segment[]) => void;
   /** Callback function to be called when a segment is right clicked. */
   onSegmentContextMenu?: (
     event: SegmentClickEvent,
@@ -208,13 +209,13 @@ export const usePeaks = ({
 
         peaks.on("segments.add", (event) => {
           if (onSegmentAdd) {
-            onSegmentAdd(event.segments as SegmentOptions[]);
+            onSegmentAdd(event.segments);
           }
         });
 
         peaks.on("segments.remove", (event) => {
           if (onSegmentRemove) {
-            onSegmentRemove(event.segments as SegmentOptions[]);
+            onSegmentRemove(event.segments);
           }
         });
 

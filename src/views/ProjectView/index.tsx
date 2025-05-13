@@ -14,6 +14,7 @@ import { useDialogStore } from "../../stores/dialogs";
 import { useContextMenuStore } from "../../stores/contextMenu";
 import { useNewSegmentStore } from "../../stores/newSegment";
 import { SegmentOptions } from "peaks.js";
+import { mapSegmentToSegmentOptions } from "../../helpers/segments";
 
 export const ProjectView = (): React.ReactElement => {
   const { subdivision, setSubdivision } = useSettingsStore();
@@ -96,19 +97,13 @@ export const ProjectView = (): React.ReactElement => {
     onSegmentAdd: (segments) =>
       addSegmentsToCurrentProject(
         segments.map(
-          (segment): SegmentOptions => ({
-            startTime: segment.startTime,
-            endTime: segment.endTime,
-          })
+          (segment): SegmentOptions => mapSegmentToSegmentOptions(segment)
         )
       ),
     onSegmentRemove: (segments) =>
       removeSegmentsFromCurrentProject(
         segments.map(
-          (segment): SegmentOptions => ({
-            startTime: segment.startTime,
-            endTime: segment.endTime,
-          })
+          (segment): SegmentOptions => mapSegmentToSegmentOptions(segment)
         )
       ),
     onSegmentContextMenu: (event, peaks) => {
