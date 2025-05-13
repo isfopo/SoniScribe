@@ -1,11 +1,15 @@
 import { PeaksInstance } from "peaks.js";
 import { useNewSegmentStore } from "../../stores/newSegment";
 import { useCallback, useEffect } from "react";
+import { useTheme } from "../../theme/useTheme";
 
 export const useSections = (
   peaksRef: React.RefObject<PeaksInstance | undefined>
 ) => {
   const { start, end, clear } = useNewSegmentStore();
+  const {
+    scheme: { primary, secondary, tertiary },
+  } = useTheme();
 
   /**
    * Adds a segment to the Peaks instance.
@@ -21,7 +25,7 @@ export const useSections = (
           span = { startTime: end, endTime: start };
         }
 
-        const name = prompt("Enter a name for the segment:", "part A");
+        const name = prompt("Enter a name for the segment:", "Aart A");
 
         if (!name) {
           alert("No name provided for the segment");
@@ -29,8 +33,9 @@ export const useSections = (
         }
 
         peaksRef.current.segments.add({
-          id: start.toString() + end.toString(),
+          id: name + start.toString() + end.toString(),
           editable: true,
+
           labelText: name,
           ...span,
         });

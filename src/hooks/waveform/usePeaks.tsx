@@ -106,6 +106,7 @@ export const usePeaks = ({
       fontFamily: "Quicksand",
       segmentOptions: {
         overlayFontSize: 16,
+        overlay: true,
       },
       formatAxisTime: (time) => {
         const minutes = Math.floor(time / 60);
@@ -157,7 +158,10 @@ export const usePeaks = ({
         mediaElement: audioElementRef.current as Element,
         webAudio: { audioContext: audioContext.current, multiChannel: true },
         segmentOptions: {
-          markers: false,
+          markers: true,
+          overlayLabelColor: onBackground,
+          overlayFontSize: 16,
+          overlayLabelAlign: "left",
         },
         keyboard: false,
         logger: console.error.bind(console),
@@ -226,6 +230,7 @@ export const usePeaks = ({
       });
     },
     [
+      onBackground,
       onError,
       onInitialize,
       onPointAdd,
