@@ -120,6 +120,20 @@ export const ProjectView = (): React.ReactElement => {
               }
             },
           },
+          {
+            label: "Change Color",
+            key: "change-color",
+            action: () => {
+              const color = prompt("Enter a color (hex or name):", "#ff0000");
+              if (event.segment && event.segment.id) {
+                event.segment.update({
+                  color: color || event.segment.color,
+                  startTime: event.segment.startTime,
+                  endTime: event.segment.endTime,
+                });
+              }
+            },
+          },
         ],
       });
     },
