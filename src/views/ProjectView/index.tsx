@@ -121,6 +121,23 @@ export const ProjectView = (): React.ReactElement => {
             },
           },
           {
+            label: "Change Name",
+            key: "change-name",
+            action: () => {
+              const label = prompt(
+                "Enter a new label:",
+                event.segment.labelText
+              );
+              if (event.segment && event.segment.id) {
+                event.segment.update({
+                  labelText: label || event.segment.labelText,
+                  startTime: event.segment.startTime,
+                  endTime: event.segment.endTime,
+                });
+              }
+            },
+          },
+          {
             label: "Change Color",
             key: "change-color",
             action: () => {
