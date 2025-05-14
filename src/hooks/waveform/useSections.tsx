@@ -2,13 +2,14 @@ import { PeaksInstance } from "peaks.js";
 import { useNewSegmentStore } from "../../stores/newSegment";
 import { useCallback, useEffect } from "react";
 import { useTheme } from "../../theme/useTheme";
+import { nanoid } from "nanoid";
 
 export const useSections = (
   peaksRef: React.RefObject<PeaksInstance | undefined>
 ) => {
   const { start, end, clear } = useNewSegmentStore();
   const {
-    scheme: { primary, primaryFixedDim },
+    scheme: { primary },
   } = useTheme();
 
   /**
@@ -33,16 +34,16 @@ export const useSections = (
         }
 
         peaksRef.current.segments.add({
-          id: name + start.toString() + end.toString(),
+          id: nanoid(),
           editable: true,
+          overlay: true,
           color: primary,
-          colorFixedDim: primaryFixedDim,
           labelText: name,
           ...span,
         });
       }
     },
-    [peaksRef, primary, primaryFixedDim]
+    [peaksRef, primary]
   );
 
   /**
