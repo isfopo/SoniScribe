@@ -107,6 +107,12 @@ export const ProjectView = (): React.ReactElement => {
           (segment): SegmentOptions => mapSegmentToSegmentOptions(segment)
         )
       ),
+    onSegmentUpdate: (segment) => {
+      updateSegmentInCurrentProject(
+        segment,
+        mapSegmentToSegmentOptions(segment)
+      );
+    },
     onSegmentContextMenu: (event, peaks) => {
       openContextMenu({
         event: event.evt,

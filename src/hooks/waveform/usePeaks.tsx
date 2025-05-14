@@ -53,7 +53,8 @@ export interface UsePeaksOptions {
   onSegmentAdd?: (segment: Segment[]) => void;
   /** Callback function to be called when a segment is removed. */
   onSegmentRemove?: (segment: Segment[]) => void;
-
+  /** Callback function to be called when a segment is updated. */
+  onSegmentUpdate?: (segment: Segment) => void;
   /** Callback function to be called when a segment is right clicked. */
   onSegmentContextMenu?: (
     event: SegmentClickEvent,
@@ -77,6 +78,7 @@ export const usePeaks = ({
   onPointContextMenu,
   onSegmentAdd,
   onSegmentRemove,
+  onSegmentUpdate,
   onSegmentContextMenu,
   onError,
 }: UsePeaksOptions) => {
@@ -224,6 +226,12 @@ export const usePeaks = ({
           }
         });
 
+        peaks.on("segments.dragend", (event) => {
+          if (onSegmentUpdate) {
+            onSegmentUpdate(event.segment);
+          }
+        });
+
         peaksRef.current = peaks;
         setMediaFile(mediaFile);
         localFileRef.current = mediaFile;
@@ -243,6 +251,7 @@ export const usePeaks = ({
       onPointRemove,
       onSegmentAdd,
       onSegmentRemove,
+      onSegmentUpdate,
       viewOptions,
     ]
   );

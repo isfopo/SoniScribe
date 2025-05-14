@@ -201,6 +201,11 @@ export const useProjects = () => {
     [write]
   );
 
+  /**
+   * Updates a segment in the current project.
+   * @param segment The segment to update.
+   * @param options The options to update the segment with.
+   */
   const updateSegmentInCurrentProject = useCallback(
     async (segment: Segment, options: Partial<SegmentOptions>) => {
       if (!currentProject.current) {
@@ -208,19 +213,37 @@ export const useProjects = () => {
         return;
       }
 
-      segment.update(options);
+      debugger;
 
+      const previousId = segment.id;
+
+      // Update the segment in the Peaks instance
+      segment.update({
+        startTime: options.startTime ?? segment.startTime,
+        endTime: options.endTime ?? segment.endTime,
+        color: options.color ?? segment.color,
+        labelText: options.labelText ?? segment.labelText,
+        editable: options.editable ?? segment.editable,
+        borderColor: options.borderColor ?? segment.borderColor,
+      });
+
+      // Get the project data
       const projectData = await getProjectDataFromCurrentProject(
         currentProject.current
       );
 
-      projectData.segments = projectData.segments?.map((s) => {
-        if (s.id === segment.id) {
-          return mapSegmentToSegmentOptions(segment);
-        }
-        return s;
-      });
+      // Remove the old segment
+      projectData.segments = projectData.segments?.filter(
+        (s: SegmentOptions) => s.id !== previousId
+      );
 
+      // Add the new segment
+      projectData.segments = [
+        ...(projectData.segments || []),
+        mapSegmentToSegmentOptions(segment),
+      ];
+
+      // Write the updated project data to the file system
       await write(
         currentProject.current.name,
         new Blob([stringify(projectData)], { type: "application/json" })
