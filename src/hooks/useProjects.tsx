@@ -3,7 +3,8 @@ import { useFileSystem } from "./useFileSystem";
 import { SubdivisionPointOptions } from "../helpers/subdivisions";
 import { stringify } from "../helpers/objects";
 import { stripExtension } from "../helpers/files";
-import { SegmentOptions } from "peaks.js";
+import { Segment, SegmentOptions } from "peaks.js";
+import { mapSegmentToSegmentOptions } from "../helpers/segments";
 
 export interface SavedProjectData {
   media: string;
@@ -196,6 +197,34 @@ export const useProjects = () => {
     [write]
   );
 
+  const updateSegmentInCurrentProject = useCallback(
+    async (segment: Segment, options: Partial<SegmentOptions>) => {
+      if (!currentProject.current) {
+        console.error("No current project selected");
+        return;
+      }
+
+      segment.update(options);
+
+      const file = await currentProject.current.getFile();
+      const data = await file.text();
+      const projectData = JSON.parse(data) as SavedProjectData;
+
+      projectData.segments = projectData.segments?.map((s) => {
+        if (s.id === segment.id) {
+          return mapSegmentToSegmentOptions(segment);
+        }
+        return s;
+      });
+
+      await write(
+        currentProject.current.name,
+        new Blob([stringify(projectData)], { type: "application/json" })
+      );
+    },
+    [write]
+  );
+
   return {
     projects,
     /** The current project */
@@ -207,5 +236,6 @@ export const useProjects = () => {
     removePointsFromCurrentProject,
     addSegmentsToCurrentProject,
     removeSegmentsFromCurrentProject,
+    updateSegmentInCurrentProject,
   };
 };

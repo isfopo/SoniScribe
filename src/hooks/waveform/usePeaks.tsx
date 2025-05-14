@@ -53,6 +53,7 @@ export interface UsePeaksOptions {
   onSegmentAdd?: (segment: Segment[]) => void;
   /** Callback function to be called when a segment is removed. */
   onSegmentRemove?: (segment: Segment[]) => void;
+
   /** Callback function to be called when a segment is right clicked. */
   onSegmentContextMenu?: (
     event: SegmentClickEvent,

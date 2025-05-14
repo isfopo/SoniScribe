@@ -32,6 +32,7 @@ export const ProjectView = (): React.ReactElement => {
     removePointsFromCurrentProject,
     addSegmentsToCurrentProject,
     removeSegmentsFromCurrentProject,
+    updateSegmentInCurrentProject,
   } = useProjects();
 
   const {
@@ -129,7 +130,7 @@ export const ProjectView = (): React.ReactElement => {
                 event.segment.labelText
               );
               if (event.segment && event.segment.id) {
-                event.segment.update({
+                updateSegmentInCurrentProject(event.segment, {
                   labelText: label || event.segment.labelText,
                 });
               }
