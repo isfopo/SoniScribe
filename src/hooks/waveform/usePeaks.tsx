@@ -167,6 +167,7 @@ export const usePeaks = ({
         webAudio: { audioContext: audioContext.current, multiChannel: true },
         segmentOptions: {
           markers: true,
+          overlay: true,
           overlayLabelColor: onBackground,
           overlayFontSize: 16,
           overlayLabelAlign: "left",
