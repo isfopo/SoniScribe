@@ -131,8 +131,6 @@ export const ProjectView = (): React.ReactElement => {
               if (event.segment && event.segment.id) {
                 event.segment.update({
                   labelText: label || event.segment.labelText,
-                  startTime: event.segment.startTime,
-                  endTime: event.segment.endTime,
                 });
               }
             },
@@ -145,8 +143,6 @@ export const ProjectView = (): React.ReactElement => {
               if (event.segment && event.segment.id) {
                 event.segment.update({
                   color: color || event.segment.color,
-                  startTime: event.segment.startTime,
-                  endTime: event.segment.endTime,
                 });
               }
             },
