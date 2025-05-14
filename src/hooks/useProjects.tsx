@@ -2,7 +2,10 @@ import { useCallback, useRef } from "react";
 import { useFileSystem } from "./useFileSystem";
 import { SubdivisionPointOptions } from "../helpers/subdivisions";
 import { stringify } from "../helpers/objects";
-import { stripExtension } from "../helpers/files";
+import {
+  getProjectDataFromCurrentProject,
+  stripExtension,
+} from "../helpers/files";
 import { Segment, SegmentOptions } from "peaks.js";
 import { mapSegmentToSegmentOptions } from "../helpers/segments";
 
@@ -110,9 +113,10 @@ export const useProjects = () => {
         return;
       }
 
-      const file = await currentProject.current.getFile();
-      const data = await file.text();
-      const projectData = JSON.parse(data) as SavedProjectData;
+      const projectData = await getProjectDataFromCurrentProject(
+        currentProject.current
+      );
+
       projectData.points = [...projectData.points, ...points];
 
       await write(
@@ -134,9 +138,9 @@ export const useProjects = () => {
         return;
       }
 
-      const file = await currentProject.current.getFile();
-      const data = await file.text();
-      const projectData = JSON.parse(data) as SavedProjectData;
+      const projectData = await getProjectDataFromCurrentProject(
+        currentProject.current
+      );
 
       projectData.points = projectData.points.filter(
         (point: SubdivisionPointOptions) =>
@@ -161,9 +165,9 @@ export const useProjects = () => {
         console.error("No current project selected");
         return;
       }
-      const file = await currentProject.current.getFile();
-      const data = await file.text();
-      const projectData = JSON.parse(data) as SavedProjectData;
+      const projectData = await getProjectDataFromCurrentProject(
+        currentProject.current
+      );
       projectData.segments = [...(projectData.segments || []), ...segments];
       await write(
         currentProject.current.name,
@@ -183,9 +187,9 @@ export const useProjects = () => {
         console.error("No current project selected");
         return;
       }
-      const file = await currentProject.current.getFile();
-      const data = await file.text();
-      const projectData = JSON.parse(data) as SavedProjectData;
+      const projectData = await getProjectDataFromCurrentProject(
+        currentProject.current
+      );
       projectData.segments = projectData.segments?.filter(
         (segment: SegmentOptions) => !segments.some((s) => s.id === segment.id)
       );
@@ -206,9 +210,9 @@ export const useProjects = () => {
 
       segment.update(options);
 
-      const file = await currentProject.current.getFile();
-      const data = await file.text();
-      const projectData = JSON.parse(data) as SavedProjectData;
+      const projectData = await getProjectDataFromCurrentProject(
+        currentProject.current
+      );
 
       projectData.segments = projectData.segments?.map((s) => {
         if (s.id === segment.id) {
