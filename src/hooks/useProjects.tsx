@@ -213,8 +213,6 @@ export const useProjects = () => {
         return;
       }
 
-      debugger;
-
       const previousId = segment.id;
 
       // Update the segment in the Peaks instance
