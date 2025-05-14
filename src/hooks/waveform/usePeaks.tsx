@@ -45,6 +45,8 @@ export interface UsePeaksOptions {
   onPointAdd?: (point: Point[]) => void;
   /** Callback function to be called when a point is removed. */
   onPointRemove?: (point: Point[]) => void;
+  /** Callback function to be called when a point is updated. */
+  onPointUpdate?: (point: Point) => void;
   /** Callback function to be called when a point is double clicked. */
   onPointDoubleClick?: (event: PointClickEvent) => void;
   /** Callback function to be called when a point is right clicked. */
@@ -74,6 +76,7 @@ export const usePeaks = ({
   onInitialize,
   onPointAdd,
   onPointRemove,
+  onPointUpdate,
   onPointDoubleClick,
   onPointContextMenu,
   onSegmentAdd,
@@ -209,6 +212,13 @@ export const usePeaks = ({
             onPointAdd(event.points as SubdivisionPoint[]);
           }
         });
+
+        peaks.on("points.dragend", (event) => {
+          if (onPointUpdate) {
+            onPointUpdate(event.point);
+          }
+        });
+
         peaks.on("points.remove", (event) => {
           if (onPointRemove) {
             onPointRemove(event.points as SubdivisionPoint[]);
@@ -250,6 +260,7 @@ export const usePeaks = ({
       onInitialize,
       onPointAdd,
       onPointRemove,
+      onPointUpdate,
       onSegmentAdd,
       onSegmentRemove,
       onSegmentUpdate,
