@@ -30,6 +30,7 @@ export const ProjectView = (): React.ReactElement => {
     setCurrentProject,
     addPointsToCurrentProject,
     removePointsFromCurrentProject,
+    updatePointInCurrentProject,
     addSegmentsToCurrentProject,
     removeSegmentsFromCurrentProject,
     updateSegmentInCurrentProject,
@@ -67,6 +68,11 @@ export const ProjectView = (): React.ReactElement => {
           mapSubdivisionPointToSubdivisionPointOption(point)
         )
       ),
+    onPointUpdate: (point) => {
+      updatePointInCurrentProject(
+        mapSubdivisionPointToSubdivisionPointOption(point)
+      );
+    },
     onPointContextMenu: (event, peaks) => {
       openContextMenu({
         event: event.evt,

@@ -21,6 +21,7 @@ import { useTheme } from "../../theme/useTheme";
 import { useEventListener } from "../useEventListener";
 import { useSections } from "./useSections";
 import { usePeaksListener } from "./usePeaksListener";
+import { nanoid } from "nanoid";
 
 export interface InitializePeaksOptions {
   points?: SubdivisionPointOptions[];
@@ -379,7 +380,7 @@ export const usePeaks = ({
       peaksRef.current.points.add({
         time: time,
         editable: true,
-        id: `${subdivision}-${time}`,
+        id: nanoid(),
         subdivision: subdivision,
         ...SubdivisionPoints[subdivision],
       });

@@ -156,6 +156,39 @@ export const useProjects = () => {
   );
 
   /**
+   * Updates the point in the current project.
+   * @param project The current project.
+   * @returns The project data.
+   */
+  const updatePointInCurrentProject = useCallback(
+    async (point: SubdivisionPointOptions) => {
+      if (!currentProject.current) {
+        console.error("No current project selected");
+        return;
+      }
+      const projectData = await getProjectDataFromCurrentProject(
+        currentProject.current
+      );
+      projectData.points = projectData.points.map((p) => {
+        if (p.id === point.id) {
+          return {
+            ...p,
+            time: point.time,
+            color: point.color,
+            labelText: point.labelText,
+          };
+        }
+        return p;
+      });
+      await write(
+        currentProject.current.name,
+        new Blob([stringify(projectData)], { type: "application/json" })
+      );
+    },
+    [write]
+  );
+
+  /**
    * Adds segments to the current project.
    * @param segments The segments to add to the current project.
    */
@@ -259,6 +292,7 @@ export const useProjects = () => {
     deleteProject,
     addPointsToCurrentProject,
     removePointsFromCurrentProject,
+    updatePointInCurrentProject,
     addSegmentsToCurrentProject,
     removeSegmentsFromCurrentProject,
     updateSegmentInCurrentProject,
