@@ -6,9 +6,8 @@ import Peaks, {
   Segment,
   SegmentClickEvent,
   SegmentOptions,
-  ZoomViewOptions,
 } from "peaks.js";
-import { useRef, useState, useCallback, useMemo } from "react";
+import { useRef, useState, useCallback } from "react";
 import {
   isSubdivision,
   Subdivision,
@@ -102,33 +101,6 @@ export const usePeaks = ({
     scheme: { onBackground },
   } = useTheme();
 
-  const viewOptions: ZoomViewOptions = useMemo(
-    () => ({
-      waveformColor: onBackground,
-      playheadColor: onBackground,
-      axisLabelColor: onBackground,
-      axisGridlineColor: onBackground,
-      showAxisLabels: true,
-      wheelMode: "scroll",
-      playheadWidth: 2,
-      fontFamily: "Quicksand",
-      segmentOptions: {
-        overlay: true,
-        overlayFontSize: 18,
-        overlayFontStyle: "bold",
-        overlayFontFamily: "Quicksand",
-        overlayLabelVerticalAlign: "middle",
-        overlayBorderWidth: 0,
-      },
-      formatAxisTime: (time) => {
-        const minutes = Math.floor(time / 60);
-        const seconds = Math.floor(time % 60);
-        return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
-      },
-    }),
-    [onBackground]
-  );
-
   const handleError = (error: Error) => {
     console.error(error.message);
     if (onError) {
@@ -157,25 +129,48 @@ export const usePeaks = ({
       }
     ) => {
       const options: PeaksOptions = {
+        waveformColor: onBackground,
+        playheadColor: onBackground,
+        axisLabelColor: onBackground,
+        axisGridlineColor: onBackground,
+        showAxisLabels: true,
+        fontFamily: "Quicksand",
+        segmentOptions: {
+          overlayFontSize: 18,
+          overlayFontFamily: "Quicksand",
+          overlayLabelColor: onBackground,
+          overlayBorderWidth: 0,
+          overlay: true,
+        },
         zoomview: {
           container: viewRef.current,
-          ...viewOptions,
           autoScrollOffset: 50,
+          segmentOptions: {
+            overlay: true,
+            overlayFontStyle: "bold",
+            overlayLabelVerticalAlign: "middle",
+            markers: true,
+            overlayLabelAlign: "left",
+          },
         },
         overview: {
           container: overviewRef.current,
-          ...viewOptions,
-          axisGridlineColor: "transparent",
+          segmentOptions: {
+            overlay: true,
+            overlayFontStyle: "bold",
+            overlayLabelVerticalAlign: "middle",
+            markers: true,
+            overlayLabelAlign: "left",
+            overlayCornerRadius: 0,
+          },
+        },
+        formatAxisTime: (time) => {
+          const minutes = Math.floor(time / 60);
+          const seconds = Math.floor(time % 60);
+          return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
         },
         mediaElement: audioElementRef.current as Element,
         webAudio: { audioContext: audioContext.current, multiChannel: true },
-        segmentOptions: {
-          markers: true,
-          overlay: true,
-          overlayLabelColor: onBackground,
-          overlayFontSize: 16,
-          overlayLabelAlign: "left",
-        },
         keyboard: false,
         logger: console.error.bind(console),
         points,
@@ -265,7 +260,6 @@ export const usePeaks = ({
       onSegmentAdd,
       onSegmentRemove,
       onSegmentUpdate,
-      viewOptions,
     ]
   );
 
