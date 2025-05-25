@@ -157,11 +157,14 @@ export const usePeaks = ({
           container: overviewRef.current,
           segmentOptions: {
             overlay: true,
+            overlayFontSize: 14,
             overlayFontStyle: "bold",
-            overlayLabelVerticalAlign: "middle",
+            overlayLabelVerticalAlign: "top",
             markers: true,
             overlayLabelAlign: "left",
             overlayCornerRadius: 0,
+            overlayLabelPadding: 0,
+            overlayOffset: 0,
           },
         },
         formatAxisTime: (time) => {
