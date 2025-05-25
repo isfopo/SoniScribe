@@ -37,16 +37,18 @@ export const ContextMenu = () => {
   }
 
   return (
-    <ul
-      className={styles["context-menu"]}
-      onMouseLeave={closeContextMenu}
-      style={{ top: anchorPoint.y, left: anchorPoint.x }}
-    >
-      {items.map(({ label, action, key }) => (
-        <li key={key} onClick={() => handleSelection(action)}>
-          {label}
-        </li>
-      ))}
-    </ul>
+    <div>
+      <ul
+        className={styles["context-menu"]}
+        onMouseLeave={closeContextMenu}
+        style={{ top: anchorPoint.y, left: anchorPoint.x }}
+      >
+        {items.map(({ label, action, key }) => (
+          <li key={key} onClick={() => handleSelection(action)}>
+            {label}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 };
