@@ -157,7 +157,7 @@ export const useProjects = () => {
 
   /**
    * Updates the point in the current project.
-   * @param project The current project.
+   * @param point The point to update in the current project.
    * @returns The project data.
    */
   const updatePointInCurrentProject = useCallback(
