@@ -1,0 +1,33 @@
+.context-menu {
+  position: absolute;
+  background: var(--primaryFixed);
+  color: var(--onPrimaryFixed);
+  border: none;
+  border-radius: 0.3rem;
+  list-style: none;
+  list-style-position: inside;
+  padding: 0;
+  margin: 0;
+  z-index: 1000;
+
+  li {
+    cursor: pointer;
+    padding: 0.4rem 1.6rem;
+    font-size: 14px;
+    font-weight: 500;
+    align-text: left;
+
+    &:hover {
+      background: var(--primaryFixedDim);
+    }
+
+    &:first-child {
+      border-top-left-radius: 0.3rem;
+      border-top-right-radius: 0.3rem;
+    }
+    &:last-child {
+      border-bottom-left-radius: 0.3rem;
+      border-bottom-right-radius: 0.3rem;
+    }
+  }
+}

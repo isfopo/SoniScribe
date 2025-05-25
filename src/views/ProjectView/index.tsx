@@ -6,15 +6,21 @@ import { Transport } from "../../components/Transport";
 import { WaveformView } from "../../components/WaveformView";
 import { mapSubdivisionPointToSubdivisionPointOption } from "../../helpers/points";
 import { useKeyPress } from "../../hooks/useKeyPress";
-import { usePeaks } from "../../hooks/usePeaks";
+import { usePeaks } from "../../hooks/waveform/usePeaks";
 import { useProjects } from "../../hooks/useProjects";
 import { useSettingsStore } from "../../stores/settings";
 import styles from "./index.module.css";
 import { useDialogStore } from "../../stores/dialogs";
+import { useContextMenuStore } from "../../stores/contextMenu";
+import { useNewSegmentStore } from "../../stores/newSegment";
+import { SegmentOptions } from "peaks.js";
+import { mapSegmentToSegmentOptions } from "../../helpers/segments";
 
 export const ProjectView = (): React.ReactElement => {
   const { subdivision, setSubdivision } = useSettingsStore();
   const { addDialog, closeDialog } = useDialogStore();
+  const { openContextMenu } = useContextMenuStore();
+  const { addStart, addEnd, isDrawing } = useNewSegmentStore();
 
   const {
     createNewProject,
@@ -24,6 +30,10 @@ export const ProjectView = (): React.ReactElement => {
     setCurrentProject,
     addPointsToCurrentProject,
     removePointsFromCurrentProject,
+    updatePointInCurrentProject,
+    addSegmentsToCurrentProject,
+    removeSegmentsFromCurrentProject,
+    updateSegmentInCurrentProject,
   } = useProjects();
 
   const {
@@ -58,6 +68,101 @@ export const ProjectView = (): React.ReactElement => {
           mapSubdivisionPointToSubdivisionPointOption(point)
         )
       ),
+    onPointUpdate: (point) => {
+      updatePointInCurrentProject(
+        mapSubdivisionPointToSubdivisionPointOption(point)
+      );
+    },
+    onPointContextMenu: (event, peaks) => {
+      openContextMenu({
+        event: event.evt,
+        object: event.point,
+        items: [
+          {
+            label: !isDrawing ? "Start Section" : "End Section",
+            key: "create-section",
+            action: () => {
+              if (!isDrawing) {
+                addStart(event.point);
+              } else {
+                addEnd(event.point);
+              }
+            },
+          },
+          {
+            label: "Remove Point",
+            key: "remove-point",
+            action: () => {
+              if (event.point && event.point.id) {
+                peaks.points.removeById(event.point.id);
+              }
+            },
+          },
+        ],
+      });
+    },
+    onSegmentAdd: (segments) =>
+      addSegmentsToCurrentProject(
+        segments.map(
+          (segment): SegmentOptions => mapSegmentToSegmentOptions(segment)
+        )
+      ),
+    onSegmentRemove: (segments) =>
+      removeSegmentsFromCurrentProject(
+        segments.map(
+          (segment): SegmentOptions => mapSegmentToSegmentOptions(segment)
+        )
+      ),
+    onSegmentUpdate: (segment) => {
+      updateSegmentInCurrentProject(
+        segment,
+        mapSegmentToSegmentOptions(segment)
+      );
+    },
+    onSegmentContextMenu: (event, peaks) => {
+      openContextMenu({
+        event: event.evt,
+        object: event.segment,
+        items: [
+          {
+            label: "Remove Segment",
+            key: "remove-segment",
+            action: () => {
+              if (event.segment && event.segment.id) {
+                peaks.segments.removeById(event.segment.id);
+              }
+            },
+          },
+          {
+            label: "Change Name",
+            key: "change-name",
+            action: () => {
+              const label = prompt(
+                "Enter a new label:",
+                event.segment.labelText
+              );
+              if (event.segment && event.segment.id) {
+                updateSegmentInCurrentProject(event.segment, {
+                  labelText: label || event.segment.labelText,
+                });
+              }
+            },
+          },
+          {
+            label: "Change Color",
+            key: "change-color",
+            action: () => {
+              const color = prompt("Enter a color (hex or name):", "#ff0000");
+              if (event.segment && event.segment.id) {
+                event.segment.update({
+                  color: color || event.segment.color,
+                });
+              }
+            },
+          },
+        ],
+      });
+    },
   });
 
   useKeyPress({
@@ -139,6 +244,7 @@ export const ProjectView = (): React.ReactElement => {
 
       <button onClick={() => setPlaybackRate(0.5)}>0.5x</button>
       <button onClick={() => setPlaybackRate(1)}>1x</button>
+      {isDrawing && <p>adding segment</p>}
     </>
   );
 };

@@ -2,13 +2,19 @@ import { useCallback, useRef } from "react";
 import { useFileSystem } from "./useFileSystem";
 import { SubdivisionPointOptions } from "../helpers/subdivisions";
 import { stringify } from "../helpers/objects";
-import { stripExtension } from "../helpers/files";
+import {
+  getProjectDataFromCurrentProject,
+  stripExtension,
+} from "../helpers/files";
+import { Segment, SegmentOptions } from "peaks.js";
+import { mapSegmentToSegmentOptions } from "../helpers/segments";
 
 export interface SavedProjectData {
   media: string;
   type: string;
   size: number;
   points: SubdivisionPointOptions[];
+  segments?: SegmentOptions[];
 }
 
 /**
@@ -63,6 +69,7 @@ export const useProjects = () => {
               type: mediaFile.type,
               size: mediaFile.size,
               points: [],
+              segments: [],
             } as SavedProjectData),
           ],
           { type: "application/json" }
@@ -106,9 +113,10 @@ export const useProjects = () => {
         return;
       }
 
-      const file = await currentProject.current.getFile();
-      const data = await file.text();
-      const projectData = JSON.parse(data) as SavedProjectData;
+      const projectData = await getProjectDataFromCurrentProject(
+        currentProject.current
+      );
+
       projectData.points = [...projectData.points, ...points];
 
       await write(
@@ -130,15 +138,143 @@ export const useProjects = () => {
         return;
       }
 
-      const file = await currentProject.current.getFile();
-      const data = await file.text();
-      const projectData = JSON.parse(data) as SavedProjectData;
+      const projectData = await getProjectDataFromCurrentProject(
+        currentProject.current
+      );
 
       projectData.points = projectData.points.filter(
         (point: SubdivisionPointOptions) =>
           !points.some((p) => p.id === point.id)
       );
 
+      await write(
+        currentProject.current.name,
+        new Blob([stringify(projectData)], { type: "application/json" })
+      );
+    },
+    [write]
+  );
+
+  /**
+   * Updates the point in the current project.
+   * @param point The point to update in the current project.
+   * @returns The project data.
+   */
+  const updatePointInCurrentProject = useCallback(
+    async (point: SubdivisionPointOptions) => {
+      if (!currentProject.current) {
+        console.error("No current project selected");
+        return;
+      }
+      const projectData = await getProjectDataFromCurrentProject(
+        currentProject.current
+      );
+      projectData.points = projectData.points.map((p) => {
+        if (p.id === point.id) {
+          return {
+            ...p,
+            time: point.time,
+            color: point.color,
+            labelText: point.labelText,
+          };
+        }
+        return p;
+      });
+      await write(
+        currentProject.current.name,
+        new Blob([stringify(projectData)], { type: "application/json" })
+      );
+    },
+    [write]
+  );
+
+  /**
+   * Adds segments to the current project.
+   * @param segments The segments to add to the current project.
+   */
+  const addSegmentsToCurrentProject = useCallback(
+    async (segments: SegmentOptions[]) => {
+      if (!currentProject.current) {
+        console.error("No current project selected");
+        return;
+      }
+      const projectData = await getProjectDataFromCurrentProject(
+        currentProject.current
+      );
+      projectData.segments = [...(projectData.segments || []), ...segments];
+      await write(
+        currentProject.current.name,
+        new Blob([stringify(projectData)], { type: "application/json" })
+      );
+    },
+    [write]
+  );
+
+  /**
+   * Removes segments from the current project.
+   * @param segments The segments to remove from the current project.
+   */
+  const removeSegmentsFromCurrentProject = useCallback(
+    async (segments: SegmentOptions[]) => {
+      if (!currentProject.current) {
+        console.error("No current project selected");
+        return;
+      }
+      const projectData = await getProjectDataFromCurrentProject(
+        currentProject.current
+      );
+      projectData.segments = projectData.segments?.filter(
+        (segment: SegmentOptions) => !segments.some((s) => s.id === segment.id)
+      );
+      await write(
+        currentProject.current.name,
+        new Blob([stringify(projectData)], { type: "application/json" })
+      );
+    },
+    [write]
+  );
+
+  /**
+   * Updates a segment in the current project.
+   * @param segment The segment to update.
+   * @param options The options to update the segment with.
+   */
+  const updateSegmentInCurrentProject = useCallback(
+    async (segment: Segment, options: Partial<SegmentOptions>) => {
+      if (!currentProject.current) {
+        console.error("No current project selected");
+        return;
+      }
+
+      const previousId = segment.id;
+
+      // Update the segment in the Peaks instance
+      segment.update({
+        startTime: options.startTime ?? segment.startTime,
+        endTime: options.endTime ?? segment.endTime,
+        color: options.color ?? segment.color,
+        labelText: options.labelText ?? segment.labelText,
+        editable: options.editable ?? segment.editable,
+        borderColor: options.borderColor ?? segment.borderColor,
+      });
+
+      // Get the project data
+      const projectData = await getProjectDataFromCurrentProject(
+        currentProject.current
+      );
+
+      // Remove the old segment
+      projectData.segments = projectData.segments?.filter(
+        (s: SegmentOptions) => s.id !== previousId
+      );
+
+      // Add the new segment
+      projectData.segments = [
+        ...(projectData.segments || []),
+        mapSegmentToSegmentOptions(segment),
+      ];
+
+      // Write the updated project data to the file system
       await write(
         currentProject.current.name,
         new Blob([stringify(projectData)], { type: "application/json" })
@@ -156,5 +292,9 @@ export const useProjects = () => {
     deleteProject,
     addPointsToCurrentProject,
     removePointsFromCurrentProject,
+    updatePointInCurrentProject,
+    addSegmentsToCurrentProject,
+    removeSegmentsFromCurrentProject,
+    updateSegmentInCurrentProject,
   };
 };

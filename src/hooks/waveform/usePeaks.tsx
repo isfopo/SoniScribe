@@ -1,15 +1,32 @@
-import Peaks, { PeaksInstance, PeaksOptions, ZoomViewOptions } from "peaks.js";
-import { useRef, useState, useCallback, useMemo } from "react";
+import Peaks, {
+  PeaksInstance,
+  PeaksOptions,
+  Point,
+  PointClickEvent,
+  Segment,
+  SegmentClickEvent,
+  SegmentOptions,
+} from "peaks.js";
+import { useRef, useState, useCallback } from "react";
 import {
   isSubdivision,
   Subdivision,
   SubdivisionPoint,
   SubdivisionPointOptions,
   SubdivisionPoints,
-} from "../helpers/subdivisions";
-import { SavedProjectData } from "./useProjects";
-import { useTheme } from "../theme/useTheme";
-import { useEventListener } from "./useEventListener";
+} from "../../helpers/subdivisions";
+import { SavedProjectData } from "../useProjects";
+import { useTheme } from "../../theme/useTheme";
+import { useEventListener } from "../useEventListener";
+import { useSections } from "./useSections";
+import { usePeaksListener } from "./usePeaksListener";
+import { nanoid } from "nanoid";
+
+export interface InitializePeaksOptions {
+  points?: SubdivisionPointOptions[];
+  segments?: SegmentOptions[];
+  isNewProject?: boolean;
+}
 
 export interface UsePeaksOptions {
   /** The amount of time that the previous point will go back to the one before. */
@@ -25,9 +42,26 @@ export interface UsePeaksOptions {
   /** Callback function to be called when a point is added. */
   onOpen?: (project: FileSystemFileHandle) => void;
   /** Callback function to be called when a point is added. */
-  onPointAdd?: (point: SubdivisionPoint[]) => void;
+  onPointAdd?: (point: Point[]) => void;
   /** Callback function to be called when a point is removed. */
-  onPointRemove?: (point: SubdivisionPoint[]) => void;
+  onPointRemove?: (point: Point[]) => void;
+  /** Callback function to be called when a point is updated. */
+  onPointUpdate?: (point: Point) => void;
+  /** Callback function to be called when a point is double clicked. */
+  onPointDoubleClick?: (event: PointClickEvent) => void;
+  /** Callback function to be called when a point is right clicked. */
+  onPointContextMenu?: (event: PointClickEvent, peaks: PeaksInstance) => void;
+  /** Callback function to be called when a segment is added. */
+  onSegmentAdd?: (segment: Segment[]) => void;
+  /** Callback function to be called when a segment is removed. */
+  onSegmentRemove?: (segment: Segment[]) => void;
+  /** Callback function to be called when a segment is updated. */
+  onSegmentUpdate?: (segment: Segment) => void;
+  /** Callback function to be called when a segment is right clicked. */
+  onSegmentContextMenu?: (
+    event: SegmentClickEvent,
+    peaks: PeaksInstance
+  ) => void;
   /** Callback function to be called when an error occurs. */
   onError?: (error: Error) => void;
 }
@@ -42,6 +76,13 @@ export const usePeaks = ({
   onInitialize,
   onPointAdd,
   onPointRemove,
+  onPointUpdate,
+  onPointDoubleClick,
+  onPointContextMenu,
+  onSegmentAdd,
+  onSegmentRemove,
+  onSegmentUpdate,
+  onSegmentContextMenu,
   onError,
 }: UsePeaksOptions) => {
   const viewRef = useRef<HTMLDivElement>(null);
@@ -54,28 +95,18 @@ export const usePeaks = ({
   const [mediaFile, setMediaFile] = useState<File | null>(null);
   const localFileRef = useRef<File | null>(null);
 
+  const { addSegment } = useSections(peaksRef);
+
   const {
     scheme: { onBackground },
   } = useTheme();
 
-  const viewOptions: ZoomViewOptions = useMemo(
-    () => ({
-      waveformColor: onBackground,
-      playheadColor: onBackground,
-      axisLabelColor: onBackground,
-      axisGridlineColor: onBackground,
-      showAxisLabels: true,
-      wheelMode: "scroll",
-      playheadWidth: 2,
-      fontFamily: "Quicksand",
-      formatAxisTime: (time) => {
-        const minutes = Math.floor(time / 60);
-        const seconds = Math.floor(time % 60);
-        return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
-      },
-    }),
-    [onBackground]
-  );
+  const handleError = (error: Error) => {
+    console.error(error.message);
+    if (onError) {
+      onError(error);
+    }
+  };
 
   /**
    * Initializes Peaks.js with the given media file and options.
@@ -88,40 +119,65 @@ export const usePeaks = ({
    * @throws Error if the media file is not provided.
    * @throws Error if the audio element is not found.
    */
-  const handleError = (error: Error) => {
-    console.error(error.message);
-    if (onError) {
-      onError(error);
-    }
-  };
-
   const initialize = useCallback(
     (
       mediaFile: File,
-      {
-        points,
-        isNewProject,
-      }: { points?: SubdivisionPointOptions[]; isNewProject?: boolean } = {
+      { points, segments, isNewProject }: InitializePeaksOptions = {
         points: [],
+        segments: [],
         isNewProject: false,
       }
     ) => {
       const options: PeaksOptions = {
+        waveformColor: onBackground,
+        playheadColor: onBackground,
+        axisLabelColor: onBackground,
+        axisGridlineColor: onBackground,
+        showAxisLabels: true,
+        fontFamily: "Quicksand",
+        segmentOptions: {
+          overlayFontSize: 18,
+          overlayFontFamily: "Quicksand",
+          overlayLabelColor: onBackground,
+          overlayBorderWidth: 0,
+          overlay: true,
+        },
         zoomview: {
           container: viewRef.current,
-          ...viewOptions,
           autoScrollOffset: 50,
+          segmentOptions: {
+            overlay: true,
+            overlayFontStyle: "bold",
+            overlayLabelVerticalAlign: "middle",
+            markers: true,
+            overlayLabelAlign: "left",
+          },
         },
         overview: {
           container: overviewRef.current,
-          ...viewOptions,
-          axisGridlineColor: "transparent",
+          segmentOptions: {
+            overlay: true,
+            overlayFontSize: 14,
+            overlayFontStyle: "bold",
+            overlayLabelVerticalAlign: "top",
+            markers: true,
+            overlayLabelAlign: "left",
+            overlayCornerRadius: 0,
+            overlayLabelPadding: 0,
+            overlayOffset: 0,
+          },
+        },
+        formatAxisTime: (time) => {
+          const minutes = Math.floor(time / 60);
+          const seconds = Math.floor(time % 60);
+          return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
         },
         mediaElement: audioElementRef.current as Element,
         webAudio: { audioContext: audioContext.current, multiChannel: true },
         keyboard: false,
         logger: console.error.bind(console),
         points,
+        segments,
       };
 
       if (!audioElementRef.current) return;
@@ -150,6 +206,42 @@ export const usePeaks = ({
           return;
         }
 
+        peaks.on("points.add", (event) => {
+          if (onPointAdd) {
+            onPointAdd(event.points as SubdivisionPoint[]);
+          }
+        });
+
+        peaks.on("points.dragend", (event) => {
+          if (onPointUpdate) {
+            onPointUpdate(event.point);
+          }
+        });
+
+        peaks.on("points.remove", (event) => {
+          if (onPointRemove) {
+            onPointRemove(event.points as SubdivisionPoint[]);
+          }
+        });
+
+        peaks.on("segments.add", (event) => {
+          if (onSegmentAdd) {
+            onSegmentAdd(event.segments);
+          }
+        });
+
+        peaks.on("segments.remove", (event) => {
+          if (onSegmentRemove) {
+            onSegmentRemove(event.segments);
+          }
+        });
+
+        peaks.on("segments.dragend", (event) => {
+          if (onSegmentUpdate) {
+            onSegmentUpdate(event.segment);
+          }
+        });
+
         peaksRef.current = peaks;
         setMediaFile(mediaFile);
         localFileRef.current = mediaFile;
@@ -159,27 +251,53 @@ export const usePeaks = ({
             isNewProject: isNewProject ?? false,
           });
         }
-
-        if (onPointAdd) {
-          peaks.on("points.add", (event) => {
-            onPointAdd(event.points as SubdivisionPoint[]);
-          });
-        }
-
-        if (onPointRemove) {
-          peaks.on("points.remove", (event) => {
-            onPointRemove(event.points as SubdivisionPoint[]);
-          });
-        }
       });
     },
-    [onError, onInitialize, onPointAdd, onPointRemove, viewOptions]
+    [
+      onBackground,
+      onError,
+      onInitialize,
+      onPointAdd,
+      onPointRemove,
+      onPointUpdate,
+      onSegmentAdd,
+      onSegmentRemove,
+      onSegmentUpdate,
+    ]
   );
+
+  usePeaksListener(peaksRef, {
+    event: "points.dblclick",
+    on: (event) => {
+      if (onPointDoubleClick) {
+        onPointDoubleClick(event);
+      }
+    },
+  });
+
+  usePeaksListener(peaksRef, {
+    event: "points.contextmenu",
+    on: (event) => {
+      if (onPointContextMenu) {
+        onPointContextMenu(event, peaksRef.current as PeaksInstance);
+      }
+    },
+  });
+
+  usePeaksListener(peaksRef, {
+    event: "segments.contextmenu",
+    on: (event) => {
+      if (onSegmentContextMenu) {
+        onSegmentContextMenu(event, peaksRef.current as PeaksInstance);
+      }
+    },
+  });
 
   const reinitialize = useCallback(() => {
     if (peaksRef.current && localFileRef.current) {
       const points = peaksRef.current.points.getPoints() as SubdivisionPoint[];
-      initialize(localFileRef.current, { points });
+      const segments = peaksRef.current.segments.getSegments();
+      initialize(localFileRef.current, { points, segments });
     }
   }, [initialize]);
 
@@ -204,7 +322,7 @@ export const usePeaks = ({
         const fileHandle = file as FileSystemFileHandle;
 
         const saveData = await fileHandle.getFile();
-        const { points, media } = JSON.parse(
+        const { points, segments, media } = JSON.parse(
           await saveData.text()
         ) as SavedProjectData;
 
@@ -213,6 +331,7 @@ export const usePeaks = ({
 
         initialize(await mediaFileHandle.getFile(), {
           points,
+          segments,
           isNewProject: false,
         });
       } else {
@@ -258,7 +377,7 @@ export const usePeaks = ({
       peaksRef.current.points.add({
         time: time,
         editable: true,
-        id: `${subdivision}-${time}`,
+        id: nanoid(),
         subdivision: subdivision,
         ...SubdivisionPoints[subdivision],
       });
@@ -342,6 +461,7 @@ export const usePeaks = ({
     addPoint,
     nextPoint,
     previousPoint,
+    addSegment,
     setPlaybackRate,
   };
 };

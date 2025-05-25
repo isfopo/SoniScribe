@@ -1,3 +1,5 @@
+import { SavedProjectData } from "../hooks/useProjects";
+
 /**
  * Removes the file extension from a given filename.
  * This function is useful for displaying filenames without their extensions.
@@ -18,4 +20,16 @@ export const displayBytes = (bytes: number): string => {
   const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+};
+
+/**
+ * Converts a file handle to project data.
+ * @param file The file handle to convert.
+ * @returns A promise that resolves to a blob.
+ */
+export const getProjectDataFromCurrentProject = async (
+  project: FileSystemFileHandle
+): Promise<SavedProjectData> => {
+  const file = await project.getFile();
+  return JSON.parse(await file.text()) as SavedProjectData;
 };
