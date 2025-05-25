@@ -4,8 +4,11 @@ Using SoniScribe as an end user.
 
 ## Points
 
+Points are markers that represent specific moments or locations in the timeline. They can be used to define key events or reference points for creating segments.
+
 ## Segments
 
+Segments are sections of the timeline defined by a start and end point. They are useful for grouping related points or highlighting specific intervals for playback or analysis.
 ### Creating a Section (Segment)
 
 #### Mobile
