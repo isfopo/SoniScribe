@@ -79,6 +79,16 @@ export const ProjectView = (): React.ReactElement => {
         object: event.point,
         items: [
           {
+            label: "Play from Here",
+            key: "play-point",
+            action: () => {
+              if (event.point && event.point.id) {
+                peaks.player.seek(event.point.time);
+                peaks.player.play();
+              }
+            },
+          },
+          {
             label: !isDrawing ? "Start Section" : "End Section",
             key: "create-section",
             action: () => {
@@ -124,6 +134,16 @@ export const ProjectView = (): React.ReactElement => {
         event: event.evt,
         object: event.segment,
         items: [
+          {
+            label: "Play Segment",
+            key: "play-segment",
+            action: () => {
+              if (event.segment && event.segment.id) {
+                peaks.player.seek(event.segment.startTime);
+                peaks.player.play();
+              }
+            },
+          },
           {
             label: "Remove Segment",
             key: "remove-segment",

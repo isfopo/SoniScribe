@@ -206,6 +206,14 @@ export const usePeaks = ({
           return;
         }
 
+        peaks.on("player.playing", () => {
+          setIsPlaying(true);
+        });
+
+        peaks.on("player.pause", () => {
+          setIsPlaying(false);
+        });
+
         peaks.on("points.add", (event) => {
           if (onPointAdd) {
             onPointAdd(event.points as SubdivisionPoint[]);
