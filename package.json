@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://isfopo.github.io/soniscribe/",
+  "homepage": "https://isfopo.github.io/SoniScribe/",
   "scripts": {
     "dev": "vite",
     "tunnel": "devtunnel host -p 5173",
