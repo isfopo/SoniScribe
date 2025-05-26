@@ -114,3 +114,4 @@ transcription-app/
 - `hooks/`: Custom React hooks for enhanced functionality.
 - `stores/`: State management using Zustand.
 - `public/`: Static assets and the main `index.html` file.
+- `views/`: The different views or pages of the app.
