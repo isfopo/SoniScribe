@@ -4,12 +4,11 @@ Welcome to the **SoniScribe**, a cutting-edge tool designed to streamline your a
 
 ## Table of Contents
 
-- [Transcription App](#transcription-app)
-  - [Table of Contents](#table-of-contents)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Scripts](#scripts)
-  - [Project Structure](#project-structure)
+- [Table of Contents](#table-of-contents)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Scripts](#scripts)
+- [Project Structure](#project-structure)
 
 ## Prerequisites
 
