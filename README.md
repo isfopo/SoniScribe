@@ -2,10 +2,7 @@
 
 Welcome to the **SoniScribe**, a cutting-edge tool designed to streamline your audio transcription workflow. Leveraging modern web technologies, this application offers a seamless experience for uploading, playing, and annotating audio files with precision.
 
-## Table of Contents
-
 - [SoniScribe](#soniscribe)
-  - [Table of Contents](#table-of-contents)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
   - [Scripts](#scripts)
