@@ -4,11 +4,17 @@ Welcome to the **SoniScribe**, a cutting-edge tool designed to streamline your a
 
 ## Table of Contents
 
-- [Table of Contents](#table-of-contents)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Scripts](#scripts)
-- [Project Structure](#project-structure)
+- [SoniScribe](#soniscribe)
+  - [Table of Contents](#table-of-contents)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Scripts](#scripts)
+    - [Start Development Server](#start-development-server)
+    - [Start Https Tunnel](#start-https-tunnel)
+    - [Build for Production](#build-for-production)
+    - [Lint the Codebase](#lint-the-codebase)
+    - [Preview the Production Build](#preview-the-production-build)
+  - [Project Structure](#project-structure)
 
 ## Prerequisites
 
@@ -51,25 +57,33 @@ Before you begin, ensure you have met the following requirements:
 
 The project includes several npm scripts to streamline development and deployment:
 
-Start Development Server
+### Start Development Server
 
 ```bash
 npm run dev
 ```
 
-Build for Production
+### Start Https Tunnel
+
+This script will start a https tunnel in order for the File System API to work locally.
+
+```bash
+npm run tunnel
+```
+
+### Build for Production
 
 ```bash
 npm run build
 ```
 
-Lint the Codebase
+### Lint the Codebase
 
 ```bash
 npm run lint
 ```
 
-Preview the Production Build
+### Preview the Production Build
 
 ```bash
 npm run preview
