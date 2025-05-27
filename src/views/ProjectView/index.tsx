@@ -1,7 +1,7 @@
 import { AudioPlayer } from "../../components/AudioPlayer";
 import { DragAndDropDialog } from "../../components/Dialogs/DragAndDropDialog";
 import { ProjectList } from "../../components/ProjectList";
-import { SubdivisionSelector } from "../../components/SubdivisionSelector";
+import { MultiTap } from "../../components/MultiTap";
 import { Transport } from "../../components/Transport";
 import { WaveformView } from "../../components/WaveformView";
 import { mapSubdivisionPointToSubdivisionPointOption } from "../../helpers/points";
@@ -252,7 +252,7 @@ export const ProjectView = (): React.ReactElement => {
 
       <AudioPlayer audioElementRef={audioElementRef} mediaFile={mediaFile} />
 
-      <SubdivisionSelector
+      <MultiTap
         subdivisions={[1, 2, 4, 8, 16, 32, 64]}
         onSelect={(subdivision) => addPoint({ subdivision })}
       />

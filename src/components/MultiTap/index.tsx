@@ -1,7 +1,7 @@
 import { Subdivision } from "../../helpers/subdivisions";
 import styles from "./index.module.css";
 
-export interface SubdivisionSelectorProps {
+export interface MultiTapProps {
   /** The available subdivisions. */
   subdivisions: Subdivision[];
   /** The function to call when the subdivision is selected. */
@@ -19,10 +19,7 @@ const SubdivisionIcons: Record<Subdivision, React.ReactNode> = {
   64: "1/64",
 } as const;
 
-export const SubdivisionSelector = ({
-  subdivisions,
-  onSelect,
-}: SubdivisionSelectorProps) => {
+export const MultiTap = ({ subdivisions, onSelect }: MultiTapProps) => {
   return (
     <div>
       {subdivisions.map((subdivision) => (
