@@ -2,8 +2,6 @@ import { Subdivision } from "../../helpers/subdivisions";
 import styles from "./index.module.css";
 
 export interface SubdivisionSelectorProps {
-  /** The current subdivision. */
-  currentSubdivision: Subdivision;
   /** The available subdivisions. */
   subdivisions: Subdivision[];
   /** The function to call when the subdivision is selected. */
@@ -22,7 +20,6 @@ const SubdivisionIcons: Record<Subdivision, React.ReactNode> = {
 } as const;
 
 export const SubdivisionSelector = ({
-  currentSubdivision,
   subdivisions,
   onSelect,
 }: SubdivisionSelectorProps) => {
@@ -33,9 +30,6 @@ export const SubdivisionSelector = ({
           key={subdivision}
           type="button"
           onClick={() => onSelect(subdivision)}
-          className={`${
-            currentSubdivision === subdivision ? styles["selected"] : ""
-          }`}
         >
           {SubdivisionIcons[subdivision]}
         </button>

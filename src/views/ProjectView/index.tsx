@@ -8,7 +8,6 @@ import { mapSubdivisionPointToSubdivisionPointOption } from "../../helpers/point
 import { useKeyPress } from "../../hooks/useKeyPress";
 import { usePeaks } from "../../hooks/waveform/usePeaks";
 import { useProjects } from "../../hooks/useProjects";
-import { useSettingsStore } from "../../stores/settings";
 import styles from "./index.module.css";
 import { useDialogStore } from "../../stores/dialogs";
 import { useContextMenuStore } from "../../stores/contextMenu";
@@ -17,7 +16,6 @@ import { SegmentOptions } from "peaks.js";
 import { mapSegmentToSegmentOptions } from "../../helpers/segments";
 
 export const ProjectView = (): React.ReactElement => {
-  const { subdivision, setSubdivision } = useSettingsStore();
   const { addDialog, closeDialog } = useDialogStore();
   const { openContextMenu } = useContextMenuStore();
   const { addStart, addEnd, isDrawing } = useNewSegmentStore();
@@ -50,7 +48,6 @@ export const ProjectView = (): React.ReactElement => {
     setPlaybackRate,
     mediaFile,
   } = usePeaks({
-    subdivision,
     onInitialize: async (_, mediaFile, { isNewProject }) => {
       if (!isNewProject) return;
       // Create a new project if the user drops a file
@@ -249,7 +246,6 @@ export const ProjectView = (): React.ReactElement => {
         nextPoint={nextPoint}
         previousPoint={previousPoint}
         isPlaying={isPlaying}
-        addPoint={() => addPoint({ subdivision })}
       />
 
       <WaveformView viewRef={viewRef} overviewRef={overviewRef} />
@@ -258,8 +254,7 @@ export const ProjectView = (): React.ReactElement => {
 
       <SubdivisionSelector
         subdivisions={[1, 2, 4, 8, 16, 32, 64]}
-        currentSubdivision={subdivision}
-        onSelect={setSubdivision}
+        onSelect={(subdivision) => addPoint({ subdivision })}
       />
 
       <button onClick={() => setPlaybackRate(0.5)}>0.5x</button>
