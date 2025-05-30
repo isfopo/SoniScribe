@@ -1,4 +1,5 @@
 import { Subdivision } from "../../helpers/subdivisions";
+import { Button } from "../Button";
 import styles from "./index.module.css";
 
 export interface MultiTapProps {
@@ -23,13 +24,13 @@ export const MultiTap = ({ subdivisions, onSelect }: MultiTapProps) => {
   return (
     <div>
       {subdivisions.map((subdivision) => (
-        <button
+        <Button
           key={subdivision}
           type="button"
           onClick={() => onSelect(subdivision)}
         >
           {SubdivisionIcons[subdivision]}
-        </button>
+        </Button>
       ))}
     </div>
   );

@@ -240,8 +240,8 @@ export const ProjectView = (): React.ReactElement => {
         />
       </div>
 
-      <p>{currentProject?.name}</p>
       <Transport
+        title={currentProject?.name || "No Project Opened"}
         playPause={playPause}
         nextPoint={nextPoint}
         previousPoint={previousPoint}
