@@ -1,9 +1,7 @@
 import { Subdivision } from "../../helpers/subdivisions";
 import styles from "./index.module.css";
 
-export interface SubdivisionSelectorProps {
-  /** The current subdivision. */
-  currentSubdivision: Subdivision;
+export interface MultiTapProps {
   /** The available subdivisions. */
   subdivisions: Subdivision[];
   /** The function to call when the subdivision is selected. */
@@ -21,11 +19,7 @@ const SubdivisionIcons: Record<Subdivision, React.ReactNode> = {
   64: "1/64",
 } as const;
 
-export const SubdivisionSelector = ({
-  currentSubdivision,
-  subdivisions,
-  onSelect,
-}: SubdivisionSelectorProps) => {
+export const MultiTap = ({ subdivisions, onSelect }: MultiTapProps) => {
   return (
     <div>
       {subdivisions.map((subdivision) => (
@@ -33,9 +27,6 @@ export const SubdivisionSelector = ({
           key={subdivision}
           type="button"
           onClick={() => onSelect(subdivision)}
-          className={`${
-            currentSubdivision === subdivision ? styles["selected"] : ""
-          }`}
         >
           {SubdivisionIcons[subdivision]}
         </button>
