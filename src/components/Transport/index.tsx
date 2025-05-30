@@ -1,6 +1,7 @@
 import { Play, Pause, ArrowBigRightDash, ArrowBigLeftDash } from "lucide-react";
 import { Button } from "../Button";
 import { BarContainer } from "../Container/BarContainer";
+import { ButtonGroup } from "../ButtonGroup";
 
 export interface TransportProps {
   title: string;
@@ -19,7 +20,7 @@ export const Transport = ({
 }: TransportProps) => {
   return (
     <BarContainer>
-      <div>
+      <ButtonGroup>
         <Button type="button" onClick={previousPoint} title="Next Point">
           <ArrowBigLeftDash />
         </Button>
@@ -29,7 +30,7 @@ export const Transport = ({
         <Button type="button" onClick={nextPoint} title="Previous Point">
           <ArrowBigRightDash />
         </Button>
-      </div>
+      </ButtonGroup>
       <h2>{title}</h2>
     </BarContainer>
   );

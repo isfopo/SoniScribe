@@ -1,6 +1,6 @@
 import { Subdivision } from "../../helpers/subdivisions";
 import { Button } from "../Button";
-import styles from "./index.module.css";
+import { ButtonGroup } from "../ButtonGroup";
 
 export interface MultiTapProps {
   /** The available subdivisions. */
@@ -22,7 +22,7 @@ const SubdivisionIcons: Record<Subdivision, React.ReactNode> = {
 
 export const MultiTap = ({ subdivisions, onSelect }: MultiTapProps) => {
   return (
-    <div>
+    <ButtonGroup>
       {subdivisions.map((subdivision) => (
         <Button
           key={subdivision}
@@ -32,6 +32,6 @@ export const MultiTap = ({ subdivisions, onSelect }: MultiTapProps) => {
           {SubdivisionIcons[subdivision]}
         </Button>
       ))}
-    </div>
+    </ButtonGroup>
   );
 };
