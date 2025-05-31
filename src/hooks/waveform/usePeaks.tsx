@@ -206,6 +206,8 @@ export const usePeaks = ({
           return;
         }
 
+        setIsPlaying(false);
+
         peaks.on("player.playing", () => {
           setIsPlaying(true);
         });
