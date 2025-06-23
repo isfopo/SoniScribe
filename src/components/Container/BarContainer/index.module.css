@@ -4,10 +4,10 @@
   width: 100%;
   overflow: hidden;
   align-items: center;
+  justify-content: space-between;
   gap: 1rem;
-
-  background-color: var(--primaryContainer);
   padding: 0 1rem;
+  background-color: var(--primaryContainer);
   height: 6rem;
   border-radius: calc(0.5 * 6rem);
 }

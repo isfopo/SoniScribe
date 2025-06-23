@@ -12,4 +12,9 @@
   height: 100vh;
   background-color: var(--surface);
   z-index: 9999;
+
+  > div {
+    padding: 1rem 0;
+    max-width: 1080px;
+  }
 }

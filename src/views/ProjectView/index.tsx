@@ -14,6 +14,9 @@ import { useContextMenuStore } from "../../stores/contextMenu";
 import { useNewSegmentStore } from "../../stores/newSegment";
 import { SegmentOptions } from "peaks.js";
 import { mapSegmentToSegmentOptions } from "../../helpers/segments";
+import { BarContainer } from "../../components/Container/BarContainer";
+import { Button } from "../../components/Button";
+import { ButtonGroup } from "../../components/ButtonGroup";
 
 export const ProjectView = (): React.ReactElement => {
   const { addDialog, closeDialog } = useDialogStore();
@@ -232,12 +235,14 @@ export const ProjectView = (): React.ReactElement => {
   return (
     <>
       <div className={currentProject ? styles["hidden"] : styles["overlay"]}>
-        <button onClick={() => openDialog()}>New</button>
-        <ProjectList
-          projects={projects}
-          open={handleProjectOpen}
-          remove={deleteProject}
-        />
+        <div>
+          <ProjectList
+            projects={projects}
+            add={openDialog}
+            open={handleProjectOpen}
+            remove={deleteProject}
+          />
+        </div>
       </div>
 
       <Transport
@@ -252,14 +257,17 @@ export const ProjectView = (): React.ReactElement => {
 
       <AudioPlayer audioElementRef={audioElementRef} mediaFile={mediaFile} />
 
-      <MultiTap
-        subdivisions={[1, 2, 4, 8, 16, 32, 64]}
-        onSelect={(subdivision) => addPoint({ subdivision })}
-      />
-
-      <button onClick={() => setPlaybackRate(0.5)}>0.5x</button>
-      <button onClick={() => setPlaybackRate(1)}>1x</button>
-      {isDrawing && <p>adding segment</p>}
+      <BarContainer>
+        <MultiTap
+          subdivisions={[1, 2, 4, 8, 16, 32, 64]}
+          onSelect={(subdivision) => addPoint({ subdivision })}
+        />
+        <ButtonGroup>
+          <Button onClick={() => setPlaybackRate(0.5)}>0.5x</Button>
+          <Button onClick={() => setPlaybackRate(1)}>1x</Button>
+          {isDrawing && <p>adding segment</p>}
+        </ButtonGroup>
+      </BarContainer>
     </>
   );
 };
