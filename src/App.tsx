@@ -4,13 +4,13 @@ import { useTheme } from "./theme/useTheme";
 import { ProjectView } from "./views/ProjectView";
 
 export const App = (): React.ReactElement => {
-  useTheme();
+	useTheme();
 
-  return (
-    <>
-      <DialogManager />
-      <ContextMenu />
-      <ProjectView />
-    </>
-  );
+	return (
+		<>
+			<DialogManager />
+			<ContextMenu />
+			<ProjectView />
+		</>
+	);
 };
