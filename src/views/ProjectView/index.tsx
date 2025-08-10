@@ -138,7 +138,7 @@ export const ProjectView = (): React.ReactElement => {
 						label: "Play Segment",
 						key: "play-segment",
 						action: () => {
-							if (event.segment && event.segment.id) {
+							if (event?.segment.id) {
 								peaks.player.seek(event.segment.startTime);
 								peaks.player.play();
 							}
@@ -148,7 +148,7 @@ export const ProjectView = (): React.ReactElement => {
 						label: "Remove Segment",
 						key: "remove-segment",
 						action: () => {
-							if (event.segment && event.segment.id) {
+							if (event?.segment.id) {
 								peaks.segments.removeById(event.segment.id);
 							}
 						},
@@ -161,7 +161,7 @@ export const ProjectView = (): React.ReactElement => {
 								"Enter a new label:",
 								event.segment.labelText,
 							);
-							if (event.segment && event.segment.id) {
+							if (event?.segment.id) {
 								updateSegmentInCurrentProject(event.segment, {
 									labelText: label || event.segment.labelText,
 								});
@@ -173,7 +173,7 @@ export const ProjectView = (): React.ReactElement => {
 						key: "change-color",
 						action: () => {
 							const color = prompt("Enter a color (hex or name):", "#ff0000");
-							if (event.segment && event.segment.id) {
+							if (event?.segment.id) {
 								event.segment.update({
 									color: color || event.segment.color,
 								});
