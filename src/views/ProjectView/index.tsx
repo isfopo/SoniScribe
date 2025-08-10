@@ -1,6 +1,6 @@
 import type { SegmentOptions } from "peaks.js";
-import { Button } from "@/components/ui/button";
 import { AudioPlayer } from "../../components/AudioPlayer";
+import { Button } from "../../components/Button";
 import { ButtonGroup } from "../../components/ButtonGroup";
 import { BarContainer } from "../../components/Container/BarContainer";
 import { DragAndDropDialog } from "../../components/Dialogs/DragAndDropDialog";
@@ -8,6 +8,7 @@ import { MultiTap } from "../../components/MultiTap";
 import { ProjectList } from "../../components/ProjectList";
 import { Transport } from "../../components/Transport";
 import { WaveformView } from "../../components/WaveformView";
+import { stripExtension } from "../../helpers/files";
 import { mapSubdivisionPointToSubdivisionPointOption } from "../../helpers/points";
 import { mapSegmentToSegmentOptions } from "../../helpers/segments";
 import { useKeyPress } from "../../hooks/useKeyPress";
@@ -44,6 +45,8 @@ export const ProjectView = (): React.ReactElement => {
 		playPause,
 		addPoint,
 		nextPoint,
+		start,
+		end,
 		previousPoint,
 		isPlaying,
 		initialize,
@@ -82,7 +85,7 @@ export const ProjectView = (): React.ReactElement => {
 						label: "Play from Here",
 						key: "play-point",
 						action: () => {
-							if (event?.point.id) {
+							if (event?.point?.id) {
 								peaks.player.seek(event.point.time);
 								peaks.player.play();
 							}
@@ -103,7 +106,7 @@ export const ProjectView = (): React.ReactElement => {
 						label: "Remove Point",
 						key: "remove-point",
 						action: () => {
-							if (event?.point.id) {
+							if (event?.point?.id) {
 								peaks.points.removeById(event.point.id);
 							}
 						},
@@ -138,7 +141,7 @@ export const ProjectView = (): React.ReactElement => {
 						label: "Play Segment",
 						key: "play-segment",
 						action: () => {
-							if (event?.segment.id) {
+							if (event?.segment?.id) {
 								peaks.player.seek(event.segment.startTime);
 								peaks.player.play();
 							}
@@ -148,7 +151,7 @@ export const ProjectView = (): React.ReactElement => {
 						label: "Remove Segment",
 						key: "remove-segment",
 						action: () => {
-							if (event?.segment.id) {
+							if (event?.segment?.id) {
 								peaks.segments.removeById(event.segment.id);
 							}
 						},
@@ -161,7 +164,7 @@ export const ProjectView = (): React.ReactElement => {
 								"Enter a new label:",
 								event.segment.labelText,
 							);
-							if (event?.segment.id) {
+							if (event?.segment?.id) {
 								updateSegmentInCurrentProject(event.segment, {
 									labelText: label || event.segment.labelText,
 								});
@@ -173,7 +176,7 @@ export const ProjectView = (): React.ReactElement => {
 						key: "change-color",
 						action: () => {
 							const color = prompt("Enter a color (hex or name):", "#ff0000");
-							if (event?.segment.id) {
+							if (event?.segment?.id) {
 								event.segment.update({
 									color: color || event.segment.color,
 								});
@@ -234,7 +237,7 @@ export const ProjectView = (): React.ReactElement => {
 
 	return (
 		<>
-			<div className={currentProject ? styles["hidden"] : styles["overlay"]}>
+			<div className={currentProject ? styles.hidden : styles.overlay}>
 				<div>
 					<ProjectList
 						projects={projects}
@@ -245,12 +248,19 @@ export const ProjectView = (): React.ReactElement => {
 				</div>
 			</div>
 
+			<h2>
+				{currentProject?.name
+					? stripExtension(currentProject.name)
+					: "No Project Opened"}
+			</h2>
+
 			<Transport
-				title={currentProject?.name || "No Project Opened"}
 				playPause={playPause}
 				nextPoint={nextPoint}
 				previousPoint={previousPoint}
 				isPlaying={isPlaying}
+				start={start}
+				end={end}
 			/>
 
 			<WaveformView viewRef={viewRef} overviewRef={overviewRef} />
