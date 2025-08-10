@@ -1,6 +1,6 @@
 # SoniScribe
 
-Welcome to the **SoniScribe**, a cutting-edge tool designed to streamline your audio transcription workflow. Leveraging modern web technologies, this application offers a seamless experience for uploading, playing, and annotating audio files with precision.
+SoniScribe is a modern web-based audio transcription tool built with React, TypeScript, and advanced audio visualization libraries. The application enables users to upload, play, and annotate audio files with precision timing and waveform visualization.
 
 - [SoniScribe](#soniscribe)
   - [Prerequisites](#prerequisites)
