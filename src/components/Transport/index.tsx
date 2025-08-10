@@ -1,37 +1,58 @@
-import { Play, Pause, ArrowBigRightDash, ArrowBigLeftDash } from "lucide-react";
+import {
+	ArrowBigLeft,
+	ArrowBigLeftDash,
+	ArrowBigRight,
+	ArrowBigRightDash,
+	Pause,
+	Play,
+} from "lucide-react";
 import { Button } from "../Button";
-import { BarContainer } from "../Container/BarContainer";
 import { ButtonGroup } from "../ButtonGroup";
+import { BarContainer } from "../Container/BarContainer";
 
 export interface TransportProps {
-  title: string;
-  playPause: () => void;
-  isPlaying: boolean;
-  nextPoint: () => void;
-  previousPoint: () => void;
+	title: string;
+	playPause: () => void;
+	isPlaying: boolean;
+	nextPoint: () => void;
+	previousPoint: () => void;
+	start: () => void;
+	end: () => void;
 }
 
 export const Transport = ({
-  title,
-  playPause,
-  isPlaying,
-  nextPoint,
-  previousPoint,
+	title,
+	playPause,
+	isPlaying,
+	nextPoint,
+	previousPoint,
+	start,
+	end,
 }: TransportProps) => {
-  return (
-    <BarContainer>
-      <ButtonGroup>
-        <Button type="button" onClick={previousPoint} title="Next Point">
-          <ArrowBigLeftDash />
-        </Button>
-        <Button type="button" onClick={playPause}>
-          {isPlaying ? <Pause /> : <Play />}
-        </Button>
-        <Button type="button" onClick={nextPoint} title="Previous Point">
-          <ArrowBigRightDash />
-        </Button>
-      </ButtonGroup>
-      <h2>{title}</h2>
-    </BarContainer>
-  );
+	return (
+		<BarContainer>
+			<ButtonGroup>
+				<Button type="button" onClick={start} title="Start">
+					<ArrowBigLeftDash />
+				</Button>
+
+				<Button type="button" onClick={previousPoint} title="Next Point">
+					<ArrowBigLeft />
+				</Button>
+
+				<Button type="button" onClick={playPause}>
+					{isPlaying ? <Pause /> : <Play />}
+				</Button>
+
+				<Button type="button" onClick={nextPoint} title="Previous Point">
+					<ArrowBigRight />
+				</Button>
+
+				<Button type="button" onClick={end} title="End">
+					<ArrowBigRightDash />
+				</Button>
+			</ButtonGroup>
+			<h2>{title}</h2>
+		</BarContainer>
+	);
 };
