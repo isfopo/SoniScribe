@@ -237,7 +237,7 @@ export const ProjectView = (): React.ReactElement => {
 
 	return (
 		<>
-			<div className={currentProject ? styles["hidden"] : styles["overlay"]}>
+			<div className={currentProject ? styles.hidden : styles.overlay}>
 				<div>
 					<ProjectList
 						projects={projects}
