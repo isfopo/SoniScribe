@@ -1,6 +1,6 @@
 import type { SegmentOptions } from "peaks.js";
+import { Button } from "@/components/ui/button";
 import { AudioPlayer } from "../../components/AudioPlayer";
-import { Button } from "../../components/Button";
 import { ButtonGroup } from "../../components/ButtonGroup";
 import { BarContainer } from "../../components/Container/BarContainer";
 import { DragAndDropDialog } from "../../components/Dialogs/DragAndDropDialog";
