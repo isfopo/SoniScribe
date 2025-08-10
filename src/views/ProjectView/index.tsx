@@ -82,7 +82,7 @@ export const ProjectView = (): React.ReactElement => {
 						label: "Play from Here",
 						key: "play-point",
 						action: () => {
-							if (event.point && event.point.id) {
+							if (event?.point.id) {
 								peaks.player.seek(event.point.time);
 								peaks.player.play();
 							}
@@ -103,7 +103,7 @@ export const ProjectView = (): React.ReactElement => {
 						label: "Remove Point",
 						key: "remove-point",
 						action: () => {
-							if (event.point && event.point.id) {
+							if (event?.point.id) {
 								peaks.points.removeById(event.point.id);
 							}
 						},
