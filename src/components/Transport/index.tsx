@@ -11,7 +11,6 @@ import { ButtonGroup } from "../ButtonGroup";
 import { BarContainer } from "../Container/BarContainer";
 
 export interface TransportProps {
-	title: string;
 	playPause: () => void;
 	isPlaying: boolean;
 	nextPoint: () => void;
@@ -21,7 +20,6 @@ export interface TransportProps {
 }
 
 export const Transport = ({
-	title,
 	playPause,
 	isPlaying,
 	nextPoint,
@@ -52,7 +50,6 @@ export const Transport = ({
 					<ArrowBigRightDash />
 				</Button>
 			</ButtonGroup>
-			<h2>{title}</h2>
 		</BarContainer>
 	);
 };
