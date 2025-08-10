@@ -8,6 +8,7 @@ import { MultiTap } from "../../components/MultiTap";
 import { ProjectList } from "../../components/ProjectList";
 import { Transport } from "../../components/Transport";
 import { WaveformView } from "../../components/WaveformView";
+import { stripExtension } from "../../helpers/files";
 import { mapSubdivisionPointToSubdivisionPointOption } from "../../helpers/points";
 import { mapSegmentToSegmentOptions } from "../../helpers/segments";
 import { useKeyPress } from "../../hooks/useKeyPress";
@@ -248,7 +249,11 @@ export const ProjectView = (): React.ReactElement => {
 			</div>
 
 			<Transport
-				title={currentProject?.name || "No Project Opened"}
+				title={
+					currentProject?.name
+						? stripExtension(currentProject.name)
+						: "No Project Opened"
+				}
 				playPause={playPause}
 				nextPoint={nextPoint}
 				previousPoint={previousPoint}
