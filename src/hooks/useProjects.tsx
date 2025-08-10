@@ -40,7 +40,7 @@ export const useProjects = () => {
 		(project: FileSystemFileHandle | undefined) => {
 			currentProject.current = project;
 		},
-		[currentProject],
+		[],
 	);
 
 	/**
