@@ -1,4 +1,5 @@
 import type { SegmentOptions } from "peaks.js";
+import PlaybackRateToggle from "@/components/PlaybackRateToggle";
 import { AudioPlayer } from "../../components/AudioPlayer";
 import { Button } from "../../components/Button";
 import { ButtonGroup } from "../../components/ButtonGroup";
@@ -272,11 +273,8 @@ export const ProjectView = (): React.ReactElement => {
 					subdivisions={[1, 2, 4, 8, 16, 32, 64]}
 					onSelect={(subdivision) => addPoint({ subdivision })}
 				/>
-				<ButtonGroup>
-					<Button onClick={() => setPlaybackRate(0.5)}>0.5x</Button>
-					<Button onClick={() => setPlaybackRate(1)}>1x</Button>
-					{isDrawing && <p>adding segment</p>}
-				</ButtonGroup>
+				<PlaybackRateToggle setPlaybackRate={setPlaybackRate} />
+				{isDrawing && <p>adding segment</p>}
 			</BarContainer>
 		</>
 	);
