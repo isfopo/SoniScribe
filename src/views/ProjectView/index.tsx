@@ -1,8 +1,6 @@
 import type { SegmentOptions } from "peaks.js";
 import PlaybackRateToggle from "@/components/PlaybackRateToggle";
 import { AudioPlayer } from "../../components/AudioPlayer";
-import { Button } from "../../components/Button";
-import { ButtonGroup } from "../../components/ButtonGroup";
 import { BarContainer } from "../../components/Container/BarContainer";
 import { DragAndDropDialog } from "../../components/Dialogs/DragAndDropDialog";
 import { MultiTap } from "../../components/MultiTap";
@@ -52,6 +50,7 @@ export const ProjectView = (): React.ReactElement => {
 		isPlaying,
 		initialize,
 		open,
+		playbackRate,
 		setPlaybackRate,
 		mediaFile,
 	} = usePeaks({
@@ -273,7 +272,10 @@ export const ProjectView = (): React.ReactElement => {
 					subdivisions={[1, 2, 4, 8, 16, 32, 64]}
 					onSelect={(subdivision) => addPoint({ subdivision })}
 				/>
-				<PlaybackRateToggle setPlaybackRate={setPlaybackRate} />
+				<PlaybackRateToggle
+					playbackRate={playbackRate}
+					setPlaybackRate={setPlaybackRate}
+				/>
 				{isDrawing && <p>adding segment</p>}
 			</BarContainer>
 		</>

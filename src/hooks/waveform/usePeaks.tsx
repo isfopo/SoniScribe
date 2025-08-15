@@ -8,7 +8,7 @@ import Peaks, {
 	type SegmentClickEvent,
 	type SegmentOptions,
 } from "peaks.js";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import {
 	isSubdivision,
 	type Subdivision,
@@ -19,6 +19,7 @@ import {
 import { useTheme } from "../../theme/useTheme";
 import { useEventListener } from "../useEventListener";
 import type { SavedProjectData } from "../useProjects";
+import { useUpdateMemo } from "../useUpdateMemo";
 import { usePeaksListener } from "./usePeaksListener";
 import { useSections } from "./useSections";
 
@@ -456,6 +457,11 @@ export const usePeaks = ({
 		}
 	};
 
+	const [playbackRate, update] = useUpdateMemo(
+		() => audioElementRef.current?.playbackRate ?? 1,
+		[],
+	);
+
 	/**
 	 * Sets the playback rate of the audio element.
 	 * @param rate The playback rate to be set (between 0 and 2).
@@ -466,7 +472,7 @@ export const usePeaks = ({
 			handleError(new Error("Audio element not found"));
 			return;
 		}
-
+		update();
 		audioElementRef.current.playbackRate = rate;
 	};
 
@@ -486,6 +492,7 @@ export const usePeaks = ({
 		nextPoint,
 		previousPoint,
 		addSegment,
+		playbackRate,
 		setPlaybackRate,
 	};
 };
