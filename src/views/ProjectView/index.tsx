@@ -44,8 +44,6 @@ export const ProjectView = (): React.ReactElement => {
 		playPause,
 		addPoint,
 		nextPoint,
-		start,
-		end,
 		previousPoint,
 		isPlaying,
 		initialize,
@@ -259,8 +257,6 @@ export const ProjectView = (): React.ReactElement => {
 				nextPoint={nextPoint}
 				previousPoint={previousPoint}
 				isPlaying={isPlaying}
-				start={start}
-				end={end}
 			/>
 
 			<WaveformView viewRef={viewRef} overviewRef={overviewRef} />
