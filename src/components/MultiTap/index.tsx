@@ -1,6 +1,11 @@
 import { Subdivision } from "../../helpers/subdivisions";
-import { Button } from "../Button";
-import { ButtonGroup } from "../ButtonGroup";
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
 
 export interface MultiTapProps {
   /** The available subdivisions. */
@@ -22,16 +27,24 @@ const SubdivisionIcons: Record<Subdivision, React.ReactNode> = {
 
 export const MultiTap = ({ subdivisions, onSelect }: MultiTapProps) => {
   return (
-    <ButtonGroup>
+    <div className="inline-flex w-fit -space-x-px rounded-md shadow-xs rtl:space-x-reverse">
       {subdivisions.map((subdivision) => (
-        <Button
-          key={subdivision}
-          type="button"
-          onClick={() => onSelect(subdivision)}
-        >
-          {SubdivisionIcons[subdivision]}
-        </Button>
+        <Tooltip key={subdivision}>
+          <TooltipTrigger asChild>
+            <Button
+              className="rounded-none shadow-none focus-visible:z-10"
+              variant="outline"
+              type="button"
+              onClick={() => onSelect(subdivision)}
+            >
+              {SubdivisionIcons[subdivision]}
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent className="px-2 py-1 text-xs">
+            {subdivision}
+          </TooltipContent>
+        </Tooltip>
       ))}
-    </ButtonGroup>
+    </div>
   );
 };
