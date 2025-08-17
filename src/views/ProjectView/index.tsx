@@ -235,7 +235,7 @@ export const ProjectView = (): React.ReactElement => {
 
 	return (
 		<>
-			<div className={currentProject ? styles.hidden : styles.overlay}>
+			<div className="bg-background">
 				<div>
 					<ProjectList
 						projects={projects}
