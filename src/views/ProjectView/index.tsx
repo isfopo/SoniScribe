@@ -21,7 +21,12 @@ import { useProjects } from "../../hooks/useProjects";
 import { usePeaks } from "../../hooks/waveform/usePeaks";
 import { useContextMenuStore } from "../../stores/contextMenu";
 import { useNewSegmentStore } from "../../stores/newSegment";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
 export const ProjectView = (): React.ReactElement => {
@@ -227,10 +232,11 @@ export const ProjectView = (): React.ReactElement => {
   return (
     <>
       <Dialog>
-        <DialogTrigger>
+        <DialogTrigger asChild>
           <Button variant="outline">Open Project</Button>
         </DialogTrigger>
         <DialogContent>
+          <DialogTitle>Select Project</DialogTitle>
           <ProjectList
             projects={projects}
             add={handleDrop}
