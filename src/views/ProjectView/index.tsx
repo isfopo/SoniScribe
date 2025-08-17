@@ -245,7 +245,7 @@ export const ProjectView = (): React.ReactElement => {
             <WaveformView viewRef={viewRef} overviewRef={overviewRef} />
           </div>
         </CardContent>
-        <CardFooter className="flex justify-between">
+        <CardFooter className="flex justify-between flex-col md:flex-row gap-4">
           <MultiTap
             subdivisions={[1, 2, 4, 8, 16, 32, 64]}
             onSelect={(subdivision) => addPoint({ subdivision })}
