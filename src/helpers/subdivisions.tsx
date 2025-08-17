@@ -1,5 +1,12 @@
 import { Point, PointOptions } from "peaks.js";
 import React from "react";
+import WholeNoteIcon from "@/assets/icons/notes/whole.svg?react";
+import HalfNoteIcon from "@/assets/icons/notes/half.svg?react";
+import QuarterNoteIcon from "@/assets/icons/notes/quarter.svg?react";
+import EighthNoteIcon from "@/assets/icons/notes/eighth.svg?react";
+import SixteenthNoteIcon from "@/assets/icons/notes/sixteenth.svg?react";
+import ThirtySecondNoteIcon from "@/assets/icons/notes/thirty-second.svg?react";
+import SixtyFourthNoteIcon from "@/assets/icons/notes/sixty-fourth.svg?react";
 
 /**
  * Possible subdivisions.
@@ -63,31 +70,31 @@ export interface ISubdivisionMeta {
 export const SubdivisionMeta: Record<Subdivision, ISubdivisionMeta> = {
   1: {
     label: "Whole",
-    icon: <div>1</div>,
+    icon: <WholeNoteIcon />,
   },
   2: {
     label: "Half",
-    icon: <div>2</div>,
+    icon: <HalfNoteIcon />,
   },
   4: {
     label: "Quarter",
-    icon: <div>4</div>,
+    icon: <QuarterNoteIcon />,
   },
   8: {
     label: "Eighth",
-    icon: <div>8</div>,
+    icon: <EighthNoteIcon />,
   },
   16: {
     label: "Sixteenth",
-    icon: <div>16</div>,
+    icon: <SixteenthNoteIcon />,
   },
   32: {
     label: "Thirty-second",
-    icon: <div>32</div>,
+    icon: <ThirtySecondNoteIcon />,
   },
   64: {
     label: "Sixty-fourth",
-    icon: <div>64</div>,
+    icon: <SixtyFourthNoteIcon />,
   },
 } as const;
 

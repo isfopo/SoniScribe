@@ -21,7 +21,7 @@ export const MultiTap = ({ subdivisions, onSelect }: MultiTapProps) => {
         <Tooltip key={subdivision}>
           <TooltipTrigger asChild>
             <Button
-              className="rounded-none shadow-none focus-visible:z-10"
+              className="rounded-none shadow-none focus-visible:z-10 w-10 [&>svg]:w-10"
               variant="outline"
               type="button"
               onClick={() => onSelect(subdivision)}
