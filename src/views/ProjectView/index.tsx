@@ -2,7 +2,6 @@ import type { SegmentOptions } from "peaks.js";
 import PlaybackRateToggle from "@/components/PlaybackRateToggle";
 import { AudioPlayer } from "../../components/AudioPlayer";
 import { BarContainer } from "../../components/Container/BarContainer";
-import { DragAndDropDialog } from "../../components/Dialogs/DragAndDropDialog";
 import { MultiTap } from "../../components/MultiTap";
 import { ProjectList } from "../../components/ProjectList";
 import { Transport } from "../../components/Transport";
@@ -25,7 +24,7 @@ import { useDialogStore } from "../../stores/dialogs";
 import { useNewSegmentStore } from "../../stores/newSegment";
 
 export const ProjectView = (): React.ReactElement => {
-  const { addDialog, closeDialog } = useDialogStore();
+  const { closeDialog } = useDialogStore();
   const { openContextMenu } = useContextMenuStore();
   const { addStart, addEnd, isDrawing } = useNewSegmentStore();
 
@@ -221,19 +220,6 @@ export const ProjectView = (): React.ReactElement => {
     }
   };
 
-  const openDialog = () => {
-    addDialog({
-      id: "drag-and-drop-dialog",
-      component: (
-        <DragAndDropDialog
-          onDrop={handleDrop}
-          allowedFileTypes={["audio/mpeg", "audio/wav", "audio/ogg"]}
-          maxCount={1}
-        />
-      ),
-    });
-  };
-
   const handleProjectOpen = async (file: FileSystemHandle) => {
     open(file);
     setCurrentProject(file as FileSystemFileHandle);
@@ -243,7 +229,7 @@ export const ProjectView = (): React.ReactElement => {
     <>
       <ProjectList
         projects={projects}
-        add={openDialog}
+        add={handleDrop}
         open={handleProjectOpen}
         remove={deleteProject}
       />

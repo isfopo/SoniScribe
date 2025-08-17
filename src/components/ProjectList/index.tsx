@@ -1,5 +1,4 @@
-import { FolderOpen, Trash2, Plus } from "lucide-react";
-import styles from "./index.module.css";
+import { FolderOpen, Trash2 } from "lucide-react";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -7,13 +6,18 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  Dropzone,
+  DropzoneContent,
+  DropzoneEmptyState,
+} from "@/components/ui/shadcn-io/dropzone";
 
 export interface ProjectListProps {
   projects: FileSystemFileHandle[];
   /**
-   * Opens dialog to create a new project.
+   * Adds a new project from the given file.
    */
-  add: () => void;
+  add: (files: File[]) => void;
   /**
    * Opens the project file.
    * @param file The file to open.
@@ -33,11 +37,12 @@ export const ProjectList = ({
   remove,
 }: ProjectListProps) => {
   return (
-    <div className={styles["project-list"]}>
-      <Button onClick={add}>
-        <Plus />
-      </Button>
-      <ul>
+    <div className="flex flex-col gap-2">
+      <Dropzone accept={{ "audio/*": [] }} maxFiles={1} onDrop={add}>
+        <DropzoneEmptyState /> <DropzoneContent />
+      </Dropzone>
+
+      <ul className="flex flex-col gap-2">
         {projects.map((project) => (
           <li key={project.name}>
             <Card className="flex-row justify-between items-center px-6">
