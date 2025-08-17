@@ -1,16 +1,12 @@
 import { PeaksInstance } from "peaks.js";
 import { useNewSegmentStore } from "../../stores/newSegment";
 import { useCallback, useEffect } from "react";
-import { useTheme } from "../../theme/useTheme";
 import { nanoid } from "nanoid";
 
 export const useSections = (
   peaksRef: React.RefObject<PeaksInstance | undefined>
 ) => {
   const { start, end, clear } = useNewSegmentStore();
-  const {
-    scheme: { primary },
-  } = useTheme();
 
   /**
    * Adds a segment to the Peaks instance.
@@ -37,13 +33,13 @@ export const useSections = (
           id: nanoid(),
           editable: true,
           overlay: true,
-          color: primary,
+          // color: primary,
           labelText: name,
           ...span,
         });
       }
     },
-    [peaksRef, primary]
+    [peaksRef]
   );
 
   /**

@@ -8,7 +8,7 @@ import Peaks, {
 	type SegmentClickEvent,
 	type SegmentOptions,
 } from "peaks.js";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import {
 	isSubdivision,
 	type Subdivision,
@@ -16,7 +16,6 @@ import {
 	type SubdivisionPointOptions,
 	SubdivisionPoints,
 } from "../../helpers/subdivisions";
-import { useTheme } from "../../theme/useTheme";
 import { useEventListener } from "../useEventListener";
 import type { SavedProjectData } from "../useProjects";
 import { useUpdateMemo } from "../useUpdateMemo";
@@ -98,10 +97,6 @@ export const usePeaks = ({
 
 	const { addSegment } = useSections(peaksRef);
 
-	const {
-		scheme: { onBackground },
-	} = useTheme();
-
 	const handleError = (error: Error) => {
 		console.error(error.message);
 		if (onError) {
@@ -130,16 +125,16 @@ export const usePeaks = ({
 			},
 		) => {
 			const options: PeaksOptions = {
-				waveformColor: onBackground,
-				playheadColor: onBackground,
-				axisLabelColor: onBackground,
-				axisGridlineColor: onBackground,
+				// waveformColor: onBackground,
+				// playheadColor: onBackground,
+				// axisLabelColor: onBackground,
+				// axisGridlineColor: onBackground,
 				showAxisLabels: true,
 				fontFamily: "Quicksand",
 				segmentOptions: {
 					overlayFontSize: 18,
 					overlayFontFamily: "Quicksand",
-					overlayLabelColor: onBackground,
+					// overlayLabelColor: onBackground,
 					overlayBorderWidth: 0,
 					overlay: true,
 				},
@@ -265,7 +260,6 @@ export const usePeaks = ({
 			});
 		},
 		[
-			onBackground,
 			onError,
 			onInitialize,
 			onPointAdd,
