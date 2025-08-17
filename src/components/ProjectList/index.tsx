@@ -2,6 +2,11 @@ import { FolderOpen, Trash2, Plus } from "lucide-react";
 import styles from "./index.module.css";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export interface ProjectListProps {
   projects: FileSystemFileHandle[];
@@ -42,12 +47,28 @@ export const ProjectList = ({
                 </CardTitle>
               </CardHeader>
               <div className="flex flex-row gap-1 text-left">
-                <Button onClick={() => open(project)}>
-                  <FolderOpen />
-                </Button>
-                <Button onClick={() => remove(project)}>
-                  <Trash2 />
-                </Button>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button onClick={() => open(project)}>
+                      <FolderOpen />
+                      <span className="sr-only">Open</span>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent className="px-2 py-1 text-xs">
+                    Open
+                  </TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button onClick={() => remove(project)}>
+                      <Trash2 />
+                      <span className="sr-only">Remove</span>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent className="px-2 py-1 text-xs">
+                    Remove
+                  </TooltipContent>
+                </Tooltip>
               </div>
             </Card>
           </li>
