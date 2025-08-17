@@ -20,11 +20,9 @@ import { useKeyPress } from "../../hooks/useKeyPress";
 import { useProjects } from "../../hooks/useProjects";
 import { usePeaks } from "../../hooks/waveform/usePeaks";
 import { useContextMenuStore } from "../../stores/contextMenu";
-import { useDialogStore } from "../../stores/dialogs";
 import { useNewSegmentStore } from "../../stores/newSegment";
 
 export const ProjectView = (): React.ReactElement => {
-  const { closeDialog } = useDialogStore();
   const { openContextMenu } = useContextMenuStore();
   const { addStart, addEnd, isDrawing } = useNewSegmentStore();
 
