@@ -12,6 +12,7 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 import { stripExtension } from "../../helpers/files";
 import { mapSubdivisionPointToSubdivisionPointOption } from "../../helpers/points";
@@ -253,11 +254,11 @@ export const ProjectView = (): React.ReactElement => {
 
       <Card className="w-full">
         <CardHeader>
-          <h2>
+          <CardTitle className="text-justify">
             {currentProject?.name
               ? stripExtension(currentProject.name)
               : "No Project Opened"}
-          </h2>
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="bg-blend-color">
