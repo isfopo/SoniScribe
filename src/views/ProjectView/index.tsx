@@ -213,7 +213,6 @@ export const ProjectView = (): React.ReactElement => {
         initialize(file, {
           isNewProject: true,
         });
-        closeDialog();
       } else {
         alert("Invalid file type. Please drop an audio file.");
       }
