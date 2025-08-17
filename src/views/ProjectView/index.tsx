@@ -7,6 +7,12 @@ import { MultiTap } from "../../components/MultiTap";
 import { ProjectList } from "../../components/ProjectList";
 import { Transport } from "../../components/Transport";
 import { WaveformView } from "../../components/WaveformView";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 import { stripExtension } from "../../helpers/files";
 import { mapSubdivisionPointToSubdivisionPointOption } from "../../helpers/points";
 import { mapSegmentToSegmentOptions } from "../../helpers/segments";
@@ -16,264 +22,269 @@ import { usePeaks } from "../../hooks/waveform/usePeaks";
 import { useContextMenuStore } from "../../stores/contextMenu";
 import { useDialogStore } from "../../stores/dialogs";
 import { useNewSegmentStore } from "../../stores/newSegment";
-import styles from "./index.module.css";
 
 export const ProjectView = (): React.ReactElement => {
-	const { addDialog, closeDialog } = useDialogStore();
-	const { openContextMenu } = useContextMenuStore();
-	const { addStart, addEnd, isDrawing } = useNewSegmentStore();
+  const { addDialog, closeDialog } = useDialogStore();
+  const { openContextMenu } = useContextMenuStore();
+  const { addStart, addEnd, isDrawing } = useNewSegmentStore();
 
-	const {
-		createNewProject,
-		deleteProject,
-		projects,
-		currentProject,
-		setCurrentProject,
-		addPointsToCurrentProject,
-		removePointsFromCurrentProject,
-		updatePointInCurrentProject,
-		addSegmentsToCurrentProject,
-		removeSegmentsFromCurrentProject,
-		updateSegmentInCurrentProject,
-	} = useProjects();
+  const {
+    createNewProject,
+    deleteProject,
+    projects,
+    currentProject,
+    setCurrentProject,
+    addPointsToCurrentProject,
+    removePointsFromCurrentProject,
+    updatePointInCurrentProject,
+    addSegmentsToCurrentProject,
+    removeSegmentsFromCurrentProject,
+    updateSegmentInCurrentProject,
+  } = useProjects();
 
-	const {
-		viewRef,
-		overviewRef,
-		audioElementRef,
-		playPause,
-		addPoint,
-		nextPoint,
-		previousPoint,
-		isPlaying,
-		initialize,
-		open,
-		playbackRate,
-		setPlaybackRate,
-		mediaFile,
-	} = usePeaks({
-		onInitialize: async (_, mediaFile, { isNewProject }) => {
-			if (!isNewProject) return;
-			// Create a new project if the user drops a file
-			createNewProject(mediaFile);
-		},
-		onPointAdd: (points) =>
-			addPointsToCurrentProject(
-				points.map((point) =>
-					mapSubdivisionPointToSubdivisionPointOption(point),
-				),
-			),
-		onPointRemove: (points) =>
-			removePointsFromCurrentProject(
-				points.map((point) =>
-					mapSubdivisionPointToSubdivisionPointOption(point),
-				),
-			),
-		onPointUpdate: (point) => {
-			updatePointInCurrentProject(
-				mapSubdivisionPointToSubdivisionPointOption(point),
-			);
-		},
-		onPointContextMenu: (event, peaks) => {
-			openContextMenu({
-				event: event.evt,
-				object: event.point,
-				items: [
-					{
-						label: "Play from Here",
-						key: "play-point",
-						action: () => {
-							if (event?.point?.id) {
-								peaks.player.seek(event.point.time);
-								peaks.player.play();
-							}
-						},
-					},
-					{
-						label: !isDrawing ? "Start Section" : "End Section",
-						key: "create-section",
-						action: () => {
-							if (!isDrawing) {
-								addStart(event.point);
-							} else {
-								addEnd(event.point);
-							}
-						},
-					},
-					{
-						label: "Remove Point",
-						key: "remove-point",
-						action: () => {
-							if (event?.point?.id) {
-								peaks.points.removeById(event.point.id);
-							}
-						},
-					},
-				],
-			});
-		},
-		onSegmentAdd: (segments) =>
-			addSegmentsToCurrentProject(
-				segments.map(
-					(segment): SegmentOptions => mapSegmentToSegmentOptions(segment),
-				),
-			),
-		onSegmentRemove: (segments) =>
-			removeSegmentsFromCurrentProject(
-				segments.map(
-					(segment): SegmentOptions => mapSegmentToSegmentOptions(segment),
-				),
-			),
-		onSegmentUpdate: (segment) => {
-			updateSegmentInCurrentProject(
-				segment,
-				mapSegmentToSegmentOptions(segment),
-			);
-		},
-		onSegmentContextMenu: (event, peaks) => {
-			openContextMenu({
-				event: event.evt,
-				object: event.segment,
-				items: [
-					{
-						label: "Play Segment",
-						key: "play-segment",
-						action: () => {
-							if (event?.segment?.id) {
-								peaks.player.seek(event.segment.startTime);
-								peaks.player.play();
-							}
-						},
-					},
-					{
-						label: "Remove Segment",
-						key: "remove-segment",
-						action: () => {
-							if (event?.segment?.id) {
-								peaks.segments.removeById(event.segment.id);
-							}
-						},
-					},
-					{
-						label: "Change Name",
-						key: "change-name",
-						action: () => {
-							const label = prompt(
-								"Enter a new label:",
-								event.segment.labelText,
-							);
-							if (event?.segment?.id) {
-								updateSegmentInCurrentProject(event.segment, {
-									labelText: label || event.segment.labelText,
-								});
-							}
-						},
-					},
-					{
-						label: "Change Color",
-						key: "change-color",
-						action: () => {
-							const color = prompt("Enter a color (hex or name):", "#ff0000");
-							if (event?.segment?.id) {
-								event.segment.update({
-									color: color || event.segment.color,
-								});
-							}
-						},
-					},
-				],
-			});
-		},
-	});
+  const {
+    viewRef,
+    overviewRef,
+    audioElementRef,
+    playPause,
+    addPoint,
+    nextPoint,
+    previousPoint,
+    isPlaying,
+    initialize,
+    open,
+    playbackRate,
+    setPlaybackRate,
+    mediaFile,
+  } = usePeaks({
+    onInitialize: async (_, mediaFile, { isNewProject }) => {
+      if (!isNewProject) return;
+      // Create a new project if the user drops a file
+      createNewProject(mediaFile);
+    },
+    onPointAdd: (points) =>
+      addPointsToCurrentProject(
+        points.map((point) =>
+          mapSubdivisionPointToSubdivisionPointOption(point),
+        ),
+      ),
+    onPointRemove: (points) =>
+      removePointsFromCurrentProject(
+        points.map((point) =>
+          mapSubdivisionPointToSubdivisionPointOption(point),
+        ),
+      ),
+    onPointUpdate: (point) => {
+      updatePointInCurrentProject(
+        mapSubdivisionPointToSubdivisionPointOption(point),
+      );
+    },
+    onPointContextMenu: (event, peaks) => {
+      openContextMenu({
+        event: event.evt,
+        object: event.point,
+        items: [
+          {
+            label: "Play from Here",
+            key: "play-point",
+            action: () => {
+              if (event?.point?.id) {
+                peaks.player.seek(event.point.time);
+                peaks.player.play();
+              }
+            },
+          },
+          {
+            label: !isDrawing ? "Start Section" : "End Section",
+            key: "create-section",
+            action: () => {
+              if (!isDrawing) {
+                addStart(event.point);
+              } else {
+                addEnd(event.point);
+              }
+            },
+          },
+          {
+            label: "Remove Point",
+            key: "remove-point",
+            action: () => {
+              if (event?.point?.id) {
+                peaks.points.removeById(event.point.id);
+              }
+            },
+          },
+        ],
+      });
+    },
+    onSegmentAdd: (segments) =>
+      addSegmentsToCurrentProject(
+        segments.map(
+          (segment): SegmentOptions => mapSegmentToSegmentOptions(segment),
+        ),
+      ),
+    onSegmentRemove: (segments) =>
+      removeSegmentsFromCurrentProject(
+        segments.map(
+          (segment): SegmentOptions => mapSegmentToSegmentOptions(segment),
+        ),
+      ),
+    onSegmentUpdate: (segment) => {
+      updateSegmentInCurrentProject(
+        segment,
+        mapSegmentToSegmentOptions(segment),
+      );
+    },
+    onSegmentContextMenu: (event, peaks) => {
+      openContextMenu({
+        event: event.evt,
+        object: event.segment,
+        items: [
+          {
+            label: "Play Segment",
+            key: "play-segment",
+            action: () => {
+              if (event?.segment?.id) {
+                peaks.player.seek(event.segment.startTime);
+                peaks.player.play();
+              }
+            },
+          },
+          {
+            label: "Remove Segment",
+            key: "remove-segment",
+            action: () => {
+              if (event?.segment?.id) {
+                peaks.segments.removeById(event.segment.id);
+              }
+            },
+          },
+          {
+            label: "Change Name",
+            key: "change-name",
+            action: () => {
+              const label = prompt(
+                "Enter a new label:",
+                event.segment.labelText,
+              );
+              if (event?.segment?.id) {
+                updateSegmentInCurrentProject(event.segment, {
+                  labelText: label || event.segment.labelText,
+                });
+              }
+            },
+          },
+          {
+            label: "Change Color",
+            key: "change-color",
+            action: () => {
+              const color = prompt("Enter a color (hex or name):", "#ff0000");
+              if (event?.segment?.id) {
+                event.segment.update({
+                  color: color || event.segment.color,
+                });
+              }
+            },
+          },
+        ],
+      });
+    },
+  });
 
-	useKeyPress({
-		keymap: {
-			Space: playPause,
-			ArrowLeft: previousPoint,
-			ArrowRight: nextPoint,
-			KeyQ: () => addPoint({ subdivision: 1 }),
-			KeyW: () => addPoint({ subdivision: 2 }),
-			KeyE: () => addPoint({ subdivision: 4 }),
-			KeyR: () => addPoint({ subdivision: 8 }),
-			KeyT: () => addPoint({ subdivision: 16 }),
-			KeyY: () => addPoint({ subdivision: 32 }),
-			KeyU: () => addPoint({ subdivision: 64 }),
-		},
-	});
+  useKeyPress({
+    keymap: {
+      Space: playPause,
+      ArrowLeft: previousPoint,
+      ArrowRight: nextPoint,
+      KeyQ: () => addPoint({ subdivision: 1 }),
+      KeyW: () => addPoint({ subdivision: 2 }),
+      KeyE: () => addPoint({ subdivision: 4 }),
+      KeyR: () => addPoint({ subdivision: 8 }),
+      KeyT: () => addPoint({ subdivision: 16 }),
+      KeyY: () => addPoint({ subdivision: 32 }),
+      KeyU: () => addPoint({ subdivision: 64 }),
+    },
+  });
 
-	const handleDrop = (files: File[]) => {
-		if (files.length > 0) {
-			const file = files[0];
-			if (file.type.startsWith("audio/")) {
-				initialize(file, {
-					isNewProject: true,
-				});
-				closeDialog();
-			} else {
-				alert("Invalid file type. Please drop an audio file.");
-			}
-		}
-	};
+  const handleDrop = (files: File[]) => {
+    if (files.length > 0) {
+      const file = files[0];
+      if (file.type.startsWith("audio/")) {
+        initialize(file, {
+          isNewProject: true,
+        });
+        closeDialog();
+      } else {
+        alert("Invalid file type. Please drop an audio file.");
+      }
+    }
+  };
 
-	const openDialog = () => {
-		addDialog({
-			id: "drag-and-drop-dialog",
-			component: (
-				<DragAndDropDialog
-					onDrop={handleDrop}
-					allowedFileTypes={["audio/mpeg", "audio/wav", "audio/ogg"]}
-					maxCount={1}
-				/>
-			),
-		});
-	};
+  const openDialog = () => {
+    addDialog({
+      id: "drag-and-drop-dialog",
+      component: (
+        <DragAndDropDialog
+          onDrop={handleDrop}
+          allowedFileTypes={["audio/mpeg", "audio/wav", "audio/ogg"]}
+          maxCount={1}
+        />
+      ),
+    });
+  };
 
-	const handleProjectOpen = async (file: FileSystemHandle) => {
-		open(file);
-		setCurrentProject(file as FileSystemFileHandle);
-	};
+  const handleProjectOpen = async (file: FileSystemHandle) => {
+    open(file);
+    setCurrentProject(file as FileSystemFileHandle);
+  };
 
-	return (
-		<>
-			<div className="bg-background">
-				<div>
-					<ProjectList
-						projects={projects}
-						add={openDialog}
-						open={handleProjectOpen}
-						remove={deleteProject}
-					/>
-				</div>
-			</div>
+  return (
+    <>
+      <div className="bg-background">
+        <div>
+          <ProjectList
+            projects={projects}
+            add={openDialog}
+            open={handleProjectOpen}
+            remove={deleteProject}
+          />
+        </div>
+      </div>
 
-			<h2>
-				{currentProject?.name
-					? stripExtension(currentProject.name)
-					: "No Project Opened"}
-			</h2>
+      <Card className="w-full">
+        <CardHeader>
+          <h2>
+            {currentProject?.name
+              ? stripExtension(currentProject.name)
+              : "No Project Opened"}
+          </h2>
+        </CardHeader>
+        <CardContent>
+          <div className="bg-blend-color">
+            <WaveformView viewRef={viewRef} overviewRef={overviewRef} />
+          </div>
+        </CardContent>
+        <CardFooter className="flex justify-between">
+          <MultiTap
+            subdivisions={[1, 2, 4, 8, 16, 32, 64]}
+            onSelect={(subdivision) => addPoint({ subdivision })}
+          />
+          <Transport
+            playPause={playPause}
+            nextPoint={nextPoint}
+            previousPoint={previousPoint}
+            isPlaying={isPlaying}
+          />
+          <PlaybackRateToggle
+            playbackRate={playbackRate}
+            setPlaybackRate={setPlaybackRate}
+          />
+        </CardFooter>
+      </Card>
 
-			<Transport
-				playPause={playPause}
-				nextPoint={nextPoint}
-				previousPoint={previousPoint}
-				isPlaying={isPlaying}
-			/>
+      <AudioPlayer audioElementRef={audioElementRef} mediaFile={mediaFile} />
 
-			<WaveformView viewRef={viewRef} overviewRef={overviewRef} />
-
-			<AudioPlayer audioElementRef={audioElementRef} mediaFile={mediaFile} />
-
-			<BarContainer>
-				<MultiTap
-					subdivisions={[1, 2, 4, 8, 16, 32, 64]}
-					onSelect={(subdivision) => addPoint({ subdivision })}
-				/>
-				<PlaybackRateToggle
-					playbackRate={playbackRate}
-					setPlaybackRate={setPlaybackRate}
-				/>
-				{isDrawing && <p>adding segment</p>}
-			</BarContainer>
-		</>
-	);
+      <BarContainer>{isDrawing && <p>adding segment</p>}</BarContainer>
+    </>
+  );
 };
