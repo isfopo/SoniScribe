@@ -62,31 +62,31 @@ export interface ISubdivisionMeta {
 
 export const SubdivisionMeta: Record<Subdivision, ISubdivisionMeta> = {
   1: {
-    label: "1",
+    label: "Whole",
     icon: <div>1</div>,
   },
   2: {
-    label: "2",
+    label: "Half",
     icon: <div>2</div>,
   },
   4: {
-    label: "4",
+    label: "Quarter",
     icon: <div>4</div>,
   },
   8: {
-    label: "8",
+    label: "Eighth",
     icon: <div>8</div>,
   },
   16: {
-    label: "16",
+    label: "Sixteenth",
     icon: <div>16</div>,
   },
   32: {
-    label: "32",
+    label: "Thirty-second",
     icon: <div>32</div>,
   },
   64: {
-    label: "64",
+    label: "Sixty-fourth",
     icon: <div>64</div>,
   },
 } as const;
