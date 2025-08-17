@@ -241,16 +241,12 @@ export const ProjectView = (): React.ReactElement => {
 
   return (
     <>
-      <div className="bg-background">
-        <div>
-          <ProjectList
-            projects={projects}
-            add={openDialog}
-            open={handleProjectOpen}
-            remove={deleteProject}
-          />
-        </div>
-      </div>
+      <ProjectList
+        projects={projects}
+        add={openDialog}
+        open={handleProjectOpen}
+        remove={deleteProject}
+      />
 
       <Card className="w-full">
         <CardHeader>

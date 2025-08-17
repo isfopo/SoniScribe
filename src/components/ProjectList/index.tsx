@@ -1,8 +1,7 @@
-import { Button } from "../Button";
-import { BarContainer } from "../Container/BarContainer";
 import { FolderOpen, Trash2, Plus } from "lucide-react";
 import styles from "./index.module.css";
-import { ButtonGroup } from "../ButtonGroup";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 export interface ProjectListProps {
   projects: FileSystemFileHandle[];
@@ -36,19 +35,21 @@ export const ProjectList = ({
       <ul>
         {projects.map((project) => (
           <li key={project.name}>
-            <BarContainer>
-              <div>
-                <h3>{project.name}</h3>
-              </div>
-              <ButtonGroup>
+            <Card className="flex-row justify-between items-center px-6">
+              <CardHeader className="flex-grow">
+                <CardTitle className="text-justify px-0">
+                  {project.name}
+                </CardTitle>
+              </CardHeader>
+              <div className="flex flex-row gap-1 text-left">
                 <Button onClick={() => open(project)}>
                   <FolderOpen />
                 </Button>
                 <Button onClick={() => remove(project)}>
                   <Trash2 />
                 </Button>
-              </ButtonGroup>
-            </BarContainer>
+              </div>
+            </Card>
           </li>
         ))}
       </ul>
