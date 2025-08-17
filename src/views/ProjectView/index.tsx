@@ -27,14 +27,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import {
-  Dock,
-  DockIcon,
-  DockItem,
-  DockLabel,
-} from "@/components/ui/shadcn-io/dock";
-import { FolderOpen, HomeIcon } from "lucide-react";
+import { Dock, DockItem, DockLabel } from "@/components/ui/shadcn-io/dock";
+import { FolderOpen } from "lucide-react";
 
 export const ProjectView = (): React.ReactElement => {
   const { openContextMenu } = useContextMenuStore();
