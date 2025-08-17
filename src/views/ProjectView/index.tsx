@@ -28,6 +28,13 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import {
+  Dock,
+  DockIcon,
+  DockItem,
+  DockLabel,
+} from "@/components/ui/shadcn-io/dock";
+import { FolderOpen, HomeIcon } from "lucide-react";
 
 export const ProjectView = (): React.ReactElement => {
   const { openContextMenu } = useContextMenuStore();
@@ -231,21 +238,6 @@ export const ProjectView = (): React.ReactElement => {
 
   return (
     <>
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button variant="outline">Open Project</Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogTitle>Select Project</DialogTitle>
-          <ProjectList
-            projects={projects}
-            add={handleDrop}
-            open={handleProjectOpen}
-            remove={deleteProject}
-          />
-        </DialogContent>
-      </Dialog>
-
       <Card className="w-full">
         <CardHeader>
           <CardTitle className="text-justify">
@@ -280,6 +272,28 @@ export const ProjectView = (): React.ReactElement => {
       <AudioPlayer audioElementRef={audioElementRef} mediaFile={mediaFile} />
 
       <BarContainer>{isDrawing && <p>adding segment</p>}</BarContainer>
+
+      <div className="absolute bottom-2 left-1/2 max-w-full -translate-x-1/2">
+        <Dock className="items-end pb-3">
+          <DockItem className="aspect-square rounded-full bg-gray-200 dark:bg-neutral-800">
+            <DockLabel>Projects</DockLabel>
+            <Dialog>
+              <DialogTrigger asChild>
+                <FolderOpen />
+              </DialogTrigger>
+              <DialogContent>
+                <DialogTitle>Select Project</DialogTitle>
+                <ProjectList
+                  projects={projects}
+                  add={handleDrop}
+                  open={handleProjectOpen}
+                  remove={deleteProject}
+                />
+              </DialogContent>
+            </Dialog>
+          </DockItem>
+        </Dock>
+      </div>
     </>
   );
 };
