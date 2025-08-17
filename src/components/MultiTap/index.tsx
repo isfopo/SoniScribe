@@ -1,4 +1,4 @@
-import { Subdivision } from "../../helpers/subdivisions";
+import { Subdivision, SubdivisionMeta } from "../../helpers/subdivisions";
 
 import {
   Tooltip,
@@ -14,17 +14,6 @@ export interface MultiTapProps {
   onSelect: (subdivision: Subdivision) => void;
 }
 
-/** The icons for each subdivision. Will need to add SVGs - lucide doesn't have all of them. */
-const SubdivisionIcons: Record<Subdivision, React.ReactNode> = {
-  1: "1",
-  2: "1/2",
-  4: "1/4",
-  8: "1/8",
-  16: "1/16",
-  32: "1/32",
-  64: "1/64",
-} as const;
-
 export const MultiTap = ({ subdivisions, onSelect }: MultiTapProps) => {
   return (
     <div className="inline-flex w-fit -space-x-px rounded-md shadow-xs rtl:space-x-reverse">
@@ -37,11 +26,11 @@ export const MultiTap = ({ subdivisions, onSelect }: MultiTapProps) => {
               type="button"
               onClick={() => onSelect(subdivision)}
             >
-              {SubdivisionIcons[subdivision]}
+              {SubdivisionMeta[subdivision].icon}
             </Button>
           </TooltipTrigger>
           <TooltipContent className="px-2 py-1 text-xs">
-            {subdivision}
+            {SubdivisionMeta[subdivision].label}
           </TooltipContent>
         </Tooltip>
       ))}

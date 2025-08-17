@@ -1,4 +1,5 @@
 import { Point, PointOptions } from "peaks.js";
+import React from "react";
 
 /**
  * Possible subdivisions.
@@ -54,17 +55,53 @@ export const SubdivisionPoints: Record<
  */
 export type Subdivision = keyof typeof SubdivisionPoints;
 
+export interface ISubdivisionMeta {
+  label: string;
+  icon: React.ReactElement;
+}
+
+export const SubdivisionMeta: Record<Subdivision, ISubdivisionMeta> = {
+  1: {
+    label: "1",
+    icon: <div>1</div>,
+  },
+  2: {
+    label: "2",
+    icon: <div>2</div>,
+  },
+  4: {
+    label: "4",
+    icon: <div>4</div>,
+  },
+  8: {
+    label: "8",
+    icon: <div>8</div>,
+  },
+  16: {
+    label: "16",
+    icon: <div>16</div>,
+  },
+  32: {
+    label: "32",
+    icon: <div>32</div>,
+  },
+  64: {
+    label: "64",
+    icon: <div>64</div>,
+  },
+} as const;
+
 /**
  * Get the value of a subdivision.
  * @param subdivision is the subdivision to get the value of.
  * @returns the value of the subdivision.
  */
 export const getSubdivisionValue = (
-  subdivision: Subdivision
+  subdivision: Subdivision,
 ): SubdivisionValue => SubdivisionPoints[subdivision].value as SubdivisionValue;
 
 /**
- * Determine if a subdivision is a subdivision of another.
+ * Determine if a subdivision is a subdivision of another. Ex. 16 is a subdivision of 8.
  * @param a Subdivision to test
  * @param b subdivision to test against
  * @returns true if a is a subdivision of b, false otherwise
