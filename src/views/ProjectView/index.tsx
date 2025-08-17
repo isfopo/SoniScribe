@@ -21,6 +21,8 @@ import { useProjects } from "../../hooks/useProjects";
 import { usePeaks } from "../../hooks/waveform/usePeaks";
 import { useContextMenuStore } from "../../stores/contextMenu";
 import { useNewSegmentStore } from "../../stores/newSegment";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 export const ProjectView = (): React.ReactElement => {
   const { openContextMenu } = useContextMenuStore();
@@ -225,12 +227,19 @@ export const ProjectView = (): React.ReactElement => {
 
   return (
     <>
-      <ProjectList
-        projects={projects}
-        add={handleDrop}
-        open={handleProjectOpen}
-        remove={deleteProject}
-      />
+      <Dialog>
+        <DialogTrigger>
+          <Button variant="outline">Open Project</Button>
+        </DialogTrigger>
+        <DialogContent>
+          <ProjectList
+            projects={projects}
+            add={handleDrop}
+            open={handleProjectOpen}
+            remove={deleteProject}
+          />
+        </DialogContent>
+      </Dialog>
 
       <Card className="w-full">
         <CardHeader>

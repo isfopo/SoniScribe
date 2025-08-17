@@ -1,5 +1,5 @@
 import { FolderOpen, Trash2 } from "lucide-react";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
@@ -46,11 +46,11 @@ export const ProjectList = ({
         {projects.map((project) => (
           <li key={project.name}>
             <Card className="flex-row justify-between items-center px-6">
-              <CardHeader className="flex-grow">
+              <div className="flex-grow">
                 <CardTitle className="text-justify px-0">
                   {project.name}
                 </CardTitle>
-              </CardHeader>
+              </div>
               <div className="flex flex-row gap-1 text-left">
                 <Tooltip>
                   <TooltipTrigger asChild>
