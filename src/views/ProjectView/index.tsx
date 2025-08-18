@@ -1,24 +1,35 @@
+import type { SegmentOptions } from "peaks.js";
+import PlaybackRateToggle from "@/components/PlaybackRateToggle";
 import { AudioPlayer } from "../../components/AudioPlayer";
-import { DragAndDropDialog } from "../../components/Dialogs/DragAndDropDialog";
+import { MultiTap } from "../../components/MultiTap";
 import { ProjectList } from "../../components/ProjectList";
-import { SubdivisionSelector } from "../../components/SubdivisionSelector";
 import { Transport } from "../../components/Transport";
 import { WaveformView } from "../../components/WaveformView";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { stripExtension } from "../../helpers/files";
 import { mapSubdivisionPointToSubdivisionPointOption } from "../../helpers/points";
+import { mapSegmentToSegmentOptions } from "../../helpers/segments";
 import { useKeyPress } from "../../hooks/useKeyPress";
-import { usePeaks } from "../../hooks/waveform/usePeaks";
 import { useProjects } from "../../hooks/useProjects";
-import { useSettingsStore } from "../../stores/settings";
-import styles from "./index.module.css";
-import { useDialogStore } from "../../stores/dialogs";
+import { usePeaks } from "../../hooks/waveform/usePeaks";
 import { useContextMenuStore } from "../../stores/contextMenu";
 import { useNewSegmentStore } from "../../stores/newSegment";
-import { SegmentOptions } from "peaks.js";
-import { mapSegmentToSegmentOptions } from "../../helpers/segments";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Dock, DockItem, DockLabel } from "@/components/ui/shadcn-io/dock";
+import { FolderOpen } from "lucide-react";
 
 export const ProjectView = (): React.ReactElement => {
-  const { subdivision, setSubdivision } = useSettingsStore();
-  const { addDialog, closeDialog } = useDialogStore();
   const { openContextMenu } = useContextMenuStore();
   const { addStart, addEnd, isDrawing } = useNewSegmentStore();
 
@@ -47,10 +58,10 @@ export const ProjectView = (): React.ReactElement => {
     isPlaying,
     initialize,
     open,
+    playbackRate,
     setPlaybackRate,
     mediaFile,
   } = usePeaks({
-    subdivision,
     onInitialize: async (_, mediaFile, { isNewProject }) => {
       if (!isNewProject) return;
       // Create a new project if the user drops a file
@@ -59,18 +70,18 @@ export const ProjectView = (): React.ReactElement => {
     onPointAdd: (points) =>
       addPointsToCurrentProject(
         points.map((point) =>
-          mapSubdivisionPointToSubdivisionPointOption(point)
-        )
+          mapSubdivisionPointToSubdivisionPointOption(point),
+        ),
       ),
     onPointRemove: (points) =>
       removePointsFromCurrentProject(
         points.map((point) =>
-          mapSubdivisionPointToSubdivisionPointOption(point)
-        )
+          mapSubdivisionPointToSubdivisionPointOption(point),
+        ),
       ),
     onPointUpdate: (point) => {
       updatePointInCurrentProject(
-        mapSubdivisionPointToSubdivisionPointOption(point)
+        mapSubdivisionPointToSubdivisionPointOption(point),
       );
     },
     onPointContextMenu: (event, peaks) => {
@@ -82,7 +93,7 @@ export const ProjectView = (): React.ReactElement => {
             label: "Play from Here",
             key: "play-point",
             action: () => {
-              if (event.point && event.point.id) {
+              if (event?.point?.id) {
                 peaks.player.seek(event.point.time);
                 peaks.player.play();
               }
@@ -103,7 +114,7 @@ export const ProjectView = (): React.ReactElement => {
             label: "Remove Point",
             key: "remove-point",
             action: () => {
-              if (event.point && event.point.id) {
+              if (event?.point?.id) {
                 peaks.points.removeById(event.point.id);
               }
             },
@@ -114,19 +125,19 @@ export const ProjectView = (): React.ReactElement => {
     onSegmentAdd: (segments) =>
       addSegmentsToCurrentProject(
         segments.map(
-          (segment): SegmentOptions => mapSegmentToSegmentOptions(segment)
-        )
+          (segment): SegmentOptions => mapSegmentToSegmentOptions(segment),
+        ),
       ),
     onSegmentRemove: (segments) =>
       removeSegmentsFromCurrentProject(
         segments.map(
-          (segment): SegmentOptions => mapSegmentToSegmentOptions(segment)
-        )
+          (segment): SegmentOptions => mapSegmentToSegmentOptions(segment),
+        ),
       ),
     onSegmentUpdate: (segment) => {
       updateSegmentInCurrentProject(
         segment,
-        mapSegmentToSegmentOptions(segment)
+        mapSegmentToSegmentOptions(segment),
       );
     },
     onSegmentContextMenu: (event, peaks) => {
@@ -138,7 +149,7 @@ export const ProjectView = (): React.ReactElement => {
             label: "Play Segment",
             key: "play-segment",
             action: () => {
-              if (event.segment && event.segment.id) {
+              if (event?.segment?.id) {
                 peaks.player.seek(event.segment.startTime);
                 peaks.player.play();
               }
@@ -148,7 +159,7 @@ export const ProjectView = (): React.ReactElement => {
             label: "Remove Segment",
             key: "remove-segment",
             action: () => {
-              if (event.segment && event.segment.id) {
+              if (event?.segment?.id) {
                 peaks.segments.removeById(event.segment.id);
               }
             },
@@ -159,9 +170,9 @@ export const ProjectView = (): React.ReactElement => {
             action: () => {
               const label = prompt(
                 "Enter a new label:",
-                event.segment.labelText
+                event.segment.labelText,
               );
-              if (event.segment && event.segment.id) {
+              if (event?.segment?.id) {
                 updateSegmentInCurrentProject(event.segment, {
                   labelText: label || event.segment.labelText,
                 });
@@ -173,7 +184,7 @@ export const ProjectView = (): React.ReactElement => {
             key: "change-color",
             action: () => {
               const color = prompt("Enter a color (hex or name):", "#ff0000");
-              if (event.segment && event.segment.id) {
+              if (event?.segment?.id) {
                 event.segment.update({
                   color: color || event.segment.color,
                 });
@@ -207,24 +218,10 @@ export const ProjectView = (): React.ReactElement => {
         initialize(file, {
           isNewProject: true,
         });
-        closeDialog();
       } else {
         alert("Invalid file type. Please drop an audio file.");
       }
     }
-  };
-
-  const openDialog = () => {
-    addDialog({
-      id: "drag-and-drop-dialog",
-      component: (
-        <DragAndDropDialog
-          onDrop={handleDrop}
-          allowedFileTypes={["audio/mpeg", "audio/wav", "audio/ogg"]}
-          maxCount={1}
-        />
-      ),
-    });
   };
 
   const handleProjectOpen = async (file: FileSystemHandle) => {
@@ -234,37 +231,60 @@ export const ProjectView = (): React.ReactElement => {
 
   return (
     <>
-      <div className={currentProject ? styles["hidden"] : styles["overlay"]}>
-        <button onClick={() => openDialog()}>New</button>
-        <ProjectList
-          projects={projects}
-          open={handleProjectOpen}
-          remove={deleteProject}
-        />
-      </div>
-
-      <p>{currentProject?.name}</p>
-      <Transport
-        playPause={playPause}
-        nextPoint={nextPoint}
-        previousPoint={previousPoint}
-        isPlaying={isPlaying}
-        addPoint={() => addPoint({ subdivision })}
-      />
-
-      <WaveformView viewRef={viewRef} overviewRef={overviewRef} />
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle className="text-justify">
+            {currentProject?.name
+              ? stripExtension(currentProject.name)
+              : "No Project Opened"}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="bg-blend-color">
+            <WaveformView viewRef={viewRef} overviewRef={overviewRef} />
+          </div>
+        </CardContent>
+        <CardFooter className="flex justify-between flex-col md:flex-row gap-4">
+          <MultiTap
+            subdivisions={[1, 2, 4, 8]}
+            onSelect={(subdivision) => addPoint({ subdivision })}
+          />
+          <Transport
+            playPause={playPause}
+            nextPoint={nextPoint}
+            previousPoint={previousPoint}
+            isPlaying={isPlaying}
+          />
+          <PlaybackRateToggle
+            playbackRate={playbackRate}
+            setPlaybackRate={setPlaybackRate}
+          />
+        </CardFooter>
+      </Card>
 
       <AudioPlayer audioElementRef={audioElementRef} mediaFile={mediaFile} />
 
-      <SubdivisionSelector
-        subdivisions={[1, 2, 4, 8, 16, 32, 64]}
-        currentSubdivision={subdivision}
-        onSelect={setSubdivision}
-      />
-
-      <button onClick={() => setPlaybackRate(0.5)}>0.5x</button>
-      <button onClick={() => setPlaybackRate(1)}>1x</button>
-      {isDrawing && <p>adding segment</p>}
+      <div className="absolute bottom-2 left-1/2 max-w-full -translate-x-1/2">
+        <Dock className="items-end pb-3">
+          <DockItem className="aspect-square rounded-full bg-gray-200 dark:bg-neutral-800">
+            <DockLabel>Projects</DockLabel>
+            <Dialog>
+              <DialogTrigger asChild>
+                <FolderOpen />
+              </DialogTrigger>
+              <DialogContent>
+                <DialogTitle>Select Project</DialogTitle>
+                <ProjectList
+                  projects={projects}
+                  add={handleDrop}
+                  open={handleProjectOpen}
+                  remove={deleteProject}
+                />
+              </DialogContent>
+            </Dialog>
+          </DockItem>
+        </Dock>
+      </div>
     </>
   );
 };

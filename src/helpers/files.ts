@@ -1,4 +1,4 @@
-import { SavedProjectData } from "../hooks/useProjects";
+import type { SavedProjectData } from "../hooks/useProjects";
 
 /**
  * Removes the file extension from a given filename.
@@ -7,19 +7,19 @@ import { SavedProjectData } from "../hooks/useProjects";
  * @returns the filename without the extension.
  */
 export const stripExtension = (filename: string): string => {
-  const lastDotIndex = filename.lastIndexOf(".");
-  if (lastDotIndex === -1) {
-    return filename; // No extension found
-  }
-  return filename.slice(0, lastDotIndex);
+	const lastDotIndex = filename.lastIndexOf(".");
+	if (lastDotIndex === -1) {
+		return filename; // No extension found
+	}
+	return filename.slice(0, lastDotIndex);
 };
 
 export const displayBytes = (bytes: number): string => {
-  if (bytes === 0) return "0 Bytes";
-  const k = 1024;
-  const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+	if (bytes === 0) return "0 Bytes";
+	const k = 1024;
+	const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+	const i = Math.floor(Math.log(bytes) / Math.log(k));
+	return parseFloat((bytes / k ** i).toFixed(2)) + " " + sizes[i];
 };
 
 /**
@@ -28,8 +28,8 @@ export const displayBytes = (bytes: number): string => {
  * @returns A promise that resolves to a blob.
  */
 export const getProjectDataFromCurrentProject = async (
-  project: FileSystemFileHandle
+	project: FileSystemFileHandle,
 ): Promise<SavedProjectData> => {
-  const file = await project.getFile();
-  return JSON.parse(await file.text()) as SavedProjectData;
+	const file = await project.getFile();
+	return JSON.parse(await file.text()) as SavedProjectData;
 };

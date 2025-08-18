@@ -1,14 +1,16 @@
 # SoniScribe
 
-Welcome to the **SoniScribe**, a cutting-edge tool designed to streamline your audio transcription workflow. Leveraging modern web technologies, this application offers a seamless experience for uploading, playing, and annotating audio files with precision.
+SoniScribe is a modern web-based audio transcription tool built with React, TypeScript, and advanced audio visualization libraries. The application enables users to upload, play, and annotate audio files with precision timing and waveform visualization.
 
-## Table of Contents
-
-- [Transcription App](#transcription-app)
-  - [Table of Contents](#table-of-contents)
+- [SoniScribe](#soniscribe)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
   - [Scripts](#scripts)
+    - [Start Development Server](#start-development-server)
+    - [Start Https Tunnel](#start-https-tunnel)
+    - [Build for Production](#build-for-production)
+    - [Lint the Codebase](#lint-the-codebase)
+    - [Preview the Production Build](#preview-the-production-build)
   - [Project Structure](#project-structure)
 
 ## Prerequisites
@@ -52,55 +54,78 @@ Before you begin, ensure you have met the following requirements:
 
 The project includes several npm scripts to streamline development and deployment:
 
-Start Development Server
+### Start Development Server
 
 ```bash
 npm run dev
 ```
 
-Build for Production
+### Start Https Tunnel
+
+This script will start a https tunnel in order for the File System API to work locally.
+
+```bash
+npm run tunnel
+```
+
+### Build for Production
 
 ```bash
 npm run build
 ```
 
-Lint the Codebase
+### Lint the Codebase
 
 ```bash
 npm run lint
 ```
 
-Preview the Production Build
+### Preview the Production Build
 
 ```bash
 npm run preview
 ```
 
-## Project Structure
+#### Waveform Audio Engine
+•  Peaks.js Integration: Advanced waveform visualization with zoom, overview, and detailed views
+•  Point & Segment Management: Create, edit, and manage audio markers and segments
+•  Playback Controls: Full transport controls (play/pause, seek, speed adjustment)
+•  Context Menus: Right-click functionality for audio elements
+•  Keyboard Shortcuts: Comprehensive keyboard navigation and control
 
-Here's a brief overview of the project's structure:
+#### Project Management System
+•  File System Integration: Direct browser-based file system access using modern APIs
+•  Project Persistence: Save and load transcription projects with all annotations
+•  Drag & Drop Interface: Intuitive file upload with validation and error handling
+•  Project List Management: Multiple project handling with rename/delete functionality
 
-```file
-transcription-app/
-├── src/
-│ ├── components/
-│ ├── helpers/
-│ ├── hooks/
-│ ├── stores/
-│ ├── App.css
-│ ├── App.tsx
-│ └── main.tsx
-├── public/
-│ └── index.html
-├── eslint.config.js
-├── package.json
-├── tsconfig.json
-├── vite.config.ts
-└── README.md
-```
+#### Advanced UI Components
+•  Modal System: Centralized dialog management with responsive design
+•  Theme Support: Dynamic theme system with light/dark mode capabilities
+•  Responsive Design: Mobile-friendly interface with touch support
+•  Context Menus: Custom right-click menus for workflow efficiency
 
-- `components/`: Reusable UI components like AudioPlayer, FileDropArea, etc.
-- `helpers/`: Utility functions for file handling and object manipulation.
-- `hooks/`: Custom React hooks for enhanced functionality.
-- `stores/`: State management using Zustand.
-- `public/`: Static assets and the main `index.html` file.
+#### Transcription Workflow Features
+•  Subdivision Controls: Configurable audio segment divisions (quarters, eighths, etc.)
+•  Multi-tap Interface: Touch-friendly controls for mobile devices
+•  Segment Annotation: Name and color-code audio segments
+•  Point Navigation: Quick jumping between marked positions
+
+🛠️ Technical Highlights
+
+#### State Management
+•  Zustand Stores: Lightweight state management for settings, dialogs, context menus, and segments
+•  Persistent Storage: Local storage integration for user preferences
+•  Context Management: Centralized state for complex UI interactions
+
+#### Custom Hooks Architecture
+•  usePeaks: Core audio waveform management
+•  useProjects: Project file system operations
+•  useKeyPress: Keyboard shortcut handling
+•  useEventListener: Efficient event management with cleanup
+•  useMediaQuery: Responsive design support
+
+#### File System Integration
+•  Modern File APIs: Utilizes cutting-edge browser file system access
+•  HTTPS Requirement: Configured with dev tunnels for secure local development
+•  Error Handling: Comprehensive file operation error management

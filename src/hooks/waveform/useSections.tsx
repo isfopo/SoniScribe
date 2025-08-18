@@ -1,16 +1,15 @@
 import { PeaksInstance } from "peaks.js";
 import { useNewSegmentStore } from "../../stores/newSegment";
 import { useCallback, useEffect } from "react";
-import { useTheme } from "../../theme/useTheme";
 import { nanoid } from "nanoid";
+import { useTheme } from "../useTheme";
+import { toast } from "sonner";
 
 export const useSections = (
-  peaksRef: React.RefObject<PeaksInstance | undefined>
+  peaksRef: React.RefObject<PeaksInstance | undefined>,
 ) => {
   const { start, end, clear } = useNewSegmentStore();
-  const {
-    scheme: { primary },
-  } = useTheme();
+  const theme = useTheme();
 
   /**
    * Adds a segment to the Peaks instance.
@@ -37,13 +36,13 @@ export const useSections = (
           id: nanoid(),
           editable: true,
           overlay: true,
-          color: primary,
+          color: theme["chart-1"],
           labelText: name,
           ...span,
         });
       }
     },
-    [peaksRef, primary]
+    [peaksRef, theme],
   );
 
   /**
@@ -57,12 +56,19 @@ export const useSections = (
         peaksRef.current.segments.removeById(segmentId);
       }
     },
-    [peaksRef]
+    [peaksRef],
   );
+
+  useEffect(() => {
+    if (start && !end) {
+      toast("Please select an end time for the segment");
+    }
+  }, [start, end]);
 
   useEffect(() => {
     if (start && end) {
       addSegment(start.time, end.time);
+      toast("Segment added successfully");
       clear();
     }
   }, [start, end, clear, addSegment]);
