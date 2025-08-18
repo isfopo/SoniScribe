@@ -245,7 +245,6 @@ describe("Transport with Keyboard Shortcuts Integration", () => {
     const previousButton = screen.getByRole("button", {
       name: /previous point/i,
     });
-    const nextButton = screen.getByRole("button", { name: /next point/i });
 
     const statusDisplay = screen.getByTestId("playback-status");
     const previousCountDisplay = screen.getByTestId("previous-count");
