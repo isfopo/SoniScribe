@@ -3,6 +3,7 @@ import { useNewSegmentStore } from "../../stores/newSegment";
 import { useCallback, useEffect } from "react";
 import { nanoid } from "nanoid";
 import { useTheme } from "../useTheme";
+import { toast } from "sonner";
 
 export const useSections = (
   peaksRef: React.RefObject<PeaksInstance | undefined>,
@@ -59,8 +60,15 @@ export const useSections = (
   );
 
   useEffect(() => {
+    if (start && !end) {
+      toast("Please select an end time for the segment");
+    }
+  }, [start, end]);
+
+  useEffect(() => {
     if (start && end) {
       addSegment(start.time, end.time);
+      toast("Segment added successfully");
       clear();
     }
   }, [start, end, clear, addSegment]);

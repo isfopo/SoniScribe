@@ -1,4 +1,5 @@
 import { ContextMenu } from "./components/ContextMenu";
+import { Toaster } from "./components/ui/sonner";
 import { ProjectView } from "./views/ProjectView";
 
 export const App = (): React.ReactElement => {
@@ -6,6 +7,7 @@ export const App = (): React.ReactElement => {
     <>
       <ContextMenu />
       <ProjectView />
+      <Toaster />
     </>
   );
 };

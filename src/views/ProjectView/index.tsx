@@ -264,8 +264,6 @@ export const ProjectView = (): React.ReactElement => {
 
       <AudioPlayer audioElementRef={audioElementRef} mediaFile={mediaFile} />
 
-      <>{isDrawing && <p>adding segment</p>}</>
-
       <div className="absolute bottom-2 left-1/2 max-w-full -translate-x-1/2">
         <Dock className="items-end pb-3">
           <DockItem className="aspect-square rounded-full bg-gray-200 dark:bg-neutral-800">
