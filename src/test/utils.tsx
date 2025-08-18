@@ -95,7 +95,7 @@ export const mockFileReader = () => {
     readyState: 0,
   };
 
-  global.FileReader = vi.fn(() => mockFileReader) as any;
+  global.FileReader = vi.fn(() => mockFileReader) as never;
   return mockFileReader;
 };
 
@@ -126,7 +126,7 @@ export const mockCanvasContext = () => {
     measureText: vi.fn(() => ({ width: 100 })),
   };
 
-  HTMLCanvasElement.prototype.getContext = vi.fn(() => mockContext);
+  HTMLCanvasElement.prototype.getContext = vi.fn(() => mockContext) as never;
   return mockContext;
 };
 
