@@ -154,6 +154,7 @@ export const usePeaks = ({
         },
         overview: {
           container: overviewRef.current,
+          waveformColor: theme["sidebar-primary"],
           segmentOptions: {
             overlay: true,
             overlayFontSize: 14,
