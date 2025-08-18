@@ -12,42 +12,22 @@ import {
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-export interface TransportProps {
-	isPlaying: boolean;
-	playPause: () => void;
-	nextPoint: () => void;
-	previousPoint: () => void;
-}
-
-export const Transport = ({
-	isPlaying,
-	playPause,
-	nextPoint,
-	previousPoint,
-}: TransportProps) => {
+const ButtonGroupRoundedDemo = () => {
 	return (
 		<div className="divide-primary-foreground/30 inline-flex w-fit divide-x rounded-full shadow-xs">
 			<Tooltip>
 				<TooltipTrigger asChild>
-					<Button
-						onClick={previousPoint}
-						className="rounded-none rounded-s-full shadow-none focus-visible:z-10"
-					>
+					<Button className="rounded-none rounded-s-full shadow-none focus-visible:z-10">
 						<SkipBackIcon />
-						<span className="sr-only">Previous Point</span>
+						<span className="sr-only">Skip Back</span>
 					</Button>
 				</TooltipTrigger>
-				<TooltipContent className="px-2 py-1 text-xs">
-					Previous Point
-				</TooltipContent>
+				<TooltipContent className="px-2 py-1 text-xs">Skip Back</TooltipContent>
 			</Tooltip>
 			<Tooltip>
 				<TooltipTrigger asChild>
-					<Button
-						onClick={playPause}
-						className="rounded-none shadow-none focus-visible:z-10"
-					>
-						{isPlaying ? <PauseIcon /> : <PlayIcon />}
+					<Button className="rounded-none shadow-none focus-visible:z-10">
+						<PlayIcon />
 						<span className="sr-only">Play</span>
 					</Button>
 				</TooltipTrigger>
@@ -55,18 +35,26 @@ export const Transport = ({
 			</Tooltip>
 			<Tooltip>
 				<TooltipTrigger asChild>
-					<Button
-						onClick={nextPoint}
-						className="rounded-none rounded-e-full shadow-none focus-visible:z-10"
-					>
+					<Button className="rounded-none shadow-none focus-visible:z-10">
+						<PauseIcon />
+						<span className="sr-only">Pause</span>
+					</Button>
+				</TooltipTrigger>
+				<TooltipContent className="px-2 py-1 text-xs">Pause</TooltipContent>
+			</Tooltip>
+			<Tooltip>
+				<TooltipTrigger asChild>
+					<Button className="rounded-none rounded-e-full shadow-none focus-visible:z-10">
 						<SkipForwardIcon />
-						<span className="sr-only">Next Point</span>
+						<span className="sr-only">Skip Forward</span>
 					</Button>
 				</TooltipTrigger>
 				<TooltipContent className="px-2 py-1 text-xs">
-					Next Point
+					Skip Forward
 				</TooltipContent>
 			</Tooltip>
 		</div>
 	);
 };
+
+export default ButtonGroupRoundedDemo;

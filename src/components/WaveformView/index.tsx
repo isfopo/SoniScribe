@@ -1,5 +1,3 @@
-import styles from "./index.module.css";
-
 export interface WaveformViewProps {
   viewRef: React.RefObject<HTMLDivElement | null>;
   overviewRef: React.RefObject<HTMLDivElement | null>;
@@ -10,9 +8,15 @@ export interface WaveformViewProps {
  */
 export const WaveformView = ({ viewRef, overviewRef }: WaveformViewProps) => {
   return (
-    <div>
-      <div ref={viewRef} className={styles["waveform-container"]}></div>
-      <div ref={overviewRef} className={styles["overview-container"]}></div>
+    <div className="grid grid-cols-1 gap-4">
+      <div
+        ref={viewRef}
+        className="w-full h-96 cursor-grab active:cursor-grabbing"
+      ></div>
+      <div
+        ref={overviewRef}
+        className="w-full h-32 cursor-grab active:cursor-grabbing"
+      ></div>
     </div>
   );
 };

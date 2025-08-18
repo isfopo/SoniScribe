@@ -4,8 +4,6 @@ import {
   useContextMenuStore,
 } from "../../stores/contextMenu";
 
-import styles from "./index.module.css";
-
 export const ContextMenu = () => {
   const {
     anchorPoint,
@@ -29,7 +27,7 @@ export const ContextMenu = () => {
 
       closeContextMenu();
     },
-    [closeContextMenu, initialEvent, initialObject]
+    [closeContextMenu, initialEvent, initialObject],
   );
 
   if (!isShown) {
@@ -37,14 +35,18 @@ export const ContextMenu = () => {
   }
 
   return (
-    <div>
-      <ul
-        className={styles["context-menu"]}
-        onMouseLeave={closeContextMenu}
-        style={{ top: anchorPoint.y, left: anchorPoint.x }}
-      >
+    <div
+      className="absolute z-50 bg-card border-border border-1 p-1 rounded-md"
+      onMouseLeave={closeContextMenu}
+      style={{ top: anchorPoint.y, left: anchorPoint.x }}
+    >
+      <ul>
         {items.map(({ label, action, key }) => (
-          <li key={key} onClick={() => handleSelection(action)}>
+          <li
+            className="hover:bg-accent text-sm rounded-md px-6 py-1 text-left cursor-pointer"
+            key={key}
+            onClick={() => handleSelection(action)}
+          >
             {label}
           </li>
         ))}

@@ -1,26 +1,27 @@
+import { nanoid } from "nanoid";
 import Peaks, {
-  PeaksInstance,
-  PeaksOptions,
-  Point,
-  PointClickEvent,
-  Segment,
-  SegmentClickEvent,
-  SegmentOptions,
+  type PeaksInstance,
+  type PeaksOptions,
+  type Point,
+  type PointClickEvent,
+  type Segment,
+  type SegmentClickEvent,
+  type SegmentOptions,
 } from "peaks.js";
-import { useRef, useState, useCallback } from "react";
+import { useCallback, useRef, useState } from "react";
 import {
   isSubdivision,
-  Subdivision,
-  SubdivisionPoint,
-  SubdivisionPointOptions,
+  type Subdivision,
+  type SubdivisionPoint,
+  type SubdivisionPointOptions,
   SubdivisionPoints,
 } from "../../helpers/subdivisions";
-import { SavedProjectData } from "../useProjects";
-import { useTheme } from "../../theme/useTheme";
 import { useEventListener } from "../useEventListener";
-import { useSections } from "./useSections";
+import type { SavedProjectData } from "../useProjects";
+import { useUpdateMemo } from "../useUpdateMemo";
 import { usePeaksListener } from "./usePeaksListener";
-import { nanoid } from "nanoid";
+import { useSections } from "./useSections";
+import { useTheme } from "../useTheme";
 
 export interface InitializePeaksOptions {
   points?: SubdivisionPointOptions[];
@@ -37,7 +38,7 @@ export interface UsePeaksOptions {
   onInitialize?: (
     peaks: PeaksInstance,
     mediaFile: File,
-    { isNewProject }: { isNewProject: boolean }
+    { isNewProject }: { isNewProject: boolean },
   ) => void;
   /** Callback function to be called when a point is added. */
   onOpen?: (project: FileSystemFileHandle) => void;
@@ -60,7 +61,7 @@ export interface UsePeaksOptions {
   /** Callback function to be called when a segment is right clicked. */
   onSegmentContextMenu?: (
     event: SegmentClickEvent,
-    peaks: PeaksInstance
+    peaks: PeaksInstance,
   ) => void;
   /** Callback function to be called when an error occurs. */
   onError?: (error: Error) => void;
@@ -97,9 +98,7 @@ export const usePeaks = ({
 
   const { addSegment } = useSections(peaksRef);
 
-  const {
-    scheme: { onBackground },
-  } = useTheme();
+  const theme = useTheme();
 
   const handleError = (error: Error) => {
     console.error(error.message);
@@ -126,19 +125,22 @@ export const usePeaks = ({
         points: [],
         segments: [],
         isNewProject: false,
-      }
+      },
     ) => {
       const options: PeaksOptions = {
-        waveformColor: onBackground,
-        playheadColor: onBackground,
-        axisLabelColor: onBackground,
-        axisGridlineColor: onBackground,
+        waveformColor: theme["accent-foreground"],
+        playheadColor: theme["card-foreground"],
+        playheadTextColor: theme["card-foreground"],
+        pointMarkerColor: theme["card-foreground"],
+        axisLabelColor: theme["card-foreground"],
+        axisGridlineColor: theme["card-foreground"],
         showAxisLabels: true,
+        showPlayheadTime: false,
         fontFamily: "Quicksand",
         segmentOptions: {
           overlayFontSize: 18,
           overlayFontFamily: "Quicksand",
-          overlayLabelColor: onBackground,
+          overlayLabelColor: theme["card-foreground"],
           overlayBorderWidth: 0,
           overlay: true,
         },
@@ -155,6 +157,8 @@ export const usePeaks = ({
         },
         overview: {
           container: overviewRef.current,
+          waveformColor: theme["accent"],
+          enablePoints: false,
           segmentOptions: {
             overlay: true,
             overlayFontSize: 14,
@@ -264,7 +268,6 @@ export const usePeaks = ({
       });
     },
     [
-      onBackground,
       onError,
       onInitialize,
       onPointAdd,
@@ -273,7 +276,8 @@ export const usePeaks = ({
       onSegmentAdd,
       onSegmentRemove,
       onSegmentUpdate,
-    ]
+      theme,
+    ],
   );
 
   usePeaksListener(peaksRef, {
@@ -333,7 +337,7 @@ export const usePeaks = ({
 
         const saveData = await fileHandle.getFile();
         const { points, segments, media } = JSON.parse(
-          await saveData.text()
+          await saveData.text(),
         ) as SavedProjectData;
 
         const root = await navigator.storage.getDirectory();
@@ -351,7 +355,7 @@ export const usePeaks = ({
         }
       }
     },
-    [initialize, onError]
+    [initialize, onError],
   );
 
   /**
@@ -394,6 +398,18 @@ export const usePeaks = ({
     }
   };
 
+  const start = () => {
+    if (peaksRef.current) {
+      peaksRef.current.player.seek(0);
+    }
+  };
+
+  const end = () => {
+    if (peaksRef.current) {
+      peaksRef.current.player.seek(peaksRef.current.player.getDuration());
+    }
+  };
+
   /**
    * Seeks to the next point in the Peaks instance.
    * @returns void
@@ -406,14 +422,14 @@ export const usePeaks = ({
       const nextPoint = points.find(
         (point) =>
           isSubdivision(point.subdivision, subdivision) &&
-          point.time > currentTime
+          point.time > currentTime,
       );
 
       if (nextPoint) {
         peaksRef.current.player.seek(nextPoint.time);
       } else {
         // If no next point is found, seek to the end of the audio
-        peaksRef.current.player.seek(peaksRef.current.player.getDuration());
+        end();
       }
     }
   };
@@ -432,29 +448,34 @@ export const usePeaks = ({
         .find(
           (point) =>
             isSubdivision(point.subdivision, subdivision) &&
-            point.time < currentTime - previousPointGap
+            point.time < currentTime - previousPointGap,
         );
 
       if (previousPoint) {
         peaksRef.current.player.seek(previousPoint.time);
       } else {
         // If no previous point is found, seek to the beginning of the audio
-        peaksRef.current.player.seek(0);
+        start();
       }
     }
   };
 
+  const [playbackRate, update] = useUpdateMemo(
+    () => audioElementRef.current?.playbackRate ?? 1,
+    [],
+  );
+
   /**
    * Sets the playback rate of the audio element.
-   * @param rate The playback rate to be set (between 0.5 and 2).
+   * @param rate The playback rate to be set (between 0 and 2).
    * @returns void
    */
-  const setPlaybackRate = (rate: 0.25 | 0.5 | 0.75 | 1) => {
+  const setPlaybackRate = (rate: number) => {
     if (!audioElementRef.current) {
       handleError(new Error("Audio element not found"));
       return;
     }
-
+    update();
     audioElementRef.current.playbackRate = rate;
   };
 
@@ -468,10 +489,13 @@ export const usePeaks = ({
     open,
     initialize,
     playPause,
+    start,
+    end,
     addPoint,
     nextPoint,
     previousPoint,
     addSegment,
+    playbackRate,
     setPlaybackRate,
   };
 };

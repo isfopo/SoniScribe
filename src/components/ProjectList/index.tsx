@@ -1,15 +1,23 @@
-import { Button } from "../Button";
-import { BarContainer } from "../Container/BarContainer";
-import { FolderOpen, Trash2, Plus } from "lucide-react";
-import styles from "./index.module.css";
-import { ButtonGroup } from "../ButtonGroup";
+import { FolderOpen, Trash2 } from "lucide-react";
+import { Card, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  Dropzone,
+  DropzoneContent,
+  DropzoneEmptyState,
+} from "@/components/ui/shadcn-io/dropzone";
 
 export interface ProjectListProps {
   projects: FileSystemFileHandle[];
   /**
-   * Opens dialog to create a new project.
+   * Adds a new project from the given file.
    */
-  add: () => void;
+  add: (files: File[]) => void;
   /**
    * Opens the project file.
    * @param file The file to open.
@@ -29,26 +37,45 @@ export const ProjectList = ({
   remove,
 }: ProjectListProps) => {
   return (
-    <div className={styles["project-list"]}>
-      <Button onClick={add}>
-        <Plus />
-      </Button>
-      <ul>
+    <div className="flex flex-col gap-2">
+      <Dropzone accept={{ "audio/*": [] }} maxFiles={1} onDrop={add}>
+        <DropzoneEmptyState /> <DropzoneContent />
+      </Dropzone>
+
+      <ul className="flex flex-col gap-2">
         {projects.map((project) => (
           <li key={project.name}>
-            <BarContainer>
-              <div>
-                <h3>{project.name}</h3>
+            <Card className="flex-row justify-between items-center px-6">
+              <div className="flex-grow">
+                <CardTitle className="text-justify px-0">
+                  {project.name}
+                </CardTitle>
               </div>
-              <ButtonGroup>
-                <Button onClick={() => open(project)}>
-                  <FolderOpen />
-                </Button>
-                <Button onClick={() => remove(project)}>
-                  <Trash2 />
-                </Button>
-              </ButtonGroup>
-            </BarContainer>
+              <div className="flex flex-row gap-1 text-left">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button onClick={() => open(project)}>
+                      <FolderOpen />
+                      <span className="sr-only">Open</span>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent className="px-2 py-1 text-xs">
+                    Open
+                  </TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button onClick={() => remove(project)}>
+                      <Trash2 />
+                      <span className="sr-only">Remove</span>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent className="px-2 py-1 text-xs">
+                    Remove
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+            </Card>
           </li>
         ))}
       </ul>
