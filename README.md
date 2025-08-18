@@ -122,6 +122,28 @@ Generate a comprehensive test coverage report:
 npm run test:coverage
 ```
 
+### Serve Coverage Report Locally
+
+View the detailed HTML coverage report in your browser:
+
+```bash
+npm run test:coverage:serve
+```
+
+This serves the coverage report at `http://localhost:8080` where you can:
+- Browse file-by-file coverage details
+- See highlighted uncovered lines
+- Navigate through your codebase with coverage metrics
+- View coverage statistics and charts
+
+### Generate and Serve Coverage in One Command
+
+Generate coverage and immediately serve it locally:
+
+```bash
+npm run test:coverage:open
+```
+
 ## Testing
 
 SonicScribe uses **Vitest + React Testing Library** for comprehensive testing:
@@ -168,6 +190,12 @@ npm run test:ui
 
 # Coverage report
 npm run test:coverage
+
+# Serve coverage report locally at http://localhost:8080
+npm run test:coverage:serve
+
+# Generate and serve coverage in one command
+npm run test:coverage:open
 ```
 
 For detailed testing documentation, see [`src/test/README.md`](./src/test/README.md).

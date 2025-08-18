@@ -15,7 +15,10 @@
     "test": "vitest",
     "test:watch": "vitest --watch",
     "test:ui": "vitest --ui",
-    "test:coverage": "vitest --coverage"
+    "test:coverage": "vitest --coverage",
+    "test:coverage:serve": "serve coverage -s -p 8080",
+    "test:coverage:open": "npm run test:coverage && npm run test:coverage:serve",
+    "test:help": "echo '\n📋 Available Test Commands:\n\n🧪 npm test                    - Run all tests once\n⚡ npm run test:watch          - Run tests in watch mode\n🎨 npm run test:ui             - Open interactive test UI\n📊 npm run test:coverage       - Generate coverage report\n🌐 npm run test:coverage:serve - Serve coverage at http://localhost:8080\n🚀 npm run test:coverage:open  - Generate & serve coverage\n❓ npm run test:help           - Show this help\n'"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
@@ -56,6 +59,7 @@
     "gh-pages": "^6.3.0",
     "globals": "^15.15.0",
     "jsdom": "^26.1.0",
+    "serve": "^14.2.4",
     "tw-animate-css": "^1.3.6",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.24.1",

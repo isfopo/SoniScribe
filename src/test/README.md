@@ -58,6 +58,12 @@ npm run test:ui
 
 # Run tests with coverage report
 npm run test:coverage
+
+# Serve coverage report locally at http://localhost:8080
+npm run test:coverage:serve
+
+# Generate and serve coverage in one command
+npm run test:coverage:open
 ```
 
 ### Test Modes
@@ -66,6 +72,8 @@ npm run test:coverage
 - **Watch Mode**: `npm run test:watch` - Runs tests and watches for changes
 - **UI Mode**: `npm run test:ui` - Opens interactive test UI in browser
 - **Coverage**: `npm run test:coverage` - Generates detailed coverage reports
+- **Coverage Server**: `npm run test:coverage:serve` - Serves HTML coverage report locally
+- **Coverage + Server**: `npm run test:coverage:open` - Generates and serves coverage in one command
 
 ## Writing Tests
 
@@ -231,6 +239,24 @@ Coverage reports are generated in multiple formats:
 - **JSON**: Machine-readable format for CI/CD
 - **HTML**: Interactive web reports in `coverage/` directory
 
+### Viewing HTML Coverage Reports
+
+You can browse the detailed HTML coverage reports locally:
+
+```bash
+# Generate coverage and serve at http://localhost:8080
+npm run test:coverage:open
+
+# Or serve existing coverage reports
+npm run test:coverage:serve
+```
+
+The HTML reports provide:
+- File-by-file coverage breakdown
+- Line-by-line highlighting of covered/uncovered code
+- Interactive navigation through your codebase
+- Visual coverage statistics and charts
+
 ### Coverage Thresholds
 
 Current coverage metrics:
@@ -344,7 +370,22 @@ it('handles keyboard shortcuts', async () => {
 
 ## Debugging Tests
 
-### 1. Use screen.debug()
+### 1. Coverage Analysis with Local Server
+
+Use the coverage server to identify untested code:
+
+```bash
+# Generate and serve coverage reports
+npm run test:coverage:open
+```
+
+Then browse to `http://localhost:8080` to:
+- **Find red-highlighted lines** - These are uncovered by tests
+- **Navigate file structure** - Click through components to see coverage
+- **Identify critical gaps** - Focus on important business logic that's uncovered
+- **Track improvement** - Re-run tests and refresh to see coverage changes
+
+### 2. Use screen.debug()
 
 ```tsx
 import { screen } from '@testing-library/react';
@@ -377,6 +418,19 @@ await waitFor(() => {
   expect(screen.getByText('Expected')).toBeInTheDocument();
 });
 ```
+
+### 4. Coverage-Driven Test Writing
+
+When coverage is low, use the HTML reports to guide test writing:
+
+1. **Run coverage**: `npm run test:coverage:open`
+2. **Browse to uncovered files** in the HTML report
+3. **Click on specific files** to see line-by-line coverage
+4. **Focus on red lines** - these need test coverage
+5. **Write targeted tests** for uncovered branches and functions
+6. **Re-run coverage** to verify improvements
+
+**Pro tip**: Look for uncovered error handling, edge cases, and conditional logic!
 
 ## Continuous Integration
 
