@@ -272,6 +272,7 @@ export const usePeaks = ({
       onSegmentAdd,
       onSegmentRemove,
       onSegmentUpdate,
+      theme,
     ],
   );
 
