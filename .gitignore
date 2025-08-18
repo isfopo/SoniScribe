@@ -25,4 +25,9 @@ dist-ssr
 
 /public/audio/*
 
+# Coverage reports
+coverage/
+*.lcov
+.nyc_output
+
 .env

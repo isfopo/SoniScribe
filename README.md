@@ -2,6 +2,11 @@
 
 SoniScribe is a modern web-based audio transcription tool built with React, TypeScript, and advanced audio visualization libraries. The application enables users to upload, play, and annotate audio files with precision timing and waveform visualization.
 
+[![CI](https://github.com/isfopo/SonicScribe/actions/workflows/ci.yml/badge.svg)](https://github.com/isfopo/SonicScribe/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/isfopo/SonicScribe/branch/main/graph/badge.svg)](https://codecov.io/gh/isfopo/SonicScribe)
+[![Coverage Status](https://coveralls.io/repos/github/isfopo/SonicScribe/badge.svg?branch=main)](https://coveralls.io/github/isfopo/SonicScribe?branch=main)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 - [SoniScribe](#soniscribe)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
@@ -11,6 +16,9 @@ SoniScribe is a modern web-based audio transcription tool built with React, Type
     - [Build for Production](#build-for-production)
     - [Lint the Codebase](#lint-the-codebase)
     - [Preview the Production Build](#preview-the-production-build)
+    - [Run Tests](#run-tests)
+    - [Generate Coverage Report](#generate-coverage-report)
+  - [Testing](#testing)
   - [Project Structure](#project-structure)
 
 ## Prerequisites
@@ -85,6 +93,84 @@ npm run lint
 ```bash
 npm run preview
 ```
+
+### Run Tests
+
+Run the test suite with Vitest:
+
+```bash
+npm test
+```
+
+Run tests in watch mode during development:
+
+```bash
+npm run test:watch
+```
+
+Open the interactive test UI:
+
+```bash
+npm run test:ui
+```
+
+### Generate Coverage Report
+
+Generate a comprehensive test coverage report:
+
+```bash
+npm run test:coverage
+```
+
+## Testing
+
+SonicScribe uses **Vitest + React Testing Library** for comprehensive testing:
+
+- **Unit Tests**: Individual component and hook testing
+- **Integration Tests**: Multi-component workflow testing  
+- **Coverage Reports**: Detailed code coverage analysis
+- **CI/CD Integration**: Automated testing in GitHub Actions
+
+### Test Structure
+
+```
+src/
+├── test/
+│   ├── setup.ts              # Global test configuration
+│   ├── utils.tsx              # Custom testing utilities
+│   ├── integration/           # Integration tests
+│   └── README.md              # Detailed testing docs
+├── components/
+│   └── **/*.test.tsx          # Component tests
+└── hooks/
+    └── **/*.test.tsx          # Hook tests
+```
+
+### Key Features
+
+- **Audio-specific mocking**: AudioContext, MediaElement APIs
+- **Browser API mocks**: matchMedia, ResizeObserver, IntersectionObserver  
+- **Custom utilities**: Audio file creation, waveform simulation
+- **Keyboard testing**: Comprehensive shortcut testing
+- **Coverage thresholds**: Enforced quality standards
+
+### Running Tests
+
+```bash
+# Run all tests once
+npm test
+
+# Watch mode for development  
+npm run test:watch
+
+# Interactive UI mode
+npm run test:ui
+
+# Coverage report
+npm run test:coverage
+```
+
+For detailed testing documentation, see [`src/test/README.md`](./src/test/README.md).
 
 #### Waveform Audio Engine
 •  Peaks.js Integration: Advanced waveform visualization with zoom, overview, and detailed views
