@@ -1,12 +1,12 @@
 import { Point, PointOptions } from "peaks.js";
 import React from "react";
-import WholeNoteIcon from "@/assets/icons/notes/whole.svg";
-import HalfNoteIcon from "@/assets/icons/notes/half.svg";
-import QuarterNoteIcon from "@/assets/icons/notes/quarter.svg";
-import EighthNoteIcon from "@/assets/icons/notes/eighth.svg";
-import SixteenthNoteIcon from "@/assets/icons/notes/sixteenth.svg";
-import ThirtySecondNoteIcon from "@/assets/icons/notes/thirty-second.svg";
-import SixtyFourthNoteIcon from "@/assets/icons/notes/sixty-fourth.svg";
+import WholeNoteIcon from "@/assets/icons/notes/whole.svg?react";
+import HalfNoteIcon from "@/assets/icons/notes/half.svg?react";
+import QuarterNoteIcon from "@/assets/icons/notes/quarter.svg?react";
+import EighthNoteIcon from "@/assets/icons/notes/eighth.svg?react";
+import SixteenthNoteIcon from "@/assets/icons/notes/sixteenth.svg?react";
+import ThirtySecondNoteIcon from "@/assets/icons/notes/thirty-second.svg?react";
+import SixtyFourthNoteIcon from "@/assets/icons/notes/sixty-fourth.svg?react";
 
 /**
  * Possible subdivisions.
