@@ -7,6 +7,7 @@ import EighthNoteIcon from "@/assets/icons/notes/eighth.svg?react";
 import SixteenthNoteIcon from "@/assets/icons/notes/sixteenth.svg?react";
 import ThirtySecondNoteIcon from "@/assets/icons/notes/thirty-second.svg?react";
 import SixtyFourthNoteIcon from "@/assets/icons/notes/sixty-fourth.svg?react";
+import { getTheme } from "@/hooks/useTheme";
 
 /**
  * Possible subdivisions.
@@ -27,6 +28,8 @@ export interface SubdivisionPointOptions extends PointOptions {
   subdivision: SubdivisionValue;
 }
 
+const theme = getTheme();
+
 /**
  * A map of given subdivision values to a PointOptions object.
  */
@@ -35,19 +38,19 @@ export const SubdivisionPoints: Record<
   Omit<PointOptions, "time">
 > = {
   1: {
-    color: "#fff",
+    color: theme["chart-1"],
   },
   2: {
-    color: "#ccc",
+    color: theme["chart-2"],
   },
   4: {
-    color: "#aaa",
+    color: theme["chart-3"],
   },
   8: {
-    color: "#999",
+    color: theme["chart-4"],
   },
   16: {
-    color: "#777",
+    color: theme["chart-5"],
   },
   32: {
     color: "#666",

@@ -128,7 +128,7 @@ export const usePeaks = ({
       },
     ) => {
       const options: PeaksOptions = {
-        waveformColor: theme["primary"],
+        waveformColor: theme["accent-foreground"],
         playheadColor: theme["card-foreground"],
         axisLabelColor: theme["card-foreground"],
         axisGridlineColor: theme["card-foreground"],
@@ -154,7 +154,8 @@ export const usePeaks = ({
         },
         overview: {
           container: overviewRef.current,
-          waveformColor: theme["sidebar-primary"],
+          waveformColor: theme["accent"],
+          enablePoints: false,
           segmentOptions: {
             overlay: true,
             overlayFontSize: 14,
