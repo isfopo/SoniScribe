@@ -246,7 +246,7 @@ export const ProjectView = (): React.ReactElement => {
         </CardContent>
         <CardFooter className="flex justify-between flex-col md:flex-row gap-4">
           <MultiTap
-            subdivisions={[1, 2, 4, 8, 16, 32, 64]}
+            subdivisions={[1, 2, 4, 8]}
             onSelect={(subdivision) => addPoint({ subdivision })}
           />
           <Transport
