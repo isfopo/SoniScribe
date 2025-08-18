@@ -130,9 +130,12 @@ export const usePeaks = ({
       const options: PeaksOptions = {
         waveformColor: theme["accent-foreground"],
         playheadColor: theme["card-foreground"],
+        playheadTextColor: theme["card-foreground"],
+        pointMarkerColor: theme["card-foreground"],
         axisLabelColor: theme["card-foreground"],
         axisGridlineColor: theme["card-foreground"],
         showAxisLabels: true,
+        showPlayheadTime: false,
         fontFamily: "Quicksand",
         segmentOptions: {
           overlayFontSize: 18,
