@@ -1,7 +1,6 @@
 import type { SegmentOptions } from "peaks.js";
 import PlaybackRateToggle from "@/components/PlaybackRateToggle";
 import { AudioPlayer } from "../../components/AudioPlayer";
-import { BarContainer } from "../../components/Container/BarContainer";
 import { MultiTap } from "../../components/MultiTap";
 import { ProjectList } from "../../components/ProjectList";
 import { Transport } from "../../components/Transport";
@@ -265,7 +264,7 @@ export const ProjectView = (): React.ReactElement => {
 
       <AudioPlayer audioElementRef={audioElementRef} mediaFile={mediaFile} />
 
-      <BarContainer>{isDrawing && <p>adding segment</p>}</BarContainer>
+      <>{isDrawing && <p>adding segment</p>}</>
 
       <div className="absolute bottom-2 left-1/2 max-w-full -translate-x-1/2">
         <Dock className="items-end pb-3">
