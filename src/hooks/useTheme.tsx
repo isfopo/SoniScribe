@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export const THEME_COLORS = [
   "background",
@@ -40,15 +40,15 @@ const root = document.documentElement;
 
 export type Theme = Record<ThemeColor, string>;
 
-export const useTheme = (): Theme => {
-  const [theme, setTheme] = useState<Theme>({} as Theme);
-
-  useEffect(() => {
-    for (const color of THEME_COLORS) {
-      const value = getComputedStyle(root).getPropertyValue(`--${color}`);
-      setTheme((prevTheme) => ({ ...prevTheme, [color]: value }) as Theme);
-    }
-  }, []);
-
+export const getTheme = (): Theme => {
+  const theme: Theme = {} as Theme;
+  for (const color of THEME_COLORS) {
+    const value = getComputedStyle(root).getPropertyValue(`--${color}`);
+    theme[color] = value;
+  }
   return theme;
+};
+
+export const useTheme = (): Theme => {
+  return useMemo<Theme>(() => getTheme(), []);
 };
