@@ -7,7 +7,7 @@ import EighthNoteIcon from "@/assets/icons/notes/eighth.svg?react";
 import SixteenthNoteIcon from "@/assets/icons/notes/sixteenth.svg?react";
 import ThirtySecondNoteIcon from "@/assets/icons/notes/thirty-second.svg?react";
 import SixtyFourthNoteIcon from "@/assets/icons/notes/sixty-fourth.svg?react";
-import { getTheme } from "@/hooks/useTheme";
+import { getTheme } from "./theme";
 
 /**
  * Possible subdivisions.
