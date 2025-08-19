@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import "@testing-library/jest-dom";
 import { cleanup } from "@testing-library/react";
 import { afterEach, vi } from "vitest";
@@ -47,18 +46,22 @@ Object.defineProperty(window, "matchMedia", {
 });
 
 // Mock ResizeObserver
-(global as any).ResizeObserver = vi.fn().mockImplementation(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn(),
-}));
+(global as Record<string, unknown>).ResizeObserver = vi
+  .fn()
+  .mockImplementation(() => ({
+    observe: vi.fn(),
+    unobserve: vi.fn(),
+    disconnect: vi.fn(),
+  }));
 
 // Mock IntersectionObserver
-(global as any).IntersectionObserver = vi.fn().mockImplementation(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn(),
-}));
+(global as Record<string, unknown>).IntersectionObserver = vi
+  .fn()
+  .mockImplementation(() => ({
+    observe: vi.fn(),
+    unobserve: vi.fn(),
+    disconnect: vi.fn(),
+  }));
 
 // Cleanup after each test case (e.g. clearing jsdom)
 afterEach(() => {
