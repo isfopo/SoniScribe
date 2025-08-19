@@ -71,7 +71,7 @@ export const mockAudioContext = () => {
   }));
 
   // Mock webkitAudioContext for Safari
-  global.webkitAudioContext = global.AudioContext;
+  (global as Record<string, unknown>).webkitAudioContext = global.AudioContext;
 };
 
 // Mock file reader for file upload tests
