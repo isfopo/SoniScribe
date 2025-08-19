@@ -1,4 +1,3 @@
-/** eslint-disable @typescript-eslint/no-explicit-any */
 import React, { ReactElement } from "react";
 import { render, RenderOptions, RenderResult } from "@testing-library/react";
 import { ThemeProvider } from "next-themes";
@@ -81,6 +80,7 @@ export const mockFileReader = () => {
     readAsArrayBuffer: vi.fn(),
     readAsDataURL: vi.fn(),
     readAsText: vi.fn(),
+    readAsBinaryString: vi.fn(),
     result: null,
     error: null,
     onload: null,
@@ -90,13 +90,28 @@ export const mockFileReader = () => {
     onloadend: null,
     onprogress: null,
     abort: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
     EMPTY: 0,
     LOADING: 1,
     DONE: 2,
     readyState: 0,
   };
 
-  (global as any).FileReader = vi.fn(() => mockFileReader);
+  const MockFileReader = vi.fn(
+    () => mockFileReader,
+  ) as unknown as typeof FileReader;
+  Object.defineProperty(MockFileReader, "EMPTY", { value: 0, writable: false });
+  Object.defineProperty(MockFileReader, "LOADING", {
+    value: 1,
+    writable: false,
+  });
+  Object.defineProperty(MockFileReader, "DONE", { value: 2, writable: false });
+  MockFileReader.prototype = mockFileReader as FileReader;
+
+  (global as typeof globalThis & { FileReader: typeof FileReader }).FileReader =
+    MockFileReader;
   return mockFileReader;
 };
 
@@ -127,7 +142,14 @@ export const mockCanvasContext = () => {
     measureText: vi.fn(() => ({ width: 100 })),
   };
 
-  (HTMLCanvasElement.prototype as any).getContext = vi.fn(() => mockContext);
+  HTMLCanvasElement.prototype.getContext = vi
+    .fn()
+    .mockImplementation((contextId: string) => {
+      if (contextId === "2d") {
+        return mockContext as unknown as CanvasRenderingContext2D;
+      }
+      return null;
+    });
   return mockContext;
 };
 
