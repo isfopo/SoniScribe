@@ -96,7 +96,7 @@ export const mockFileReader = () => {
     readyState: 0,
   };
 
-  (global as any).FileReader = vi.fn(() => mockFileReader) as any;
+  (global as any).FileReader = vi.fn(() => mockFileReader);
   return mockFileReader;
 };
 
