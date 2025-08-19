@@ -1,3 +1,4 @@
+/** eslint-disable @typescript-eslint/no-explicit-any */
 import React, { ReactElement } from "react";
 import { render, RenderOptions, RenderResult } from "@testing-library/react";
 import { ThemeProvider } from "next-themes";
@@ -71,7 +72,7 @@ export const mockAudioContext = () => {
   }));
 
   // Mock webkitAudioContext for Safari
-  (global as any).webkitAudioContext = (global as any).AudioContext;
+  global.webkitAudioContext = global.AudioContext;
 };
 
 // Mock file reader for file upload tests
