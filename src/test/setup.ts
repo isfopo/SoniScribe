@@ -19,16 +19,24 @@ const mockAudioContext = {
   suspend: vi.fn(),
 };
 
-(global as any).AudioContext = vi
+(global as Record<string, unknown>).AudioContext = vi
   .fn()
   .mockImplementation(() => mockAudioContext);
-(global as any).webkitAudioContext = (global as any).AudioContext;
+(global as Record<string, unknown>).webkitAudioContext = (
+  global as Record<string, unknown>
+).AudioContext;
 
 // Mock other Web APIs that might be needed
-(global as any).HTMLMediaElement.prototype.play = vi.fn(() =>
-  Promise.resolve(),
-);
-(global as any).HTMLMediaElement.prototype.pause = vi.fn();
+(
+  global as Record<string, unknown> & {
+    HTMLMediaElement: typeof HTMLMediaElement;
+  }
+).HTMLMediaElement.prototype.play = vi.fn(() => Promise.resolve());
+(
+  global as Record<string, unknown> & {
+    HTMLMediaElement: typeof HTMLMediaElement;
+  }
+).HTMLMediaElement.prototype.pause = vi.fn();
 
 // Mock matchMedia for theme detection
 Object.defineProperty(window, "matchMedia", {
