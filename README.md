@@ -82,6 +82,20 @@ npm run tunnel
 npm run build
 ```
 
+### Type Check the Codebase
+
+Run TypeScript type checking without building:
+
+```bash
+npm run type-check
+```
+
+Build with type checking (recommended for CI/CD):
+
+```bash
+npm run build:check
+```
+
 ### Lint the Codebase
 
 ```bash

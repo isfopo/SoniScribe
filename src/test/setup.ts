@@ -19,12 +19,16 @@ const mockAudioContext = {
   suspend: vi.fn(),
 };
 
-global.AudioContext = vi.fn().mockImplementation(() => mockAudioContext);
-global.webkitAudioContext = global.AudioContext;
+(global as any).AudioContext = vi
+  .fn()
+  .mockImplementation(() => mockAudioContext);
+(global as any).webkitAudioContext = (global as any).AudioContext;
 
 // Mock other Web APIs that might be needed
-global.HTMLMediaElement.prototype.play = vi.fn(() => Promise.resolve());
-global.HTMLMediaElement.prototype.pause = vi.fn();
+(global as any).HTMLMediaElement.prototype.play = vi.fn(() =>
+  Promise.resolve(),
+);
+(global as any).HTMLMediaElement.prototype.pause = vi.fn();
 
 // Mock matchMedia for theme detection
 Object.defineProperty(window, "matchMedia", {
@@ -42,14 +46,14 @@ Object.defineProperty(window, "matchMedia", {
 });
 
 // Mock ResizeObserver
-global.ResizeObserver = vi.fn().mockImplementation(() => ({
+(global as any).ResizeObserver = vi.fn().mockImplementation(() => ({
   observe: vi.fn(),
   unobserve: vi.fn(),
   disconnect: vi.fn(),
 }));
 
 // Mock IntersectionObserver
-global.IntersectionObserver = vi.fn().mockImplementation(() => ({
+(global as any).IntersectionObserver = vi.fn().mockImplementation(() => ({
   observe: vi.fn(),
   unobserve: vi.fn(),
   disconnect: vi.fn(),

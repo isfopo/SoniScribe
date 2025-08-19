@@ -1,7 +1,7 @@
 import path from "node:path";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react-swc";
-import { defineConfig } from "vite";
+import { defineConfig } from "vitest/config";
 import svgr from "vite-plugin-svgr";
 /// <reference types="vitest" />
 
@@ -19,6 +19,9 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: "./src/test/setup.ts",
     css: true,
+    typecheck: {
+      tsconfig: "./tsconfig.test.json",
+    },
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html", "lcov"],

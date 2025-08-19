@@ -253,7 +253,9 @@ describe("useKeyPress", () => {
           window.dispatchEvent(event);
         });
 
-        expect(audioKeymap[shortcut]).toHaveBeenCalledTimes(1);
+        expect(
+          audioKeymap[shortcut as keyof typeof audioKeymap],
+        ).toHaveBeenCalledTimes(1);
       });
     });
   });

@@ -71,7 +71,7 @@ export const mockAudioContext = () => {
   }));
 
   // Mock webkitAudioContext for Safari
-  global.webkitAudioContext = global.AudioContext;
+  (global as any).webkitAudioContext = (global as any).AudioContext;
 };
 
 // Mock file reader for file upload tests
@@ -95,7 +95,7 @@ export const mockFileReader = () => {
     readyState: 0,
   };
 
-  global.FileReader = vi.fn(() => mockFileReader) as never;
+  (global as any).FileReader = vi.fn(() => mockFileReader) as any;
   return mockFileReader;
 };
 
@@ -126,7 +126,7 @@ export const mockCanvasContext = () => {
     measureText: vi.fn(() => ({ width: 100 })),
   };
 
-  HTMLCanvasElement.prototype.getContext = vi.fn(() => mockContext) as never;
+  (HTMLCanvasElement.prototype as any).getContext = vi.fn(() => mockContext);
   return mockContext;
 };
 

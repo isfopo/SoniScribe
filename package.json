@@ -7,7 +7,9 @@
   "scripts": {
     "dev": "vite",
     "tunnel": "devtunnel host -p 5173",
-    "build": "tsc -b && vite build",
+    "build": "vite build",
+    "type-check": "tsc -b",
+    "build:check": "npm run type-check && npm run build",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
     "lint": "eslint .",
