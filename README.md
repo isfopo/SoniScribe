@@ -2,7 +2,6 @@
 
 SoniScribe is a modern web-based audio transcription tool built with React, TypeScript, and advanced audio visualization libraries. The application enables users to upload, play, and annotate audio files with precision timing and waveform visualization.
 
-[![CI](https://github.com/isfopo/SonicScribe/actions/workflows/ci.yml/badge.svg)](https://github.com/isfopo/SonicScribe/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/isfopo/SonicScribe/branch/main/graph/badge.svg)](https://codecov.io/gh/isfopo/SonicScribe)
 [![Coverage Status](https://coveralls.io/repos/github/isfopo/SonicScribe/badge.svg?branch=main)](https://coveralls.io/github/isfopo/SonicScribe?branch=main)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
